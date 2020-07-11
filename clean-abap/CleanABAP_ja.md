@@ -13,13 +13,13 @@
 
 ## 目次
 
-- [やり方](#how-to)
-  - [クリーンコードを始めるには](#how-to-get-started-with-clean-code)
-  - [レガシーコードをリファクタするには](#how-to-refactor-legacy-code)
-  - [自動的にチェックするには](#how-to-check-automatically)
-  - [他のガイドとの関係性](#how-to-relate-to-other-guides)
-  - [反対するには](#how-to-disagree)
-- [Names](#names)
+- [やり方](#やり方)
+  - [クリーンコードを始めるには](#クリーンコードを始めるには)
+  - [レガシーコードをリファクタするには](#レガシーコードをリファクタするには)
+  - [自動的にチェックするには](#自動的にチェックするには)
+  - [他のガイドとの関係性](#他のガイドとの関係性)
+  - [反対するには](#反対するには)
+- [命名](#命名)
   - [Use descriptive names](#use-descriptive-names)
   - [Prefer solution domain and problem domain terms](#prefer-solution-domain-and-problem-domain-terms)
   - [Use plural](#use-plural)
@@ -232,30 +232,30 @@
 
 ## やり方
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [本節](#how-to)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#やり方)
 
 ### クリーンコードを始めるには
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-get-started-with-clean-code)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [やり方](#やり方) > [本節](#クリーンコードを始めるには)
 
 Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _Clean Code_] を読んでください。
 [Clean Code Developer initiative](https://clean-code-developer.com/) は一般的にトピックを段階的にスムーズに導入し始めるのに役立つでしょう。
 
 [Booleans](#booleans) や [Conditions](#conditions) 、 [Ifs](#ifs) のようにわかりやすく、広く受け入れられるものから始めることをお勧めします。
 
-おそらく [Methods](#methods) 、特に [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
+おそらく [メソッド](#メソッド) 、特に [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
 
 ここに書かれているトピックの中には、経験は豊富だがクリーンコードに慣れていないチームでは難しい議論を引き起こす可能性があるものもあります。これらのトピックは完全に "健全" ですが、最初は慣れるのが難しいかもしれません。
 
-特に [コメント](#comments)、 [名前](#names)、 [書式設定](#formatting) は、宗教的な論争に発展する可能性があるので、クリーンコードの効果をすでに経験しているチームにのみ適用してください。
+特に [コメント](#コメント)、 [命名](#命名)、 [フォーマット](#フォーマット) は、宗教的な論争に発展する可能性があるので、クリーンコードの効果をすでに経験しているチームにのみ適用してください。
 
 ### レガシーコードをリファクタするには
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-refactor-legacy-code)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [やり方](#やり方) > [本節](#レガシーコードをリファクタするには)
 
-[Booleans](#booleans)、[Conditions](#conditions)、[Ifs](#ifs)、[Methods](#methods) は、コンフリクトなしに新しいコードを適用できるため、変更できない、または変更したくないコードが大量にあるレガシープロジェクトで作業している場合に、最も有益なトピックです。
+[Booleans](#booleans)、[Conditions](#conditions)、[Ifs](#ifs)、[メソッド](#メソッド) は、コンフリクトなしに新しいコードを適用できるため、変更できない、または変更したくないコードが大量にあるレガシープロジェクトで作業している場合に、最も有益なトピックです。
 
-[Names](#names) は、古いコードと新しいコードの間に [Avoid encodings, esp. Hungarian notation and prefixes](#avoid-encodings-esp-hungarian-notation-and-prefixes) のような節を無視した方がよいほどまでの断絶を引き起こす可能性があるため、レガシープロジェクトには非常に厳しいトピックです。
+[命名](#命名) は、古いコードと新しいコードの間に [Avoid encodings, esp. Hungarian notation and prefixes](#avoid-encodings-esp-hungarian-notation-and-prefixes) のような節を無視した方がよいほどまでの断絶を引き起こす可能性があるため、レガシープロジェクトには非常に厳しいトピックです。
 
 リファクタリングを行う際には、同じ開発オブジェクト内で異なる開発スタイルを混在させないようにしてください。レガシーコードに事前宣言しか含まれておらず、インライン宣言を使用するように完全にリファクタリングすることが不可能な場合、2 つのスタイルを混合するよりもレガシースタイルを続ける方が良いでしょう。スタイルを混合することで混乱を招く同様の状況がいくつかあります。例えば、
 
@@ -275,7 +275,7 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 ### 自動的にチェックするには
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-check-automatically)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [やり方](#やり方) > [本節](#自動的にチェックするには)
 
 ここで説明するアンチパターンを自動的に検出する静的コードチェックの包括的なスイートはありません。
 
@@ -287,9 +287,9 @@ ABAP テストコックピット、コードインスペクタ、拡張チェッ
 
 ### 他のガイドとの関係性
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-relate-to-other-guides)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [やり方](#やり方) > [本節](#他のガイドとの関係性)
 
-私たちのガイドは、クリーンコードの _精神_ に従っていて、例えば、[管理可能な例外のための CX_STATIC_CHECK のスロー](#throw-cx_static_check-for-manageable-exceptions)など、ABAP プログラミング言語にいくつかの調整をしたことを意味します。
+私たちのガイドは、クリーンコードの _精神_ に従っていて、例えば、[管理可能な例外のための CX_STATIC_CHECK のスロー](#管理可能な例外のための CX_STATIC_CHECK のスロー)など、ABAP プログラミング言語にいくつかの調整をしたことを意味します。
 
 いくつかの要素は [ABAP プログラミングガイドライン](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenabap_pgl.htm) から引用されており、このガイドはガイドラインとほとんど互換性があります。逸脱は示され、常によりクリーンなコードの精神に基づいています。
 
@@ -299,7 +299,7 @@ ABAP テストコックピット、コードインスペクタ、拡張チェッ
 
 ### 反対するには
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-disagree)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [やり方](#やり方) > [本節](#反対するには)
 
 このスタイルガイドは、すでに Clean Code を知っている方や、これから Clean Code に取り組む方に向けて、Clean Code を _特に ABAP に_ どのように適用するかに重点を置いて書きました。
 
@@ -309,9 +309,9 @@ ABAP テストコックピット、コードインスペクタ、拡張チェッ
 
 [CONTRIBUTING.md](../CONTRIBUTING.md) には、このガイドを変更したり、細かい部分で逸脱したりする方法についての提案が書かれています。
 
-## Names
+## 命名
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#names)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#命名)
 
 ### Use descriptive names
 

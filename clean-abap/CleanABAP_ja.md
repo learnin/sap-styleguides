@@ -3,30 +3,22 @@
 
 # Clean ABAP
 
-> [**日本語**](CleanABAP_ja.md)
-> &nbsp;·&nbsp;
-> [English](CleanABAP.md)
-> &nbsp;·&nbsp;
-> [中文](CleanABAP_zh.md)
-> &nbsp;·&nbsp;
-> [Français](CleanABAP_fr.md)
-> &nbsp;·&nbsp;
-> [Deutsch](CleanABAP_de.md)
+> [**日本語**](CleanABAP_ja.md) > &nbsp;·&nbsp; > [English](CleanABAP.md) > &nbsp;·&nbsp; > [中文](CleanABAP_zh.md) > &nbsp;·&nbsp; > [Français](CleanABAP_fr.md) > &nbsp;·&nbsp; > [Deutsch](CleanABAP_de.md)
 
 このガイドは [ABAP](https://en.wikipedia.org/wiki/ABAP) 向けに [Robert C. Martin の _Clean Code_] を採用したものです。
 
 [チートシート](cheat-sheet/CheatSheet.md) は印刷に最適化されたものです。
 
-[Robert C. Martin の _Clean Code_]: https://www.oreilly.com/library/view/clean-code/9780136083238/
+[robert c. martin の _clean code_]: https://www.oreilly.com/library/view/clean-code/9780136083238/
 
 ## 目次
 
-- [How to](#how-to)
+- [やり方](#how-to)
   - [クリーンコードを始めるには](#how-to-get-started-with-clean-code)
-  - [どのようにレガシーコードをリファクタするか](#how-to-refactor-legacy-code)
-  - [How to Check Automatically](#how-to-check-automatically)
-  - [How to Relate to Other Guides](#how-to-relate-to-other-guides)
-  - [How to Disagree](#how-to-disagree)
+  - [レガシーコードをリファクタするには](#how-to-refactor-legacy-code)
+  - [自動的にチェックするには](#how-to-check-automatically)
+  - [他のガイドとの関係性](#how-to-relate-to-other-guides)
+  - [反対するには](#how-to-disagree)
 - [Names](#names)
   - [Use descriptive names](#use-descriptive-names)
   - [Prefer solution domain and problem domain terms](#prefer-solution-domain-and-problem-domain-terms)
@@ -163,7 +155,7 @@
   - [Use methods instead of comments to segment your code](#use-methods-instead-of-comments-to-segment-your-code)
   - [Write comments to explain the why, not the what](#write-comments-to-explain-the-why-not-the-what)
   - [Design goes into the design documents, not the code](#design-goes-into-the-design-documents-not-the-code)
-  - [Comment with ", not with *](#comment-with--not-with-)
+  - [Comment with ", not with \*](#comment-with--not-with-)
   - [Put comments before the statement they relate to](#put-comments-before-the-statement-they-relate-to)
   - [Delete code instead of commenting it](#delete-code-instead-of-commenting-it)
   - [Use FIXME, TODO, and XXX and add your ID](#use-fixme-todo-and-xxx-and-add-your-id)
@@ -238,13 +230,13 @@
     - [Forward unexpected exceptions instead of catching and failing](#forward-unexpected-exceptions-instead-of-catching-and-failing)
     - [Write custom asserts to shorten code and avoid duplication](#write-custom-asserts-to-shorten-code-and-avoid-duplication)
 
-## How to
+## やり方
 
 > [Clean ABAP](#clean-abap) > [目次](#content) > [本節](#how-to)
 
 ### クリーンコードを始めるには
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [How to](#how-to) > [本節](#how-to-get-started-with-clean-code)
+> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-get-started-with-clean-code)
 
 Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _Clean Code_] を読んでください。
 [Clean Code Developer initiative](https://clean-code-developer.com/) は一般的にトピックを段階的にスムーズに導入し始めるのに役立つでしょう。
@@ -257,95 +249,65 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 特に [コメント](#comments)、 [名前](#names)、 [書式設定](#formatting) は、宗教的な論争に発展する可能性があるので、クリーンコードの効果をすでに経験しているチームにのみ適用してください。
 
-### どのようにレガシーコードをリファクタするか
+### レガシーコードをリファクタするには
 
-> [Clean ABAP](#clean-abap) > [目次](#content) > [How to](#how-to) > [本節](#how-to-refactor-legacy-code)
+> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-refactor-legacy-code)
 
 [Booleans](#booleans)、[Conditions](#conditions)、[Ifs](#ifs)、[Methods](#methods) は、コンフリクトなしに新しいコードを適用できるため、変更できない、または変更したくないコードが大量にあるレガシープロジェクトで作業している場合に、最も有益なトピックです。
 
 [Names](#names) は、古いコードと新しいコードの間に [Avoid encodings, esp. Hungarian notation and prefixes](#avoid-encodings-esp-hungarian-notation-and-prefixes) のような節を無視した方がよいほどまでの断絶を引き起こす可能性があるため、レガシープロジェクトには非常に厳しいトピックです。
 
-リファクタリングを行う際には、同じ開発オブジェクト内で異なる開発スタイルを混在させないようにしてください。レガシーコードに事前宣言しか含まれておらず、インライン宣言を使用するように完全にリファクタリングすることが不可能な場合、2つのスタイルを混合するよりもレガシースタイルを続ける方が良いでしょう。スタイルを混合することで混乱を招く同様の状況がいくつかあります。例えば、
+リファクタリングを行う際には、同じ開発オブジェクト内で異なる開発スタイルを混在させないようにしてください。レガシーコードに事前宣言しか含まれておらず、インライン宣言を使用するように完全にリファクタリングすることが不可能な場合、2 つのスタイルを混合するよりもレガシースタイルを続ける方が良いでしょう。スタイルを混合することで混乱を招く同様の状況がいくつかあります。例えば、
 
 - ループ時に `REF TO` と `FIELD-SYMBOL` を混在させる
 - `CONSTRUCTOR` 呼び出し時に `NEW` と `CREATE OBJECT` を混在させる
-- 1つのパラメータしか返さないメソッドのシグニチャで `RETURNING` と `EXPORTING` を混在させる
+- 1 つのパラメータしか返さないメソッドのシグニチャで `RETURNING` と `EXPORTING` を混在させる
 
-We observed good results with a four-step plan for refactoring:
+リファクタリングの 4 段階の計画で良好な結果が得られました:
 
-1. Get the team aboard. Communicate and explain the new style,
-and get everybody on the project team to agree to it.
-You don't need to commit all guidelines at once, just start
-with an undisputed small subset and evolve from there.
+1. チームに参加してもらう。新しいスタイルを伝えて説明し、プロジェクトチームの全員に同意してもらいましょう。一度にすべてのガイドラインにコミットする必要はなく、議論の余地のない小さなサブセットから始めて、そこから進化させてください。
 
-2. Follow the _boy scout rule_ to your daily work routine:
-_always leave the code you edit a little cleaner than you found it_.
-Don't obsess with this by sinking hours into "cleaning the campsite",
-just spend a couple of minutes extra and observe how the
-improvements accumulate over time.
+2. ボーイスカウトのルールに従ってください：編集したコードは、常に見つけたときよりも少しきれいな状態にしておきましょう。「キャンプ場の掃除」に何時間もかけて執着するのではなく、数分余分に費やして、時間の経過とともに改善がどのように蓄積されていくかを観察してください。
 
-3. Build _clean islands_: from time to time, pick a small object or component and
-try to make it clean in all aspects. These islands demonstrate the benefit
-of what you're doing and form solidly tested home bases for further refactoring.
+3. クリーンな島を作る: 時々、小さなオブジェクトやコンポーネントを選んで、あらゆる面でクリーンにします。これらの島は、あなたがやっていることの利点を示し、さらなるリファクタリングのためのしっかりとテストされたホームベースを形成します。
 
-4. Talk about it. No matter whether you set up old-school [Fagan code reviews](https://en.wikipedia.org/wiki/Fagan_inspection),
-hold info sessions, or form discussion boards in your favorite chat tool:
-you will need to talk about your experiences and learnings, to enable the
-team to grow a common understanding.
+4. それについて話してください。古風な[Fagan コードレビュー](https://en.wikipedia.org/wiki/Fagan_inspection)を設定したり、情報セッションを開催したり、お気に入りのチャットツールでディスカッションボードを形成するかどうかに関わらず、チームが共通の理解を成長させることができるように、あなたの経験や学習について話す必要があります。
 
-### How to Check Automatically
+### 自動的にチェックするには
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [How to](#how-to) > [This section](#how-to-check-automatically)
+> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-check-automatically)
 
-There is no comprehensive suite of static code checks
-that automatically detect the anti-patterns we describe here.
+ここで説明するアンチパターンを自動的に検出する静的コードチェックの包括的なスイートはありません。
 
-ABAP Test Cockpit, Code Inspector, Extended Check, and Checkman provide
-some checks that may help you find certain issues.
+ABAP テストコックピット、コードインスペクタ、拡張チェック、チェックマンは、特定の問題を見つけるのに役立ついくつかのチェックを提供しています。
 
-[abapOpenChecks](https://github.com/larshp/abapOpenChecks),
-an Open Source collection of Code Inspector checks,
-also covers some of the described anti-patterns.
+コードインスペクタチェックのオープンソースのコレクションである [abapOpenChecks](https://github.com/larshp/abapOpenChecks) も記述されているアンチパターンの一部をカバーしています。
 
-[abaplint](https://github.com/abaplint/abaplint) is an open source reimplementation of the ABAP parser. It works without a SAP system and is meant to be used on code serialized using abapGit. It offers multiple integrations (GitHub Actions, Jenkins, text editors...), covers some of the antipatterns and can also be used to check formatting and code conventions.
+[abaplint](https://github.com/abaplint/abaplint) はオープンソースの ABAP パーサの再実装です。SAP システムなしで動作し、abapGit でシリアライズされたコード上で使用されるように設計されています。複数の統合機能（GitHub Actions、Jenkins、テキストエディタなど）を提供し、いくつかのアンチパターンをカバーし、フォーマットやコード規約のチェックにも使用できます。
 
-### How to Relate to Other Guides
+### 他のガイドとの関係性
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [How to](#how-to) > [This section](#how-to-relate-to-other-guides)
+> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-relate-to-other-guides)
 
-Our guide follows the _spirit_ of Clean Code,
-meaning we adjusted some things to the ABAP programming language
-e.g. [Throw CX_STATIC_CHECK for manageable exceptions](#throw-cx_static_check-for-manageable-exceptions).
+私たちのガイドは、クリーンコードの _精神_ に従っていて、例えば、[管理可能な例外のための CX_STATIC_CHECK のスロー](#throw-cx_static_check-for-manageable-exceptions)など、ABAP プログラミング言語にいくつかの調整をしたことを意味します。
 
-Some facts are from the
-[ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenabap_pgl.htm),
-which this guide is mostly compatible to; deviations are indicated and always in the spirit of cleaner code.
+いくつかの要素は [ABAP プログラミングガイドライン](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenabap_pgl.htm) から引用されており、このガイドはガイドラインとほとんど互換性があります。逸脱は示され、常によりクリーンなコードの精神に基づいています。
 
-This guide also respects the
-[DSAG's Recommendations for ABAP Development](https://www.dsag.de/sites/default/files/dsag_recommendation_abap_development.pdf),
-although we are more precise in most details.
+このガイドでは、[ABAP 開発に関する DSAG の推奨事項](https://www.dsag.de/sites/default/files/dsag_recommendation_abap_development.pdf) も尊重していますが、ほとんどの詳細についてはより正確な情報を提供しています。
 
-Since its publication, Clean ABAP has become a reference guide
-for many of SAP's in-house development teams,
-including the several hundred coders that work on S/4HANA.
+発行以来、Clean ABAP は、S/4HANA に取り組む数百人の開発者を含む多くの SAP 社内開発チームのリファレンスガイドとなっています。
 
-### How to Disagree
+### 反対するには
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [How to](#how-to) > [This section](#how-to-disagree)
+> [Clean ABAP](#clean-abap) > [目次](#content) > [やり方](#how-to) > [本節](#how-to-disagree)
 
-We wrote this style guide for readers who are already acquainted with Clean Code or who are right now working on that,
-with a strong focus on how to apply Clean Code _specifically to ABAP_.
+このスタイルガイドは、すでに Clean Code を知っている方や、これから Clean Code に取り組む方に向けて、Clean Code を _特に ABAP に_ どのように適用するかに重点を置いて書きました。
 
-Please mind that we therefore did not introduce all concepts in the same length and depth
-as the original book and related resources: these are still worth a read,
-especially if you disagree with things in here just because we didn't explain them very well.
-Use the links in the sections to read up on the background of our guidance.
+そのため、原書や関連資料と同じ長さと深さですべての概念を紹介しているわけではないことに留意ください。それらは、特に私たちがうまく説明していないからといって、ここにあることに反対する場合には、読む価値があります。節の中のリンクを使って、私たちのガイダンスの背景を読んでみてください。
 
-You are free to discuss and disagree with anything we say here.
-One of the pillars of Clean Code is that _the team rules_.
-Just be sure to give things a fair chance before you discard them.
+ここで書かれていることについて、議論したり、反対したりすることは自由です。クリーンコードの柱の一つは、 _チームのルール_ です。ただ、捨てる前に公平なチャンスを与えることを忘れないでください。
 
-[CONTRIBUTING.md](../CONTRIBUTING.md) suggests ways how you can change this guide or deviate from it in minor details.
+[CONTRIBUTING.md](../CONTRIBUTING.md) には、このガイドを変更したり、細かい部分で逸脱したりする方法についての提案が書かれています。
 
 ## Names
 
@@ -966,16 +928,16 @@ and thus should be replaced with well-founded, precise decisions.
 Our recommendation is based on this reasoning:
 
 - Field symbols can do some things that references cannot, such as dynamically accessing the components of a structure.
-Likewise, references can do things that field symbols can't, such as constructing a dynamically typed data structure.
-In summary, settling for one alone is not possible.
+  Likewise, references can do things that field symbols can't, such as constructing a dynamically typed data structure.
+  In summary, settling for one alone is not possible.
 
 - In object-oriented ABAP, references are all over the place and cannot be avoided,
-as any object is a `REF TO <class-name>`.
-In contrast, field symbols are only strictly required in few, special cases concerned with dynamic typing.
-References thus form a natural preference in any object-oriented program.
+  as any object is a `REF TO <class-name>`.
+  In contrast, field symbols are only strictly required in few, special cases concerned with dynamic typing.
+  References thus form a natural preference in any object-oriented program.
 
 - Field symbols are shorter than references, but the resulting memory saving is so tiny that it can be safely neglected.
-Similarly, speed is not an issue. As a consequence, there is no performance-related reason to prefer one to the other.
+  Similarly, speed is not an issue. As a consequence, there is no performance-related reason to prefer one to the other.
 
 > Read more in the article
 > [_Accessing Data Objects Dynamically_ in the ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abendyn_access_data_obj_guidl.htm).
@@ -989,18 +951,18 @@ Similarly, speed is not an issue. As a consequence, there is no performance-rela
 > [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#use-the-right-table-type)
 
 - You typically use `HASHED` tables for **large tables**
-that are **filled in a single step**, **never modified**, and **read often by their key**.
-Their inherent memory and processing overhead makes hash tables only valuable
-for large amounts of data and lots of read accesses.
-Each change to the table's content requires expensive recalculation of the hash,
-so don't use this for tables that are modified too often.
+  that are **filled in a single step**, **never modified**, and **read often by their key**.
+  Their inherent memory and processing overhead makes hash tables only valuable
+  for large amounts of data and lots of read accesses.
+  Each change to the table's content requires expensive recalculation of the hash,
+  so don't use this for tables that are modified too often.
 
 - You typically use `SORTED` tables for **large tables**
-that need to be **sorted at all times**, that are **filled bit by bit** or **need to be modified**,
-and **read often by one or more full or partial keys** or processed **in a certain order**.
-Adding, changing, or removing content requires finding the right insertion spot,
-but doesn't require adjusting the rest of the table's index.
-Sorted tables demonstrate their value only for large numbers of read accesses.
+  that need to be **sorted at all times**, that are **filled bit by bit** or **need to be modified**,
+  and **read often by one or more full or partial keys** or processed **in a certain order**.
+  Adding, changing, or removing content requires finding the right insertion spot,
+  but doesn't require adjusting the rest of the table's index.
+  Sorted tables demonstrate their value only for large numbers of read accesses.
 
 - Use `STANDARD` tables for **small tables**, where indexing produces more overhead than benefit, and **"arrays"**, where you either don't care at all for the order of the rows, or you want to process them in exactly the order they were appended. Also, if different access to the table is needed e.g. indexed access and sorted access via `SORT` and `BINARY SEARCH`.
 
@@ -1020,8 +982,8 @@ Default keys are often only added to get the newer functional statements working
 The keys themselves in fact are usually superfluous and waste resources for nothing.
 They can even lead to obscure mistakes because they ignore numeric data types.
 The `SORT` and `DELETE ADJACENT` statements without explicit field list will resort to the primary key of the
- internal table, which in case of usage of `DEFAULT KEY` can lead to very unexpected results when having
- e.g. numeric fields as component of the key, in particular in combination with `READ TABLE ... BINARY` etc.
+internal table, which in case of usage of `DEFAULT KEY` can lead to very unexpected results when having
+e.g. numeric fields as component of the key, in particular in combination with `READ TABLE ... BINARY` etc.
 
 Either specify the key components explicitly
 
@@ -1036,7 +998,7 @@ DATA itab1 TYPE STANDARD TABLE OF row_type WITH EMPTY KEY.
 ```
 
 > Following [Horst Keller's blog on _Internal Tables with Empty Key_](https://blogs.sap.com/2013/06/27/abap-news-for-release-740-internal-tables-with-empty-key/)
-> 
+>
 > **Caution:** `SORT` on internal tables with `EMPTY KEY` (without explicit sort fields) will not sort at all,
 > but syntax warnings are issued in case the key's emptiness can be determined statically.
 
@@ -1381,10 +1343,10 @@ IF NOT variable = 42.
 ```
 
 > A more specific variant of
-[Try to make conditions positive](#try-to-make-conditions-positive).
-Also as described in the section
-[Alternative Language Constructs](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenalternative_langu_guidl.htm)
-in the ABAP programming guidelines.
+> [Try to make conditions positive](#try-to-make-conditions-positive).
+> Also as described in the section
+> [Alternative Language Constructs](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenalternative_langu_guidl.htm)
+> in the ABAP programming guidelines.
 
 ### Consider decomposing complex conditions
 
@@ -1648,7 +1610,7 @@ Just ask yourself critically whether inheritance in your case will really provid
 If in doubt, composition generally is the safer choice.
 
 > [Interfaces vs. abstract classes](sub-sections/InterfacesVsAbstractClasses.md)
-compares some details.
+> compares some details.
 
 #### Don't mix stateful and stateless in the same class
 
@@ -1727,22 +1689,22 @@ Use local classes only where appropriate.
 Local classes are suited
 
 - for very specific private data structures,
-for example an iterator for the global class's data,
-which will only ever be needed here,
+  for example an iterator for the global class's data,
+  which will only ever be needed here,
 
 - to extract a complex private piece algorithm,
-for example to disentangle that special purpose multi-method
-sort-aggregate algorithm from the rest of your class's code,
+  for example to disentangle that special purpose multi-method
+  sort-aggregate algorithm from the rest of your class's code,
 
 - to enable mocking certain aspects of the global class,
-for example by extracing all database access to a separate local class
-that can the be replaced with a test double in the unit tests.
+  for example by extracing all database access to a separate local class
+  that can the be replaced with a test double in the unit tests.
 
 Local classes hinder reuse because they cannot be used elsewhere.
 Although they are easy to extract, people will usually fail to even find them,
 leading to undesired code duplication.
 Orientation, navigation, and debugging in very long local class includes
-is tedious and annoying. 
+is tedious and annoying.
 As ABAP locks on include level, people will not be able to work on
 different parts of the local include simultaneously
 (which would be possible if they were separate global classes).
@@ -2155,7 +2117,7 @@ with few exceptions such as enumeration classes
 which will never have an alternative implementation and will never be mocked in test cases.
 
 > [Interfaces vs. abstract classes](sub-sections/InterfacesVsAbstractClasses.md)
-describes why this also applies to classes that overwrite inherited methods.
+> describes why this also applies to classes that overwrite inherited methods.
 
 ### Parameter Number
 
@@ -2499,9 +2461,7 @@ METHODS set_is_deleted
 ```
 
 > Read more in
-> [1](http://www.beyondcode.org/articles/booleanVariables.html)
-> [2](https://silkandspinach.net/2004/07/15/avoid-boolean-parameters/)
-> [3](http://jlebar.com/2011/12/16/Boolean_parameters_to_API_functions_considered_harmful..html)
+> [1](http://www.beyondcode.org/articles/booleanVariables.html) > [2](https://silkandspinach.net/2004/07/15/avoid-boolean-parameters/) > [3](http://jlebar.com/2011/12/16/Boolean_parameters_to_API_functions_considered_harmful..html)
 
 ### Parameter Names
 
@@ -2562,7 +2522,7 @@ ENDMETHOD.
 ```
 
 > Code inspector and Checkman point out `EXPORTING` variables that are never written.
-Use these static checks to avoid this otherwise rather obscure error source.
+> Use these static checks to avoid this otherwise rather obscure error source.
 
 ##### Take care if input and output could be the same
 
@@ -2947,6 +2907,7 @@ IF 1 = 2. MESSAGE e001(ad). ENDIF.
 ```
 
 This is an anti-pattern since:
+
 - It contains unreachable code.
 - It tests a condition which can never be true for equality.
 
@@ -2976,18 +2937,18 @@ ENDMETHOD.
 Exceptions have multiple advantages over return codes:
 
 - Exceptions keep your method signatures clean:
-you can return the result of the method as a `RETURNING` parameter and still throw exceptions alongside.
-Return codes pollute your signatures with additional parameters for error handling.
+  you can return the result of the method as a `RETURNING` parameter and still throw exceptions alongside.
+  Return codes pollute your signatures with additional parameters for error handling.
 
 - The caller doesn't have to react to them immediately.
-He can simply write down the happy path of his code.
-The exception-handling `CATCH` can be at the very end of his method, or completely outside.
+  He can simply write down the happy path of his code.
+  The exception-handling `CATCH` can be at the very end of his method, or completely outside.
 
 - Exceptions can provide details on the error in their attributes and through methods.
-Return codes require you to devise a different solution on your own, such as also returning a log.
+  Return codes require you to devise a different solution on your own, such as also returning a log.
 
 - The environment reminds the caller with syntax errors to handle exceptions.
-Return codes can be accidentally ignored without anybody noticing.
+  Return codes can be accidentally ignored without anybody noticing.
 
 #### Don't let failures slip through
 
@@ -3464,7 +3425,7 @@ this may be an indicator that your code has severe design issues that you should
 Some code _does_ need some explanation beyond a single line of comment;
 consider linking the design document in these cases.
 
-### Comment with ", not with *
+### Comment with ", not with \*
 
 > [Clean ABAP](#clean-abap) > [Content](#content) > [Comments](#comments) > [This section](#comment-with--not-with-)
 
@@ -3636,7 +3597,7 @@ not enforce writing ABAP Doc for each and everything.
 
 > [Clean ABAP](#clean-abap) > [Content](#content) > [Comments](#comments) > [This section](#prefer-pragmas-to-pseudo-comments)
 
-Prefer pragmas to pseudo comments to suppress irrelevant warnings and errors identified by the ATC. Pseudo comments 
+Prefer pragmas to pseudo comments to suppress irrelevant warnings and errors identified by the ATC. Pseudo comments
 have mostly become obsolete and have been replaced by pragmas.
 
 ```ABAP
@@ -3647,7 +3608,7 @@ MESSAGE e001(ad) INTO DATA(message) ##NEEDED.
 MESSAGE e001(ad) INTO DATA(message). "#EC NEEDED
 ```
 
-Use program `ABAP_SLIN_PRAGMAS` or table `SLIN_DESC` to find the mapping between obsolete pseudo comments and the pragmas that 
+Use program `ABAP_SLIN_PRAGMAS` or table `SLIN_DESC` to find the mapping between obsolete pseudo comments and the pragmas that
 have replaced them.
 
 ## Formatting
@@ -4130,11 +4091,11 @@ An urgent need to test private or protected methods may be an early warning sign
 Ask yourself:
 
 - Did you accidentally bury a concept in your class that wants to come out into its own class,
-with its own dedicated suite of tests?
+  with its own dedicated suite of tests?
 
 - Did you forget to separate the domain logic from the glue code?
-For example, implementing the domain logic directly in the class that is plugged into BOPF as an action,
-determination, or validation, or that was generated by SAP Gateway as a `*_DPC_EXT` data provider, may not the best idea.
+  For example, implementing the domain logic directly in the class that is plugged into BOPF as an action,
+  determination, or validation, or that was generated by SAP Gateway as a `*_DPC_EXT` data provider, may not the best idea.
 
 - Are your interfaces too complicated and request too much data that is irrelevant or that cannot be mocked easily?
 
@@ -4195,7 +4156,7 @@ to avoid that it is accidentally referenced in production code.
 Putting tests into other classes has the danger that people overlook them
 and forget to run them when refactoring the involved classes.
 
-Therefore it is beneficial to use *test relations* to document which objects
+Therefore it is beneficial to use _test relations_ to document which objects
 are tested by the test.  
 With the example below the test class `hiring_test`
 could be executed while being in the class `recruting` or `candidate` via the shrotcut `Shift-Crtl-F12` (Windows) or `Cmd-Shift-F12` (macOS).
@@ -4214,7 +4175,7 @@ endclass.
 
 > [Clean ABAP](#clean-abap) > [Content](#content) > [Testing](#testing) > [Test Classes](#test-classes) > [This section](#put-help-methods-in-help-classes)
 
-Put help methods used by several test classes in a help class. Make the help methods available through 
+Put help methods used by several test classes in a help class. Make the help methods available through
 inheritance (is-a relationship) or delegation (has-a relationship).
 
 ```abap
@@ -4441,10 +4402,10 @@ However, there are tools that will allow you
 to tackle trickier cases in elegant ways:
 
 - Use the `CL_OSQL_REPLACE` service
-to test complex OpenSQL statements
-by redirecting them to a test data bin
-that can be filled with test data
-without interfering with the rest of the system.
+  to test complex OpenSQL statements
+  by redirecting them to a test data bin
+  that can be filled with test data
+  without interfering with the rest of the system.
 
 - Use the CDS test framework to test your CDS views.
 
@@ -4576,7 +4537,7 @@ Unit tests - in contrast to integration tests - should be data-in-data-out, with
 cl_abap_testdouble=>configure_call( test_double )->returning( data ).
 ```
 
-Don't start building frameworks that distinguish "*test case IDs*" to decide what data to provide.
+Don't start building frameworks that distinguish "_test case IDs_" to decide what data to provide.
 The resulting code will be so long and tangled that you won't be able to keep these tests alive in the long term.
 
 ```ABAP
@@ -4896,4 +4857,3 @@ ENDMETHOD.
 ```
 
 Instead of copy-pasting this over and over again.
-

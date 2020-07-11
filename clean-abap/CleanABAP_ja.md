@@ -20,9 +20,9 @@
   - [他のガイドとの関係性](#他のガイドとの関係性)
   - [反対するには](#反対するには)
 - [命名](#命名)
-  - [Use descriptive names](#use-descriptive-names)
+  - [意味のある名前を使う](#意味のある名前を使う)
   - [Prefer solution domain and problem domain terms](#prefer-solution-domain-and-problem-domain-terms)
-  - [Use plural](#use-plural)
+  - [複数形を使う](#複数形を使う)
   - [Use pronounceable names](#use-pronounceable-names)
   - [Avoid abbreviations](#avoid-abbreviations)
   - [Use same abbreviations everywhere](#use-same-abbreviations-everywhere)
@@ -151,7 +151,7 @@
     - [Wrap foreign exceptions instead of letting them invade your code](#wrap-foreign-exceptions-instead-of-letting-them-invade-your-code)
 - [Comments](#comments)
   - [Express yourself in code, not in comments](#express-yourself-in-code-not-in-comments)
-  - [Comments are no excuse for bad names](#comments-are-no-excuse-for-bad-names)
+  - [不適切な命名をコメントで補おうとしないでください](#不適切な命名をコメントで補おうとしないでください)
   - [Use methods instead of comments to segment your code](#use-methods-instead-of-comments-to-segment-your-code)
   - [Write comments to explain the why, not the what](#write-comments-to-explain-the-why-not-the-what)
   - [Design goes into the design documents, not the code](#design-goes-into-the-design-documents-not-the-code)
@@ -245,7 +245,7 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 おそらく [メソッド](#メソッド) 、特に [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
 
-ここに書かれているトピックの中には、経験は豊富だがクリーンコードに慣れていないチームでは難しい議論を引き起こす可能性があるものもあります。これらのトピックは完全に "健全" ですが、最初は慣れるのが難しいかもしれません。
+ここに書かれているトピックの中には、経験は豊富だがクリーンコードに慣れていないチームでは難しい議論を引き起こす可能性があるものもあります。これらのトピックは完全に「健全」ですが、最初は慣れるのが難しいかもしれません。
 
 特に [コメント](#コメント)、 [命名](#命名)、 [フォーマット](#フォーマット) は、宗教的な論争に発展する可能性があるので、クリーンコードの効果をすでに経験しているチームにのみ適用してください。
 
@@ -313,11 +313,11 @@ ABAP テストコックピット、コードインスペクタ、拡張チェッ
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#命名)
 
-### Use descriptive names
+### 意味のある名前を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#use-descriptive-names)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#意味のある名前を使う)
 
-Use names that convey the content and meaning of things.
+物事の内容や意味が伝わる名前を使いましょう。
 
 ```ABAP
 CONSTANTS max_wait_time_in_seconds TYPE i ...
@@ -326,8 +326,7 @@ METHODS read_user_preferences ...
 CLASS /clean/user_preference_reader ...
 ```
 
-Do not focus on the data type or technical encoding.
-They hardly contribute to understanding the code.
+データ型や技術的なエンコーディングに注目してはいけません。これらはコードを理解することにはほとんど貢献しません。
 
 ```ABAP
 " anti-pattern
@@ -337,45 +336,33 @@ METHODS read_t005 ...
 CLASS /dirty/t005_reader ...
 ```
 
-[Do not attempt to fix bad names by comments.](#comments-are-no-excuse-for-bad-names)
+[不適切な命名をコメントで補おうとしないでください](#不適切な命名をコメントで補おうとしないでください)
 
-> Read more in _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ を参照ください。
 
-### Prefer solution domain and problem domain terms
+### ソリューションドメインと問題ドメインの用語を好む
 
 > [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#prefer-solution-domain-and-problem-domain-terms)
 
-Search for good names in the solution domain, i.e. computer science terms such as "queue" or "tree",
-and in the problem domain, i.e. business field terms such as "account" or "ledger".
+ソリューションドメイン、すなわち「キュー」や「ツリー」などのコンピュータサイエンス用語と、問題ドメイン、すなわち「勘定科目」や「元帳」などのビジネス分野の用語で、良い名前を検索します。
 
-Layers that are business-like will sound best when named according to the problem domain.
-This is especially true for components that are designed with Domain-Driven Design, such as APIs and business objects.
+ビジネスライクなレイヤーには、問題のドメインにちなんだ名前をつけるのが最適です。これは特に、API やビジネスオブジェクトなど、ドメイン駆動設計で設計されたコンポーネントに当てはまります。
 
-Layers that provide mostly technical functionality, such as factory classes and abstract algorithms,
-will sound best when named according to the solution domain.
+ファクトリクラスや抽象アルゴリズムなどの主に技術的な機能を提供するレイヤーには、ソリューションのドメインにちなんだ名前をつけると最もよく聞こえます。
 
-In any case, do not attempt to make up your own language.
-We need to be able to exchange information between developers, product owners, partners and customers,
-so choose names that all of these can relate to without a customized dictionary.
+いずれにしても、独自の言葉を作ろうとしないでください。開発者、プロダクトオーナー、パートナー、顧客の間で情報を交換できるようにする必要があるので、カスタマイズされた辞書を使わずに、これらすべてに関連していると思われる名前を選びましょう。
 
-> Read more in _Chapter 2: Meaningful Names: Use Solution Domain Names_ and _[...]:
-> Use Problem Domain Names_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Solution Domain Names_ と _Use Problem Domain Names_ を参照ください。
 
-### Use plural
+### 複数形を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#use-plural)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#複数形を使う)
 
-There is a legacy practice at SAP to name tables of things in singular,
-for example `country` for a "table of countries".
-Common tendency in the outside world is to use the plural for lists of things.
-We therefore recommend to prefer `countries` instead.
+SAP では、テーブルの名前を単数形、例えば「国のテーブル」の場合は `country` というように命名するという時代遅れの慣習があります。しかし、SAP 以外の世界では一般的な傾向として、リストには複数形を使用します。そのため、代わりに `countries` を使用することをお勧めします。
 
-> This advice primarily targets things like variables and properties.
-> For development objects, there may be competing patterns
-> that also make sense, for example the widely used convention
-> to name database tables ("transparent tables") in singular.
+> このアドバイスは、主に変数やクラスの属性などを対象としています。開発オブジェクトの場合は、例えば、データベースのテーブル（「透過テーブル」）を単数形で命名するために広く使われている規約など、競合するパターンの方が適切かもしれません。
 
-> Read more in _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ を参照してください。
 
 ### Use pronounceable names
 
@@ -3347,9 +3334,9 @@ and resort to comments only if that fails.
 > for regular user input validation, it should be acceptable.
 > Resort to the section [Mind the performance](#mind-the-performance) to deal with Clean Code and performance issues.
 
-### Comments are no excuse for bad names
+### 不適切な命名をコメントで補おうとしないでください
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Comments](#comments) > [This section](#comments-are-no-excuse-for-bad-names)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Comments](#comments) > [This section](#不適切な命名をコメントで補おうとしないでください)
 
 ```ABAP
 DATA(input_has_entries) = has_entries( input ).

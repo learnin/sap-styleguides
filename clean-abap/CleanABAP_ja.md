@@ -43,11 +43,11 @@
   - [定数インターフェースよりも列挙クラスを選ぶ](#定数インターフェースよりも列挙クラスを選ぶ)
   - [列挙クラスを使用しない場合は定数をグループ化する](#列挙クラスを使用しない場合は定数をグループ化する)
 - [変数](#変数)
-  - [Prefer inline to up-front declarations](#prefer-inline-to-up-front-declarations)
-  - [Don't declare inline in optional branches](#dont-declare-inline-in-optional-branches)
-  - [Do not chain up-front declarations](#do-not-chain-up-front-declarations)
-  - [Prefer REF TO to FIELD-SYMBOL](#prefer-ref-to-to-field-symbol)
-- [Tables](#tables)
+  - [事前宣言よりもインライン宣言を選ぶ](#事前宣言よりもインライン宣言を選ぶ)
+  - [選択の分岐内でインライン宣言をしない](#選択の分岐内でインライン宣言をしない)
+  - [事前宣言を連結させない](#事前宣言を連結させない)
+  - [FIELD-SYMBOLよりもREF TOを選択する](#FIELD-SYMBOLよりもREF-TOを選択する)
+- [テーブル](#テーブル)
   - [Use the right table type](#use-the-right-table-type)
   - [Avoid DEFAULT KEY](#avoid-default-key)
   - [Prefer INSERT INTO TABLE to APPEND TO](#prefer-insert-into-table-to-append-to)
@@ -183,7 +183,7 @@
   - [Break the call to a new line if the line gets too long](#break-the-call-to-a-new-line-if-the-line-gets-too-long)
   - [Indent and snap to tab](#indent-and-snap-to-tab)
   - [Indent in-line declarations like method calls](#indent-in-line-declarations-like-method-calls)
-  - [Don't align type clauses](#dont-align-type-clauses)
+  - [型句の位置を揃えない](#型句の位置を揃えない)
 - [Testing](#testing)
   - [Principles](#principles)
     - [Write testable code](#write-testable-code)
@@ -743,12 +743,11 @@ ENDDO.
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#変数)
 
-### Prefer inline to up-front declarations
+### 事前宣言よりもインライン宣言を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Variables](#variables) > [This section](#prefer-inline-to-up-front-declarations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [変数](#変数) > [本節](#事前宣言よりもインライン宣言を選ぶ)
 
-If you follow these guidelines, your methods will become so short (3-5 statements)
-that declaring variables inline at first occurrence will look more natural
+これらのガイドラインに従えば、あなたのメソッドは非常に短くなり (3-5 ステートメント)、最初に出てきた場所で変数をインライン宣言することがより自然に見えるようになります。
 
 ```ABAP
 METHOD do_something.
@@ -758,10 +757,10 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-than declaring variables with a separate `DATA` section at the beginning of the method
+メソッドの最初に `DATA` セクションで変数を宣言するよりも
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD do_something.
   DATA:
     name   TYPE seoclsname,
@@ -772,14 +771,14 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-> Read more in _Chapter 5: Formatting: Vertical Distance: Variable Declarations_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 5: Formatting: Vertical Distance: Variable Declarations_ を参照してください。
 
-### Don't declare inline in optional branches
+### 選択の分岐内でインライン宣言をしない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Variables](#variables) > [This section](#dont-declare-inline-in-optional-branches)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [変数](#変数) > [本節](#選択の分岐内でインライン宣言をしない)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF has_entries = abap_true.
   DATA(value) = 1.
 ELSE.
@@ -787,10 +786,7 @@ ELSE.
 ENDIF.
 ```
 
-This works fine because ABAP handles inline declarations as if they were at the beginning of the method.
-However, it is extremely confusing for readers,
-especially if the method is longer and you don't spot the declaration right away.
-In this case, break with inlining and put the declaration up-front:
+ABAPはインライン宣言をあたかもメソッドの先頭にあるかのように扱うので、これはうまく動作します。しかし、特にメソッドが長く、すぐに宣言を見つけられない場合は、読み手を非常に混乱させてしまいます。このような場合は、インライン宣言をやめて、宣言を前に置いてください。
 
 ```ABAP
 DATA value TYPE i.
@@ -801,58 +797,49 @@ ELSE.
 ENDIF.
 ```
 
-> Read more in _Chapter 5: Formatting: Vertical Distance: Variable Declarations_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 5: Formatting: Vertical Distance: Variable Declarations_ を参照してください。
 
-### Do not chain up-front declarations
+### 事前宣言を連結させない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Variables](#variables) > [This section](#do-not-chain-up-front-declarations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [変数](#変数) > [本節](#事前宣言を連結させない)
 
 ```ABAP
 DATA name TYPE seoclsname.
 DATA reader TYPE REF TO reader.
 ```
 
-Chaining suggests the defined variables are related on a logical level.
-To consistently use it, you would have to ensure that all chained variables belong together,
-and introduce additional chain groups to add variables.
-While this is possible, it is usually not worth the effort.
+連結は、定義された変数が論理レベルで関連していることを示唆しています。これを一貫して使用するためには、すべての連結された変数が一緒に属することを確認し、変数を追加するために追加の連結グループを導入しなければなりません。これは可能ですが、通常はその努力に見合うものではありません。
 
-Chaining also needlessly complicates reformatting and refactoring
-because each line looks different and changing them requires meddling with
-colons, dots, and commas, that are not worth the effort.
+また、連結は、各行が異なるように見え、それらを変更するには、コロン、ドット、カンマをいじらなければならないので、リフォーマットやリファクタリングを不必要に複雑にします。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA:
   name   TYPE seoclsname,
   reader TYPE REF TO reader.
 ```
 
-> Also refer to [Don't align type clauses](#dont-align-type-clauses)  
-> If chaining of data declaration is used, then use one chain for each group of variables belonging together.
+> [型句の位置を揃えない](#型句の位置を揃えない) も参照してください。  
+> データ宣言の連結を使用する場合は、一緒に属する変数のグループごとに1つの連結を使用します。
 
-### Prefer REF TO to FIELD-SYMBOL
+### FIELD-SYMBOLよりもREF TOを選択する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Variables](#variables) > [This section](#prefer-ref-to-to-field-symbol)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [変数](#変数) > [本節](#FIELD-SYMBOLよりもREF-TOを選択する)
 
-> This section [is being challenged](https://github.com/SAP/styleguides/issues/115).
-> `FIELD-SYMBOL`s seem to be considerably faster
-> when iterating internal tables,
-> such that the recommendation to use `REF TO`
-> for these cases may worsen performance.
+> この節は[議論を引き起こしています](https://github.com/SAP/styleguides/issues/115)。`FIELD-SYMBOL` は、内部テーブルを反復処理する際にかなり高速になるようですが、このような場合に `REF TO` を使用することを推奨するとパフォーマンスが低下する可能性があります。
 
 ```ABAP
 LOOP AT components REFERENCE INTO DATA(component).
 ```
 
-instead of the equivalent
+の代わりに
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 LOOP AT components ASSIGNING FIELD-SYMBOL(<component>).
 ```
 
-except where you need field symbols
+フィールドシンボルが必要な場合を除いて
 
 ```ABAP
 ASSIGN generic->* TO FIELD-SYMBOL(<generic>).
@@ -860,30 +847,25 @@ ASSIGN COMPONENT name OF STRUCTURE structure TO FIELD-SYMBOL(<component>).
 ASSIGN (class_name)=>(static_member) TO FIELD-SYMBOL(<member>).
 ```
 
-Code reviews demonstrate that people tend to choose between the two arbitrarily,
-"just because", "because we are always LOOPing that way", or "for no special reason".
-Arbitrary choices make the reader waste time on the pointless question why one is used over the other
-and thus should be replaced with well-founded, precise decisions.
-Our recommendation is based on this reasoning:
+コードレビューは、人々が「ただ〜だから」「いつもそのようにLOOPしているから」「特別な理由がないから」といった恣意的な理由で、この2つから選択する傾向があることを示しています。恣意的な選択は、なぜ一方が他方よりも使用されているのかという無用な質問に読者の時間を浪費させることになります。したがって、十分な根拠に基づく正確な決定に置き換えるべきです。私たちの推奨は、このような理由に基づいています。
 
-- Field symbols can do some things that references cannot, such as dynamically accessing the components of a structure.
-  Likewise, references can do things that field symbols can't, such as constructing a dynamically typed data structure.
-  In summary, settling for one alone is not possible.
+- フィールドシンボルは、構造体のコンポーネントに動的にアクセスするなど、参照ではできないことができます。
+  同様に、参照は、動的に型付けされたデータ構造体を構築するなど、フィールドシンボルではできないことを行うことができます。
+  まとめると、1つだけに落ち着くことは不可能です。
 
-- In object-oriented ABAP, references are all over the place and cannot be avoided,
-  as any object is a `REF TO <class-name>`.
-  In contrast, field symbols are only strictly required in few, special cases concerned with dynamic typing.
-  References thus form a natural preference in any object-oriented program.
+- オブジェクト指向のABAPでは、すべてのオブジェクトが `REF TO <クラス名>` なので、参照はあらゆる場所に存在し、避けることはできません。
+  対照的に、フィールドシンボルが厳密に必要とされるのは、動的な型付けに関係するごく一部の特別なケースだけです。
+  そのため、オブジェクト指向のプログラムでは参照がより自然な選択となります。
 
-- Field symbols are shorter than references, but the resulting memory saving is so tiny that it can be safely neglected.
-  Similarly, speed is not an issue. As a consequence, there is no performance-related reason to prefer one to the other.
+- フィールドシンボルは参照よりも短いですが、結果として得られるメモリの節約は非常に小さいので、無視しても問題ありません。
+  同様に、速度も問題ではありません。結果として、どちらか一方を他方よりも優先するパフォーマンス関連の理由はありません。
 
-> Read more in the article
-> [_Accessing Data Objects Dynamically_ in the ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abendyn_access_data_obj_guidl.htm).
+> 詳細はこの記事
+> [_Accessing Data Objects Dynamically_ in the ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abendyn_access_data_obj_guidl.htm) を参照してください。
 
-## Tables
+## テーブル
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#tables)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#テーブル)
 
 ### Use the right table type
 
@@ -3939,9 +3921,9 @@ DATA(result) = merge_structures( a = VALUE #( field_1 = 'X'
                                                                 field_4 = 'D' ) ).
 ```
 
-### Don't align type clauses
+### 型句の位置を揃えない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#dont-align-type-clauses)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#型句の位置を揃えない)
 
 ```ABAP
 DATA name TYPE seoclsname.

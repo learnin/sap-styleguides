@@ -41,7 +41,7 @@
 - [定数](#定数)
   - [マジックナンバーの代わりに定数を使う](#マジックナンバーの代わりに定数を使う)
   - [定数インターフェースよりも列挙クラスを選ぶ](#定数インターフェースよりも列挙クラスを選ぶ)
-  - [列挙クラスを使用しない場合は、定数をグループ化する](#列挙クラスを使用しない場合は、定数をグループ化する)
+  - [列挙クラスを使用しない場合は定数をグループ化する](#列挙クラスを使用しない場合は定数をグループ化する)
 - [変数](#変数)
   - [Prefer inline to up-front declarations](#prefer-inline-to-up-front-declarations)
   - [Don't declare inline in optional branches](#dont-declare-inline-in-optional-branches)
@@ -692,9 +692,9 @@ ENDINTERFACE.
 >
 > 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: J3: Constants versus Enums_ を参照してください。
 
-### 列挙クラスを使用しない場合は、定数をグループ化する
+### 列挙クラスを使用しない場合は定数をグループ化する
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [定数](#定数) > [本節](#列挙クラスを使用しない場合は、定数をグループ化する)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [定数](#定数) > [本節](#列挙クラスを使用しない場合は定数をグループ化する)
 
 インターフェイスなどで緩く定数を集める場合は、それらをグループ化します。
 

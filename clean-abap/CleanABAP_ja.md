@@ -23,26 +23,26 @@
   - [意味のある名前を使う](#意味のある名前を使う)
   - [Prefer solution domain and problem domain terms](#prefer-solution-domain-and-problem-domain-terms)
   - [複数形を使う](#複数形を使う)
-  - [Use pronounceable names](#use-pronounceable-names)
-  - [Avoid abbreviations](#avoid-abbreviations)
-  - [Use same abbreviations everywhere](#use-same-abbreviations-everywhere)
-  - [Use nouns for classes and verbs for methods](#use-nouns-for-classes-and-verbs-for-methods)
-  - [Avoid noise words such as "data", "info", "object"](#avoid-noise-words-such-as-data-info-object)
-  - [Pick one word per concept](#pick-one-word-per-concept)
-  - [Use pattern names only if you mean them](#use-pattern-names-only-if-you-mean-them)
-  - [Avoid encodings, esp. Hungarian notation and prefixes](#avoid-encodings-esp-hungarian-notation-and-prefixes)
-- [Language](#language)
-  - [Mind the legacy](#mind-the-legacy)
+  - [発音可能な名前を使う](#発音可能な名前を使う)
+  - [略語を避ける](#略語を避ける)
+  - [どこでも同じ略語を使う](#どこでも同じ略語を使う)
+  - [クラスには名詞を、メソッドには動詞を使う](#クラスには名詞を、メソッドには動詞を使う)
+  - ["data"、"info"、"object" などの意味のない言葉を避ける](#"data"、"info"、"object"-などの意味のない言葉を避ける)
+  - [1つの概念には1つの言葉を使う](#1つの概念には1つの言葉を使う)
+  - [パターン名はそれを意図する場合にのみ使う](#パターン名はそれを意図する場合にのみ使う)
+  - [エンコーディング、特にハンガリアン記法と接頭辞を避ける](#エンコーディング、特にハンガリアン記法と接頭辞を避ける)
+- [言語](#言語)
+  - [古いABAPリリースに注意する](#古いABAPリリースに注意する)
   - [Mind the performance](#mind-the-performance)
-  - [Prefer object orientation to procedural programming](#prefer-object-orientation-to-procedural-programming)
-  - [Prefer functional to procedural language constructs](#prefer-functional-to-procedural-language-constructs)
-  - [Avoid obsolete language elements](#avoid-obsolete-language-elements)
-  - [Use design patterns wisely](#use-design-patterns-wisely)
-- [Constants](#constants)
-  - [Use constants instead of magic numbers](#use-constants-instead-of-magic-numbers)
-  - [Prefer enumeration classes to constants interfaces](#prefer-enumeration-classes-to-constants-interfaces)
-  - [If you don't use enumeration classes, group your constants](#if-you-dont-use-enumeration-classes-group-your-constants)
-- [Variables](#variables)
+  - [手続き型プログラミングよりもオブジェクト指向を選ぶ](#手続き型プログラミングよりもオブジェクト指向を選ぶ)
+  - [手続き型の言語構造よりも関数型の言語構造を選ぶ](#手続き型の言語構造よりも関数型の言語構造を選ぶ)
+  - [廃止された言語要素を避ける](#廃止された言語要素を避ける)
+  - [デザインパターンを賢く使う](#デザインパターンを賢く使う)
+- [定数](#定数)
+  - [マジックナンバーの代わりに定数を使う](#マジックナンバーの代わりに定数を使う)
+  - [定数インターフェースよりも列挙クラスを選ぶ](#定数インターフェースよりも列挙クラスを選ぶ)
+  - [列挙クラスを使用しない場合は、定数をグループ化する](#列挙クラスを使用しない場合は、定数をグループ化する)
+- [変数](#変数)
   - [Prefer inline to up-front declarations](#prefer-inline-to-up-front-declarations)
   - [Don't declare inline in optional branches](#dont-declare-inline-in-optional-branches)
   - [Do not chain up-front declarations](#do-not-chain-up-front-declarations)
@@ -255,7 +255,7 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 [Booleans](#booleans)、[Conditions](#conditions)、[Ifs](#ifs)、[メソッド](#メソッド) は、コンフリクトなしに新しいコードを適用できるため、変更できない、または変更したくないコードが大量にあるレガシープロジェクトで作業している場合に、最も有益なトピックです。
 
-[命名](#命名) は、古いコードと新しいコードの間に [Avoid encodings, esp. Hungarian notation and prefixes](#avoid-encodings-esp-hungarian-notation-and-prefixes) のような節を無視した方がよいほどまでの断絶を引き起こす可能性があるため、レガシープロジェクトには非常に厳しいトピックです。
+[命名](#命名) は、古いコードと新しいコードの間に [エンコーディング、特にハンガリアン記法と接頭辞を避ける](#エンコーディング、特にハンガリアン記法と接頭辞を避ける) のような節を無視した方がよいほどまでの断絶を引き起こす可能性があるため、レガシープロジェクトには非常に厳しいトピックです。
 
 リファクタリングを行う際には、同じ開発オブジェクト内で異なる開発スタイルを混在させないようにしてください。レガシーコードに事前宣言しか含まれておらず、インライン宣言を使用するように完全にリファクタリングすることが不可能な場合、2 つのスタイルを混合するよりもレガシースタイルを続ける方が良いでしょう。スタイルを混合することで混乱を招く同様の状況がいくつかあります。例えば、
 
@@ -329,7 +329,7 @@ CLASS /clean/user_preference_reader ...
 データ型や技術的なエンコーディングに注目してはいけません。これらはコードを理解することにはほとんど貢献しません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 CONSTANTS sysubrc_04 TYPE sysubrc ...
 DATA iso3166tab TYPE STANDARD TABLE ...
 METHODS read_t005 ...
@@ -338,11 +338,11 @@ CLASS /dirty/t005_reader ...
 
 [不適切な命名をコメントで補おうとしないでください](#不適切な命名をコメントで補おうとしないでください)
 
-> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ を参照ください。
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ を参照してください。
 
 ### ソリューションドメインと問題ドメインの用語を好む
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#prefer-solution-domain-and-problem-domain-terms)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#prefer-solution-domain-and-problem-domain-terms)
 
 ソリューションドメイン、すなわち「キュー」や「ツリー」などのコンピュータサイエンス用語と、問題ドメイン、すなわち「勘定科目」や「元帳」などのビジネス分野の用語で、良い名前を検索します。
 
@@ -352,7 +352,7 @@ CLASS /dirty/t005_reader ...
 
 いずれにしても、独自の言葉を作ろうとしないでください。開発者、プロダクトオーナー、パートナー、顧客の間で情報を交換できるようにする必要があるので、カスタマイズされた辞書を使わずに、これらすべてに関連していると思われる名前を選びましょう。
 
-> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Solution Domain Names_ と _Use Problem Domain Names_ を参照ください。
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Solution Domain Names_ と _Use Problem Domain Names_ を参照してください。
 
 ### 複数形を使う
 
@@ -364,46 +364,39 @@ SAP では、テーブルの名前を単数形、例えば「国のテーブル�
 
 > 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ を参照してください。
 
-### Use pronounceable names
+### 発音可能な名前を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#use-pronounceable-names)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#発音可能な名前を使う)
 
-We think and talk a lot about objects, so use names that you can pronounce,
-for example prefer `detection_object_types` to something cryptic like `dobjt`.
+私たちは、対象についてたくさん考えたり、話したりしています。そのため、発音できる名前を使いましょう。例えば、 `dobjt` のような暗号的なものではなく、 `detection_object_types` を使用してください。
 
-> Read more in _Chapter 2: Meaningful Names: Use Pronounceable Names_ of [Robert C. Martin's _Clean Code_]
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Pronounceable Names_ を参照してください。
 
-### Avoid abbreviations
+### 略語を避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#avoid-abbreviations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#略語を避ける)
 
-If you have enough space, write out names in full.
-Start abbreviating only if you exceed length limitations.
+スペースに余裕がある場合は、名前を完全に書き出してください。長さの制限を超える場合のみ省略してください。
 
-If you do have to abbreviate, start with the _unimportant_ words.
+どうしても省略しなければならない場合は、 _重要でない_ 単語から始めましょう。
 
-Abbreviating things may appear efficient at first glance, but becomes ambiguous very fast.
-For example, does the "cust" in `cust` mean "customizing", "customer", or "custom"?
-All three are common in SAP applications.
+言葉を略すことは一見効率的に見えても、すぐに誤解を招くことになります。例えば、 `cust` の「cust」が「カスタマイズ」を指しているのか、「顧客」を指しているのか、「カスタム」を指しているのかは明確ではありません。この 3 つの用語はいずれも SAP アプリケーションでは一般的なものです。
 
-> Read more in _Chapter 2: Meaningful Names: Make Meaningful Distinctions_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Make Meaningful Distinctions_ を参照してください。
 
-### Use same abbreviations everywhere
+### どこでも同じ略語を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#use-same-abbreviations-everywhere)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#どこでも同じ略語を使う)
 
-People will search for keywords to find relevant code.
-Support this by using the same abbreviation for the same thing.
-For example, always abbreviate "detection object type" to "dobjt"
-instead of mixing "dot", "dotype", "detobjtype" and so on.
+人々は関連するコードを見つけるためにキーワードを検索します。これをサポートするために、同じものを同じ略語で表現します。例えば、"detection object type" を常に "dobjt" と略すようにし、 "dot" や "dotype"、"detobjtype" などを混在させないようにしてください。
 
-> Read more in _Chapter 2: Meaningful Names: Use Searchable Names_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Searchable Names_ を参照してください。
 
-### Use nouns for classes and verbs for methods
+### クラスには名詞を、メソッドには動詞を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#use-nouns-for-classes-and-verbs-for-methods)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#クラスには名詞を、メソッドには動詞を使う)
 
-Use nouns or noun phrases to name classes, interfaces, and objects:
+クラス、インターフェース、オブジェクトの名前には名詞や名詞句を使用しましょう：
 
 ```ABAP
 CLASS /clean/account
@@ -411,7 +404,7 @@ CLASS /clean/user_preferences
 INTERFACE /clean/customizing_reader
 ```
 
-Use verbs or verb phrases to name methods:
+メソッドの名前には動詞や動詞句を使用しましょう：
 
 ```ABAP
 METHODS withdraw
@@ -419,41 +412,41 @@ METHODS add_message
 METHODS read_entries
 ```
 
-Starting Boolean methods with verbs like `is_` and `has_` yields nice reading flow:
+Boolean 型メソッドの名前を `is_` や `has_` のような動詞で開始すると、読みやすくなります：
 
 ```ABAP
 IF is_empty( table ).
 ```
 
-We recommend naming functions like methods:
+関数にはメソッドのような名前をつけることをお勧めします：
 
 ```ABAP
 FUNCTION /clean/read_alerts
 ```
 
-### Avoid noise words such as "data", "info", "object"
+### "data"、"info"、"object" などの意味のない言葉を避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#avoid-noise-words-such-as-data-info-object)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#"data"、"info"、"object"-などの意味のない言葉を避ける)
 
-Omit noise words
-
-```ABAP
-account  " instead of account_data
-alert    " instead of alert_object
-```
-
-or replace them with something specific that really adds value
+意味のない言葉は省略しましょう
 
 ```ABAP
-user_preferences          " instead of user_info
-response_time_in_seconds  " instead of response_time_variable
+account  " account_data とするのではなく
+alert    " alert_object とするのではなく
 ```
 
-> Read more in _Chapter 2: Meaningful Names: Make Meaningful Distinctions_ of [Robert C. Martin's _Clean Code_]
+または、より具体的に意味のある言葉に置き換えてください
 
-### Pick one word per concept
+```ABAP
+user_preferences          " user_info とするのではなく
+response_time_in_seconds  " response_time_variable とするのではなく
+```
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#pick-one-word-per-concept)
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Make Meaningful Distinctions_ を参照してください。
+
+### 1つの概念には1つの言葉を使う
+
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#1つの概念には1つの言葉を使う)
 
 ```ABAP
 METHODS read_this.
@@ -461,41 +454,39 @@ METHODS read_that.
 METHODS read_those.
 ```
 
-Choose a term for a concept and stick to it; don't mix in other synonyms.
-Synonyms will make the reader waste time on finding a difference that's not there.
+概念を表す言葉を選び、それに拘ります。他の同義語を混在させないようにしてください。同義語があると、読者はありもしない意味の違いを見つけようとして時間を浪費してしまいます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS read_this.
 METHODS retrieve_that.
 METHODS query_those.
 ```
 
-> Read more in _Chapter 2: Meaningful Names: Pick One Word per Concept_ of [Robert C. Martin's _Clean Code_]
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Pick One Word per Concept_ を参照してください。
 
-### Use pattern names only if you mean them
+### パターン名はそれを意図する場合にのみ使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#use-pattern-names-only-if-you-mean-them)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#パターン名はそれを意図する場合にのみ使う)
 
-Don't use the names of software design patterns for classes and interfaces unless you really mean them.
-For example, don't call your class `file_factory` unless it really implements the factory design pattern.
-The most common patterns include:
-[singleton](https://en.wikipedia.org/wiki/Singleton_pattern),
-[factory](https://en.wikipedia.org/wiki/Factory_method_pattern),
-[facade](https://en.wikipedia.org/wiki/Facade_pattern),
-[composite](https://en.wikipedia.org/wiki/Composite_pattern),
-[decorator](https://en.wikipedia.org/wiki/Decorator_pattern),
-[iterator](https://en.wikipedia.org/wiki/Iterator_pattern),
-[observer](https://en.wikipedia.org/wiki/Observer_pattern), and
-[strategy](https://en.wikipedia.org/wiki/Strategy_pattern).
+本当にそれを意図しているのでなければ、クラスやインターフェースにソフトウェアデザインパターンの名前を使わないようにしましょう。例えば、本当にファクトリーデザインパターンを実装していない限り、クラス名を `file_factory` とはしないでください。最も一般的なパターンには、
+[singleton](https://en.wikipedia.org/wiki/Singleton_pattern)、
+[factory](https://en.wikipedia.org/wiki/Factory_method_pattern)、
+[facade](https://en.wikipedia.org/wiki/Facade_pattern)、
+[composite](https://en.wikipedia.org/wiki/Composite_pattern)、
+[decorator](https://en.wikipedia.org/wiki/Decorator_pattern)、
+[iterator](https://en.wikipedia.org/wiki/Iterator_pattern)、
+[observer](https://en.wikipedia.org/wiki/Observer_pattern)、
+[strategy](https://en.wikipedia.org/wiki/Strategy_pattern)
+などがあります。
 
-> Read more in _Chapter 2: Meaningful Names: Avoid Disinformation_ of [Robert C. Martin's _Clean Code_]
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Avoid Disinformation_ を参照してください。
 
-### Avoid encodings, esp. Hungarian notation and prefixes
+### エンコーディング、特にハンガリアン記法と接頭辞を避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Names](#names) > [This section](#avoid-encodings-esp-hungarian-notation-and-prefixes)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [命名](#命名) > [本節](#エンコーディング、特にハンガリアン記法と接頭辞を避ける)
 
-We encourage you to get rid of _all_ encoding prefixes.
+私たちは、 _すべての_ エンコーディング接頭辞を取り除くことをお勧めします。
 
 ```ABAP
 METHOD add_two_numbers.
@@ -503,7 +494,7 @@ METHOD add_two_numbers.
 ENDMETHOD.
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
 METHOD add_two_numbers.
@@ -511,64 +502,39 @@ METHOD add_two_numbers.
 ENDMETHOD.
 ```
 
-> [Avoid Encodings](sub-sections/AvoidEncodings.md)
-> describes the reasoning in depth.
+> 理由は [Avoid Encodings](sub-sections/AvoidEncodings.md) に詳しく書かれています。
 
-## Language
+## 言語
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#language)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#言語)
 
-### Mind the legacy
+### 古いABAPリリースに注意する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Language](#language) > [This section](#mind-the-legacy)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [言語](#言語) > [本節](#古いABAPリリースに注意する)
 
-If you code for older ABAP releases, take the advice in this guide with care:
-Many recommendations below make use of relatively new syntax and constructs
-that may not be supported in older ABAP releases.
-Validate the guidelines you want to follow on the oldest release you must support.
-Do not simply discard Clean Code as a whole -
-the vast majority of rules (e.g. naming, commenting) will work in _any_ ABAP version.
+古いABAPリリースでコーディングを行う場合は、このガイドのアドバイスに注意してください。以下の推奨事項の多くは、古いABAPリリースではサポートされていない可能性のある比較的新しい文法や構文を使用しています。サポートしなければならない最古のリリースで適用したいガイドラインを検証してください。ただし、クリーンコード全体を単純に破棄しないでください。ほとんどのルール（名前付けやコメントなど）は _どの_ ABAP バージョンでも動作します。
 
-### Mind the performance
+### パフォーマンスに注意する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Language](#language) > [This section](#mind-the-performance)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [言語](#言語) > [本節](#パフォーマンスに注意する)
 
-If you code high performance components, take the advice in this guide with care:
-Some aspects of Clean Code may make things slower (more method calls) or consume more memory (more objects).
-ABAP has some specialties that may intensify this, for example it compares data types when calling a method,
-such that splitting a single large method into many sub-methods may make the code slower.
+高いパフォーマンスが要求されるコンポーネントをコーディングする場合は、このガイドのアドバイスに注意してください。クリーンコードのいくつかの側面は、パフォーマンスを低下させたり（メソッド呼び出しが多くなる）、メモリをより消費したり（オブジェクトが多くなる）する可能性があります。ABAPには、これを強めてしまう可能性のあるいくつかの特殊性があります。例えば、ABAPはメソッドを呼び出す際にデータ型を比較しているため、1つの大きなメソッドを多くのサブメソッドに分割するとコードが遅くなる可能性があります。
 
-However, we strongly recommend to not optimize prematurely, based on obscure fears.
-The vast majority of rules (e.g. naming, commenting) has no negative impact at all.
-Try to build things in a clean, object-oriented way.
-If something is too slow, make a performance measurement.
-Only then should you take a fact-based decision to discard selected rules.
+しかし、不明確な恐怖心から、時期尚早に最適化しないことを強くお勧めします。大多数のルール(命名、コメントなど)は全く悪影響を与えません。クリーンでオブジェクト指向的な方法で物事を構築するようにしましょう。もし、何かが遅すぎる場合は、パフォーマンスの測定を行います。その時になって初めて、選択したルールを破棄するという事実に基づいた決断をすべきです。
 
-Some further thoughts, taken in part from Chapter 2 of
-[Martin Fowler's _Refactoring_](https://martinfowler.com/books/refactoring.html):
+[Martin Fowler の _Refactoring_](https://martinfowler.com/books/refactoring.html) の第2章の一部を抜粋して、さらにいくつかの考えを述べます。
 
-In a typical application the majority of the runtime is spent in a very small proportion
-of the code. As little as 10% of the code can account for 90% of the runtime, and especially
-in ABAP a large proportion of runtime is likely to be database time.
+典型的なアプリケーションでは、ランタイムの大部分はコードのごく一部に費やされます。コードのわずか10%がランタイムの90%を占めることもあり、特にABAPではランタイムの大部分がデータベース時間になる可能性が高いです。
 
-Thus it is not the best use of resources to spend significant effort on trying to make _all_
-code super-efficient all the time. We're not suggesting ignoring performance, but rather
-focus more on clean and well structured code during initial development, and use the
-profiler to identify critical areas to optimize.
+したがって、_すべての_ コードを常に超効率的にしようとすることに多大な労力を費やすのは、リソースの最善の使い方ではありません。パフォーマンスを無視しようと言っているわけではなく、開発の初期段階ではクリーンでよく構造化されたコードに注力し、それからプロファイラを使用して最適化すべき重要な領域を特定することをお勧めします。
 
-In fact, we would argue that such an approach will have a net positive effect on performance
-because it is a more targeted optimization effort, and it should be easier
-to identify performance bottlenecks and easier to refactor and tune well structured code.
+実際、このようなアプローチは、より的を絞った最適化の努力であるため、パフォーマンスに正味のプラスの効果があり、よく構造化されたコードはパフォーマンスのボトルネックの特定や、リファクタリングやチューニングが容易になるはずです。
 
-### Prefer object orientation to procedural programming
+### 手続き型プログラミングよりもオブジェクト指向を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Language](#language) > [This section](#prefer-object-orientation-to-procedural-programming)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [言語](#言語) > [本節](#手続き型プログラミングよりもオブジェクト指向を選ぶ)
 
-Object-oriented programs (classes, interfaces) are segmented better
-and can be refactored and tested more easily than procedural code (functions, programs).
-Although there are situations where you must provide procedural objects
-(a function for an RFC, a program for a transaction),
-these objects should do little more than call a corresponding class that provides the actual feature:
+オブジェクト指向のプログラム(クラスやインターフェース)は、手続き的なコード(関数やプログラム)よりもセグメント化されており、リファクタリングやテストをより容易に行うことができます。手続き的なオブジェクト (RFC のための関数、トランザクションのためのプログラム) を書かなければいけない状況もありますが、これらのオブジェクトは実際の関数を提供するクラスを呼び出すことに限定すべきです。
 
 ```ABAP
 FUNCTION check_business_partner [...].
@@ -578,13 +544,13 @@ ENDFUNCTION.
 ```
 
 > [Function Groups vs. Classes](sub-sections/FunctionGroupsVsClasses.md)
-> describes the differences in detail.
+> に違いが詳細に書かれています。
 
-### Prefer functional to procedural language constructs
+### 手続き型の言語構造よりも関数型の言語構造を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Language](#language) > [This section](#prefer-functional-to-procedural-language-constructs)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [言語](#言語) > [本節](#手続き型の言語構造よりも関数型の言語構造を選ぶ)
 
-They are usually shorter and come more natural to modern programmers.
+これらは通常、短く、モダンなプログラマーにとってはより自然なものになります。
 
 ```ABAP
 DATA(variable) = 'A'.
@@ -615,19 +581,15 @@ IF line_exists( value_pairs[ name = 'A' ] ).
 " DATA(exists) = xsdbool( sy-subrc = 0 ).
 ```
 
-Many of the detailed rules below are just specific reiterations of this general advice.
+以下に示す詳細なルールの多くは、この一般的なアドバイスの具体的な繰り返しに過ぎません。
 
-### Avoid obsolete language elements
+### 廃止された言語要素を避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Language](#language) > [This section](#avoid-obsolete-language-elements)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [言語](#言語) > [本節](#廃止された言語要素を避ける)
 
-When upgrading your ABAP version,
-make sure to check for obsolete language elements
-and refrain from using them.
+ABAPのバージョンをアップグレードする際には、廃止された言語要素を確認し、使用を控えるようにしましょう。
 
-For example, the `@`-escaped "host" variables
-in the following statement make a little clearer
-what's a program variable and what's a column in the database,
+例えば、以下の文中の `@`-エスケープされた「host」変数は、何がプログラム変数で何がデータベースのカラムなのかを明確にしています。
 
 ```ABAP
 SELECT *
@@ -637,7 +599,7 @@ SELECT *
   INTO TABLE @itab.
 ```
 
-as compared to the [obsolete unescaped form](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenopen_sql_hostvar_obsolete.htm)
+と比べて [obsolete unescaped form](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenopen_sql_hostvar_obsolete.htm)
 
 ```ABAP
 SELECT *
@@ -647,56 +609,49 @@ SELECT *
   INTO TABLE itab.
 ```
 
-Newer alternatives tend to improve readability of the code,
-and reduce design conflicts with modern programming paradigms,
-such that switching to them can automatically clean your code.
+新しい代替案はコードの可読性を向上させ、最新のプログラミング・パラダイムとの設計の衝突を減らす傾向があり、それらに切り替えることでコードを自動的にクリーンにすることができます。
 
-While continuing to work, obsolete elements may stop benefitting
-from optimizations in terms of processing speed and memory consumption.
+廃止された要素は処理速度やメモリ消費量の面で最適化の恩恵を受けられなくなる可能性があります。
 
-With modern language elements, you can onboard young ABAPers easier,
-who may no longer be familiar with the outdated constructs
-because they are no longer taught in SAP's trainings.
+モダンな言語要素を使用することで、SAPのトレーニングではもはや教えられていないため、時代遅れの構成要素に慣れていないかもしれない若いABAPerを簡単に参加させることができます。
 
-The SAP NetWeaver documentation contains a stable section
-that lists obsolete language elements, for example
-[NW 7.50](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/index.htm?file=abenabap_obsolete.htm),
-[NW 7.51](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenabap_obsolete.htm),
-[NW 7.52](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/index.htm?file=abenabap_obsolete.htm),
-[NW 7.53](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenabap_obsolete.htm).
+SAP NetWeaver のドキュメントには、廃止された言語要素がリストアップされています。例えば、
+[NW 7.50](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/index.htm?file=abenabap_obsolete.htm)、
+[NW 7.51](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenabap_obsolete.htm)、
+[NW 7.52](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/index.htm?file=abenabap_obsolete.htm)、
+[NW 7.53](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenabap_obsolete.htm)。
 
-### Use design patterns wisely
+### デザインパターンを賢く使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Language](#language) > [This section](#use-design-patterns-wisely)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [言語](#言語) > [本節](#デザインパターンを賢く使う)
 
-Where they are appropriate and provide noticeable benefit.
-Don't apply design patterns everywhere just for the sake of it.
+デザインパターンは、それが適切であり、目立った効果をもたらす場合に使用します。デザインパターンを使いたいがために、どこにでもデザインパターンを適用してはいけません。
 
-## Constants
+## 定数
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#constants)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#定数)
 
-### Use constants instead of magic numbers
+### マジックナンバーの代わりに定数を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Constants](#constants) > [This section](#use-constants-instead-of-magic-numbers)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [定数](#定数) > [本節](#マジックナンバーの代わりに定数を使う)
 
 ```ABAP
 IF abap_type = cl_abap_typedescr=>typekind_date.
 ```
 
-is clearer than
+は以下より明確です
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF abap_type = 'D'.
 ```
 
-> Read more in _Chapter 17: Smells and Heuristics: G25:
-> Replace Magic Numbers with Named Constants_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: G25:
+> Replace Magic Numbers with Named Constants_ を参照してください。
 
-### Prefer enumeration classes to constants interfaces
+### 定数インターフェースよりも列挙クラスを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Constants](#constants) > [This section](#prefer-enumeration-classes-to-constants-interfaces)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [定数](#定数) > [本節](#定数インターフェースよりも列挙クラスを選ぶ)
 
 ```ABAP
 CLASS /clean/message_severity DEFINITION PUBLIC ABSTRACT FINAL.
@@ -707,7 +662,7 @@ CLASS /clean/message_severity DEFINITION PUBLIC ABSTRACT FINAL.
 ENDCLASS.
 ```
 
-or
+または
 
 ```ABAP
 CLASS /clean/message_severity DEFINITION PUBLIC CREATE PRIVATE FINAL.
@@ -719,12 +674,10 @@ CLASS /clean/message_severity DEFINITION PUBLIC CREATE PRIVATE FINAL.
 ENDCLASS.
 ```
 
-instead of mixing unrelated things
-or misleading people to the conclusion
-that constants collections could be "implemented":
+関係のないものを混ぜたり、定数のコレクションが「実装されている」かもしれないと誤解させたりするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 INTERFACE /dirty/common_constants.
   CONSTANTS:
     warning      TYPE symsgty VALUE 'W',
@@ -735,16 +688,15 @@ ENDINTERFACE.
 ```
 
 > [Enumerations](sub-sections/Enumerations.md)
-> describes common enumeration patterns
-> and discusses their advantages and disadvantages.
+> 一般的な列挙パターンについて説明し、その長所と短所を論じます。
 >
-> Read more in _Chapter 17: Smells and Heuristics: J3: Constants versus Enums_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: J3: Constants versus Enums_ を参照してください。
 
-### If you don't use enumeration classes, group your constants
+### 列挙クラスを使用しない場合は、定数をグループ化する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Constants](#constants) > [This section](#if-you-dont-use-enumeration-classes-group-your-constants)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [定数](#定数) > [本節](#列挙クラスを使用しない場合は、定数をグループ化する)
 
-If you collect constants in a loose way, for example in an interface, group them:
+インターフェイスなどで緩く定数を集める場合は、それらをグループ化します。
 
 ```ABAP
 CONSTANTS:
@@ -758,10 +710,10 @@ CONSTANTS:
   END OF message_lifespan.
 ```
 
-Makes the relation clearer than:
+次のコードよりも関係がより明確になります
 
 ```ABAP
-" Anti-pattern
+" アンチパターン
 CONSTANTS:
   warning      TYPE symsgty VALUE 'W',
   transitional TYPE i       VALUE 1,
@@ -769,7 +721,7 @@ CONSTANTS:
   persisted    TYPE i       VALUE 2,
 ```
 
-The group also allows you group-wise access, for example for input validation:
+グループ単位のアクセスも可能です。例えば、入力のバリデーションでは
 
 ```ABAP
 DO.
@@ -785,11 +737,11 @@ DO.
 ENDDO.
 ```
 
-> Read more in _Chapter 17: Smells and Heuristics: G27: Structure over Convention_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: G27: Structure over Convention_ を参照してください。
 
-## Variables
+## 変数
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#variables)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#変数)
 
 ### Prefer inline to up-front declarations
 

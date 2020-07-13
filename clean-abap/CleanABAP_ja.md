@@ -48,13 +48,13 @@
   - [事前宣言を連結させない](#事前宣言を連結させない)
   - [FIELD-SYMBOLよりもREF TOを選択する](#FIELD-SYMBOLよりもREF-TOを選択する)
 - [テーブル](#テーブル)
-  - [Use the right table type](#use-the-right-table-type)
-  - [Avoid DEFAULT KEY](#avoid-default-key)
-  - [Prefer INSERT INTO TABLE to APPEND TO](#prefer-insert-into-table-to-append-to)
-  - [Prefer LINE_EXISTS to READ TABLE or LOOP AT](#prefer-line_exists-to-read-table-or-loop-at)
-  - [Prefer READ TABLE to LOOP AT](#prefer-read-table-to-loop-at)
-  - [Prefer LOOP AT WHERE to nested IF](#prefer-loop-at-where-to-nested-if)
-  - [Avoid unnecessary table reads](#avoid-unnecessary-table-reads)
+  - [正しいテーブルデータ型を使う](#正しいテーブルデータ型を使う)
+  - [DEFAULT KEY を避ける](#DEFAULT-KEY-を避ける)
+  - [APPEND TO よりも INSERT INTO TABLE を選ぶ](#APPEND-TO-よりも-INSERT-INTO-TABLE-を選ぶ)
+  - [READ TABLE や LOOP AT よりも LINE_EXISTS を選ぶ](#READ-TABLE-や-LOOP-AT-よりも-LINE_EXISTS-を選ぶ)
+  - [LOOP AT よりも READ TABLE を選ぶ](#LOOP AT よりも READ TABLE を選ぶ)
+  - [ネストした IF よりも LOOP AT WHERE を選ぶ](#ネストした-IF-よりも-LOOP-AT-WHERE-を選ぶ)
+  - [不要なテーブルの読み取りを避ける](#不要なテーブルの読み取りを避ける)
 - [Strings](#strings)
   - [Use ` to define literals](#use--to-define-literals)
   - [Use | to assemble text](#use--to-assemble-text)
@@ -122,7 +122,7 @@
     - [Don't clear VALUE parameters](#dont-clear-value-parameters)
   - [Method Body](#method-body)
     - [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only)
-    - [Focus on the happy path or error handling, but not both](#focus-on-the-happy-path-or-error-handling-but-not-both)
+    - [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
     - [Descend one level of abstraction](#descend-one-level-of-abstraction)
     - [Keep methods small](#keep-methods-small)
   - [Control flow](#control-flow)
@@ -867,123 +867,114 @@ ASSIGN (class_name)=>(static_member) TO FIELD-SYMBOL(<member>).
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#テーブル)
 
-### Use the right table type
+### 正しいテーブルデータ型を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#use-the-right-table-type)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#正しいテーブルデータ型を使う)
 
-- You typically use `HASHED` tables for **large tables**
-  that are **filled in a single step**, **never modified**, and **read often by their key**.
-  Their inherent memory and processing overhead makes hash tables only valuable
-  for large amounts of data and lots of read accesses.
-  Each change to the table's content requires expensive recalculation of the hash,
-  so don't use this for tables that are modified too often.
+- 通常、 `HASHED` テーブルは、**1つのステップで入力され**、**変更されず**、**キーによって頻繁に読み取られる**、**大きなテーブル**に使用します。
+  ハッシュテーブルには固有のメモリと処理オーバーヘッドがあるため、大量のデータと大量の読み取りアクセスに対してのみ有効です。
+  テーブルの内容を変更するたびにハッシュの再計算が必要になるので、頻繁に変更されるテーブルには使用しないでください。
 
-- You typically use `SORTED` tables for **large tables**
-  that need to be **sorted at all times**, that are **filled bit by bit** or **need to be modified**,
-  and **read often by one or more full or partial keys** or processed **in a certain order**.
-  Adding, changing, or removing content requires finding the right insertion spot,
-  but doesn't require adjusting the rest of the table's index.
-  Sorted tables demonstrate their value only for large numbers of read accesses.
+- 通常、`SORTED` テーブルは、**常にソートする必要があり**、**ビット単位で入力されたり**、**変更する必要があり**、**1つ以上の完全キーまたは部分キーで頻繁に読み取られたり**、**特定の順序で処理されたりする**、**大きなテーブル**に使用します。
+  コンテンツを追加、変更、削除するには、適切な挿入箇所を見つける必要がありますが、テーブルのインデックスの残りの部分を調整する必要はありません。
+  ソートされたテーブルは、多数の読み取りアクセスに対してのみその価値を発揮します。
 
-- Use `STANDARD` tables for **small tables**, where indexing produces more overhead than benefit, and **"arrays"**, where you either don't care at all for the order of the rows, or you want to process them in exactly the order they were appended. Also, if different access to the table is needed e.g. indexed access and sorted access via `SORT` and `BINARY SEARCH`.
+- `STANDARD` テーブルは、インデックスを作成すると利点よりもオーバーヘッドが大きくなるような**小さなテーブル**や、行の順序をまったく気にしないか、追加された順に正確に処理したい **「配列」** テーブルに使用します。
+また、テーブルへの異なるアクセスが必要な場合、例えば、インデックス付きアクセスや `SORT` や `BINARY SEARCH` によるソートされたアクセスがあります。
 
-> These are only rough guidelines.
-> Find more details in the article [_Selection of Table Category_ in the ABAP Language Help](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenitab_kind.htm).
+> これらはあくまでも大まかなガイドラインです。
+> 詳細はこの記事 [_Selection of Table Category_ in the ABAP Language Help](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenitab_kind.htm) を参照してください。
 
-### Avoid DEFAULT KEY
+### DEFAULT KEY を避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#avoid-default-key)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#DEFAULT-KEY-を避ける)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA itab TYPE STANDARD TABLE OF row_type WITH DEFAULT KEY.
 ```
 
-Default keys are often only added to get the newer functional statements working.
-The keys themselves in fact are usually superfluous and waste resources for nothing.
-They can even lead to obscure mistakes because they ignore numeric data types.
-The `SORT` and `DELETE ADJACENT` statements without explicit field list will resort to the primary key of the
-internal table, which in case of usage of `DEFAULT KEY` can lead to very unexpected results when having
-e.g. numeric fields as component of the key, in particular in combination with `READ TABLE ... BINARY` etc.
+デフォルトキーは、新しい関数文を動作させるためだけに追加されることがよくあります。
+実際のところ、キー自体は通常余計なものであり、リソースを無駄に浪費します。
+数値データ型を無視するため、不明瞭な間違いにつながることさえあります。
+明示的なフィールドリストがない `SORT` や `DELETE ADJACENT` 文は、内部テーブルの主キーに依存します。`DEFAULT KEY` を使用した場合、例えば数値フィールドをキーの構成要素として持つ場合、特に `READ TABLE ... BINARY` などとの組み合わせでは、非常に予期せぬ結果になる可能性があります。
 
-Either specify the key components explicitly
+キーコンポーネントを明示的に指定する
 
 ```ABAP
 DATA itab2 TYPE STANDARD TABLE OF row_type WITH NON-UNIQUE KEY comp1 comp2.
 ```
 
-or resort to `EMPTY KEY` if you don't need a key at all.
+または、キーが全く必要ない場合は `EMPTY KEY` を使ってください。
 
 ```ABAP
 DATA itab1 TYPE STANDARD TABLE OF row_type WITH EMPTY KEY.
 ```
 
-> Following [Horst Keller's blog on _Internal Tables with Empty Key_](https://blogs.sap.com/2013/06/27/abap-news-for-release-740-internal-tables-with-empty-key/)
+> [Horst Keller's blog on _Internal Tables with Empty Key_](https://blogs.sap.com/2013/06/27/abap-news-for-release-740-internal-tables-with-empty-key/) によると
 >
-> **Caution:** `SORT` on internal tables with `EMPTY KEY` (without explicit sort fields) will not sort at all,
-> but syntax warnings are issued in case the key's emptiness can be determined statically.
+> **注意:** `EMPTY KEY` を持つ（明示的なソートフィールドを持たない）内部テーブルでの `SORT` は全くソートされませんが、キーが空であるかどうかを静的に判断できる場合には、構文警告が出ます。
 
-### Prefer INSERT INTO TABLE to APPEND TO
+### APPEND TO よりも INSERT INTO TABLE を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#prefer-insert-into-table-to-append-to)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#APPEND-TO-よりも-INSERT-INTO-TABLE-を選ぶ)
 
 ```ABAP
 INSERT VALUE #( ... ) INTO TABLE itab.
 ```
 
-`INSERT INTO TABLE` works with all table and key types,
-thus making it easier for you to refactor the table's type and key definitions if your performance requirements change.
+`INSERT INTO TABLE` はすべてのテーブルとキーの型で動作するため、
+パフォーマンス要件が変更されてもテーブルの型とキー定義のリファクタリングが容易になります。
 
-Use `APPEND TO` only if you use a `STANDARD` table in an array-like fashion,
-if you want to stress that the added entry shall be the last row.
+`APPEND TO` は、`STANDARD` テーブルを配列のように使って、追加されたエントリが最終行になることを強調したい場合にのみ使用します。
 
-### Prefer LINE_EXISTS to READ TABLE or LOOP AT
+### READ TABLE や LOOP AT よりも LINE_EXISTS を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#prefer-line_exists-to-read-table-or-loop-at)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#READ-TABLE-や-LOOP-AT-よりも-LINE_EXISTS-を選ぶ)
 
 ```ABAP
 IF line_exists( my_table[ key = 'A' ] ).
 ```
 
-expresses the intent clearer and shorter than
+次のコードよりも短く、明確に意図を表現しています。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 READ TABLE my_table TRANSPORTING NO FIELDS WITH KEY key = 'A'.
 IF sy-subrc = 0.
 ```
 
-or even
+ましてや
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 LOOP AT my_table REFERENCE INTO DATA(line) WHERE key = 'A'.
   line_exists = abap_true.
   EXIT.
 ENDLOOP.
 ```
 
-### Prefer READ TABLE to LOOP AT
+### LOOP AT よりも READ TABLE を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#prefer-read-table-to-loop-at)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#LOOP AT よりも READ TABLE を選ぶ)
 
 ```ABAP
 READ TABLE my_table REFERENCE INTO DATA(line) WITH KEY key = 'A'.
 ```
 
-expresses the intent clearer and shorter than
+次のコードよりも短く、明確に意図を表現しています。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 LOOP AT my_table REFERENCE INTO DATA(line) WHERE key = 'A'.
   EXIT.
 ENDLOOP.
 ```
 
-or even
+ましてや
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 LOOP AT my_table REFERENCE INTO DATA(line).
   IF line->key = 'A'.
     EXIT.
@@ -991,15 +982,15 @@ LOOP AT my_table REFERENCE INTO DATA(line).
 ENDLOOP.
 ```
 
-### Prefer LOOP AT WHERE to nested IF
+### ネストした IF よりも LOOP AT WHERE を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#prefer-loop-at-where-to-nested-if)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#ネストした-IF-よりも-LOOP-AT-WHERE-を選ぶ)
 
 ```ABAP
 LOOP AT my_table REFERENCE INTO DATA(line) WHERE key = 'A'.
 ```
 
-expresses the intent clearer and shorter than
+次のコードよりも短く、明確に意図を表現しています。
 
 ```ABAP
 LOOP AT my_table REFERENCE INTO DATA(line).
@@ -1009,12 +1000,11 @@ LOOP AT my_table REFERENCE INTO DATA(line).
 ENDLOOP.
 ```
 
-### Avoid unnecessary table reads
+### 不要なテーブルの読み取りを避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Tables](#tables) > [This section](#avoid-unnecessary-table-reads)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#不要なテーブルの読み取りを避ける)
 
-In case you _expect_ a row to be there,
-read once and react to the exception,
+行があると _予想される_ 場合は、一度だけ読み取って例外に対応します。
 
 ```ABAP
 TRY.
@@ -1024,24 +1014,23 @@ TRY.
 ENDTRY.
 ```
 
-instead of littering and slowing down
-the main control flow with a double read
+2度読み取ることで、主制御の流れを散らかして遅くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF NOT line_exists( my_table[ key = input ] ).
   RAISE EXCEPTION NEW /clean/my_data_not_found( ).
 ENDIF.
 DATA(row) = my_table[ key = input ].
 ```
 
-> Besides being a performance improvement,
-> this is a special variant of the more general
-> [Focus on the happy path or error handling, but not both](#focus-on-the-happy-path-or-error-handling-but-not-both).
+> パフォーマンスの向上に加えて、これはより一般的な
+> [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
+> の具体的なバリエーションです。
 
 ## Strings
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#strings)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#strings)
 
 ### Use ` to define literals
 
@@ -2526,9 +2515,9 @@ A method likely does one thing if
 - you cannot extract meaningful other methods
 - you cannot meaningfully group its statements into sections
 
-#### Focus on the happy path or error handling, but not both
+#### 正常系かエラー処理に集中する。両方ではなく
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#focus-on-the-happy-path-or-error-handling-but-not-both)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#正常系かエラー処理に集中する-両方ではなく)
 
 As a specialization of the rule [_Do one thing, do it well, do it only_](#do-one-thing-do-it-well-do-it-only),
 a method should either follow the happy-path it's built for,

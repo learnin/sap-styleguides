@@ -52,7 +52,7 @@
   - [DEFAULT KEY を避ける](#DEFAULT-KEY-を避ける)
   - [APPEND TO よりも INSERT INTO TABLE を選ぶ](#APPEND-TO-よりも-INSERT-INTO-TABLE-を選ぶ)
   - [READ TABLE や LOOP AT よりも LINE_EXISTS を選ぶ](#READ-TABLE-や-LOOP-AT-よりも-LINE_EXISTS-を選ぶ)
-  - [LOOP AT よりも READ TABLE を選ぶ](#LOOP AT よりも READ TABLE を選ぶ)
+  - [LOOP AT よりも READ TABLE を選ぶ](#LOOP-AT-よりも-READ-TABLE-を選ぶ)
   - [ネストした IF よりも LOOP AT WHERE を選ぶ](#ネストした-IF-よりも-LOOP-AT-WHERE-を選ぶ)
   - [不要なテーブルの読み取りを避ける](#不要なテーブルの読み取りを避ける)
 - [Strings](#strings)
@@ -122,7 +122,7 @@
     - [Don't clear VALUE parameters](#dont-clear-value-parameters)
   - [Method Body](#method-body)
     - [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only)
-    - [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
+    - [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する。両方ではなく)
     - [Descend one level of abstraction](#descend-one-level-of-abstraction)
     - [Keep methods small](#keep-methods-small)
   - [Control flow](#control-flow)
@@ -956,7 +956,7 @@ ENDLOOP.
 
 ### LOOP AT よりも READ TABLE を選ぶ
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#LOOP AT よりも READ TABLE を選ぶ)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [テーブル](#テーブル) > [本節](#LOOP-AT-よりも-READ-TABLE-を選ぶ)
 
 ```ABAP
 READ TABLE my_table REFERENCE INTO DATA(line) WITH KEY key = 'A'.
@@ -1025,7 +1025,7 @@ DATA(row) = my_table[ key = input ].
 ```
 
 > パフォーマンスの向上に加えて、これはより一般的な
-> [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
+> [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する。両方ではなく)
 > の具体的なバリエーションです。
 
 ## Strings
@@ -2517,7 +2517,7 @@ A method likely does one thing if
 
 #### 正常系かエラー処理に集中する。両方ではなく
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#正常系かエラー処理に集中する-両方ではなく)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#正常系かエラー処理に集中す。-両方ではなく)
 
 As a specialization of the rule [_Do one thing, do it well, do it only_](#do-one-thing-do-it-well-do-it-only),
 a method should either follow the happy-path it's built for,

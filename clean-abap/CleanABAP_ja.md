@@ -122,7 +122,7 @@
     - [Don't clear VALUE parameters](#dont-clear-value-parameters)
   - [Method Body](#method-body)
     - [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only)
-    - [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する。両方ではなく)
+    - [正常系かエラー処理に集中する, 両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
     - [Descend one level of abstraction](#descend-one-level-of-abstraction)
     - [Keep methods small](#keep-methods-small)
   - [Control flow](#control-flow)
@@ -1025,7 +1025,7 @@ DATA(row) = my_table[ key = input ].
 ```
 
 > パフォーマンスの向上に加えて、これはより一般的な
-> [正常系かエラー処理に集中する。両方ではなく](#正常系かエラー処理に集中する。両方ではなく)
+> [正常系かエラー処理に集中する, 両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
 > の具体的なバリエーションです。
 
 ## Strings
@@ -2515,7 +2515,7 @@ A method likely does one thing if
 - you cannot extract meaningful other methods
 - you cannot meaningfully group its statements into sections
 
-#### 正常系かエラー処理に集中する。両方ではなく
+#### 正常系かエラー処理に集中する, 両方ではなく
 
 > [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#正常系かエラー処理に集中す。-両方ではなく)
 

@@ -56,10 +56,10 @@
   - [ネストした IF よりも LOOP AT WHERE を選ぶ](#ネストした-IF-よりも-LOOP-AT-WHERE-を選ぶ)
   - [不要なテーブルの読み取りを避ける](#不要なテーブルの読み取りを避ける)
 - [Strings](#strings)
-  - [Use ` to define literals](#use--to-define-literals)
-  - [Use | to assemble text](#use--to-assemble-text)
+  - [リテラルを定義するには ` を使う](#リテラルを定義するには--を使う)
+  - [テキストを組み立てるには | を使う](#テキストを組み立てるには--を使う)
 - [Booleans](#booleans)
-  - [Use Booleans wisely](#use-booleans-wisely)
+  - [Booleansを賢く使う](#Booleansを賢く使う)
   - [Use ABAP_BOOL for Booleans](#use-abap_bool-for-booleans)
   - [Use ABAP_TRUE and ABAP_FALSE for comparisons](#use-abap_true-and-abap_false-for-comparisons)
   - [Use XSDBOOL to set Boolean variables](#use-xsdbool-to-set-boolean-variables)
@@ -113,7 +113,7 @@
     - [RETURNING large tables is usually okay](#returning-large-tables-is-usually-okay)
     - [Use either RETURNING or EXPORTING or CHANGING, but not a combination](#use-either-returning-or-exporting-or-changing-but-not-a-combination)
     - [Use CHANGING sparingly, where suited](#use-changing-sparingly-where-suited)
-    - [Split method instead of Boolean input parameter](#split-method-instead-of-boolean-input-parameter)
+    - [boolean型の入力パラメータの代わりにメソッドを分割する](#boolean型の入力パラメータの代わりにメソッドを分割する)
   - [Parameter Names](#parameter-names)
     - [Consider calling the RETURNING parameter RESULT](#consider-calling-the-returning-parameter-result)
   - [Parameter Initialization](#parameter-initialization)
@@ -1032,88 +1032,84 @@ DATA(row) = my_table[ key = input ].
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#strings)
 
-### Use ` to define literals
+### リテラルを定義するには ` を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Strings](#strings) > [This section](#use--to-define-literals)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Strings](#strings) > [本節](#リテラルを定義するには--を使う)
 
 ```ABAP
 CONSTANTS some_constant TYPE string VALUE `ABC`.
 DATA(some_string) = `ABC`.  " --> TYPE string
 ```
 
-Refrain from using `'`, as it adds a superfluous type conversion and confuses the reader
-whether he's dealing with a `CHAR` or `STRING`:
+`'` の使用は控えましょう。余計な型変換が追加されてしまいますし、`CHAR` なのか `STRING` なのかがわからなくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA some_string TYPE string.
 some_string = 'ABC'.
 ```
 
-`|` is generally okay, but cannot be used for `CONSTANTS` and adds needless overhead when specifying a fixed value:
+`|` は一般的には問題ありませんが、`CONSTANTS` には使用できず、固定値を指定すると不要なオーバーヘッドがかかります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(some_string) = |ABC|.
 ```
 
-### Use | to assemble text
+### テキストを組み立てるには | を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Strings](#strings) > [This section](#use--to-assemble-text)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Strings](#strings) > [本節](#テキストを組み立てるには--を使う)
 
 ```ABAP
 DATA(message) = |Received HTTP code { status_code } with message { text }|.
 ```
 
-String templates highlight better what's literal and what's variable,
-especially if you embed multiple variables in a text.
+文字列テンプレートは、特にテキストに複数の変数を埋め込む場合に、何がリテラルで何が変数なのかをよりよく強調します。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(message) = `Received an unexpected HTTP ` && status_code && ` with message ` && text.
 ```
 
 ## Booleans
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#booleans)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#booleans)
 
-### Use Booleans wisely
+### Booleansを賢く使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Booleans](#booleans) > [This section](#use-booleans-wisely)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#Booleansを賢く使う)
 
-We often encounter cases where Booleans seem to be a natural choice
+一見、Booleans が自然な選択であるように見える場合はよくあります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 is_archived = abap_true.
 ```
 
-until a change of viewpoint suggests
-we should have chosen an enumeration
+しかし、視点を変えると、列挙がより適切な選択であったことがわかります。
 
 ```ABAP
 archiving_status = /clean/archivation_status=>archiving_in_process.
 ```
 
-Generally, Booleans are a bad choice
-to distinguish types of things
-because you will nearly always encounter cases
-that are not exclusively one or the other
+一般的に、Booleans は、物事の種類を区別するには適しません。
+なぜなら、どちらか一方だけではないケースがほぼ必ず出てくるためです。
 
 ```ABAP
 assert_true( xsdbool( document->is_archived( ) = abap_true AND
                       document->is_partially_archived( ) = abap_true ) ).
 ```
 
-[Split method instead of Boolean input parameter](#split-method-instead-of-boolean-input-parameter)
-moreover explains why you should always challenge Boolean parameters.
+[boolean型の入力パラメータの代わりにメソッドを分割する](#boolean型の入力パラメータの代わりにメソッドを分割する)
+では、さらに、常に Boolean パラメータを疑うべき理由について説明しています。
 
-> Read more in
+> 詳細は
 > [1](http://www.beyondcode.org/articles/booleanVariables.html)
+> を参照してください。
 
 ### Use ABAP_BOOL for Booleans
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Booleans](#booleans) > [This section](#use-abap_bool-for-booleans)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#use-abap_bool-for-booleans)
 
 ```ABAP
 DATA has_entries TYPE abap_bool.
@@ -1136,7 +1132,7 @@ Create your own data element if you need a custom description.
 
 ### Use ABAP_TRUE and ABAP_FALSE for comparisons
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Booleans](#booleans) > [This section](#use-abap_true-and-abap_false-for-comparisons)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#use-abap_true-and-abap_false-for-comparisons)
 
 ```ABAP
 has_entries = abap_true.
@@ -1165,7 +1161,7 @@ IF has_entries IS NOT INITIAL.
 
 ### Use XSDBOOL to set Boolean variables
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Booleans](#booleans) > [This section](#use-xsdbool-to-set-boolean-variables)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#use-xsdbool-to-set-boolean-variables)
 
 ```ABAP
 DATA(has_entries) = xsdbool( line IS NOT INITIAL ).
@@ -2332,9 +2328,9 @@ ENDMETHOD.
 Do not force your callers to introduce unnecessary local variables only to supply your `CHANGING` parameter.
 Do not use `CHANGING` parameters to initially fill a previously empty variable.
 
-#### Split method instead of Boolean input parameter
+#### boolean型の入力パラメータの代わりにメソッドを分割する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#split-method-instead-of-boolean-input-parameter)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#boolean型の入力パラメータの代わりにメソッドを分割する)
 
 Boolean input parameters are often an indicator
 that a method does _two_ things instead of one.
@@ -2507,7 +2503,7 @@ It should do it in the best way possible.
 A method likely does one thing if
 
 - it has [few input parameters](#aim-for-few-importing-parameters-at-best-less-than-three)
-- it [doesn't include Boolean parameters](#split-method-instead-of-boolean-input-parameter)
+- it [doesn't include Boolean parameters](#boolean型の入力パラメータの代わりにメソッドを分割する)
 - it has [exactly one output parameter](#return-export-or-change-exactly-one-parameter)
 - it is [small](#keep-methods-small)
 - it [descends one level of abstraction](#descend-one-level-of-abstraction)

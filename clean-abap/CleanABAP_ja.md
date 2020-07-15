@@ -60,8 +60,8 @@
   - [テキストを組み立てるには | を使う](#テキストを組み立てるには--を使う)
 - [Booleans](#booleans)
   - [Booleansを賢く使う](#Booleansを賢く使う)
-  - [Use ABAP_BOOL for Booleans](#use-abap_bool-for-booleans)
-  - [Use ABAP_TRUE and ABAP_FALSE for comparisons](#use-abap_true-and-abap_false-for-comparisons)
+  - [BooleanにはABAP_BOOLを使う](#BooleanにはABAP_BOOLを使う)
+  - [比較にはABAP_TRUEとABAP_FALSEを使う](#比較にはABAP_TRUEとABAP_FALSEを使う)
   - [Use XSDBOOL to set Boolean variables](#use-xsdbool-to-set-boolean-variables)
 - [Conditions](#conditions)
   - [Try to make conditions positive](#try-to-make-conditions-positive)
@@ -1107,57 +1107,56 @@ assert_true( xsdbool( document->is_archived( ) = abap_true AND
 > [1](http://www.beyondcode.org/articles/booleanVariables.html)
 > を参照してください。
 
-### Use ABAP_BOOL for Booleans
+### BooleanにはABAP_BOOLを使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#use-abap_bool-for-booleans)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#BooleanにはABAP_BOOLを使う)
 
 ```ABAP
 DATA has_entries TYPE abap_bool.
 ```
 
-Don't use the generic type `char1`.
-Although it is technically compatible it obscures the fact that we're dealing with a Boolean variable.
+汎用型の `char1` を使用しないでください。
+技術的には互換性がありますが、Boolean 変数を扱っているという事実を曖昧にしてしまいます。
 
-Also avoid other Boolean types as they often have strange side effects,
-for example `boolean` supports a third value "undefined" that results in subtle programming errors.
+また、他のBoolean型はしばしば奇妙な副作用があるので避けてください。例えば、`boolean` は3番目の値「undefined」をサポートしており、これは微妙なプログラミングエラーを引き起こします。
 
-In some cases you may need a data dictionary element, for example for DynPro fields.
-`abap_bool` cannot be used here because it is defined in the type pool `abap`, not in the data dictionary.
-In this case, resort to `boole_d` or `xfeld`.
-Create your own data element if you need a custom description.
+場合によっては、Dynpro フィールドなどのデータディクショナリエレメントが必要になることがあります。
+`abap_bool` はデータディクショナリではなく型プール `abap` で定義されているため、ここでは使用できません。
+この場合は、`boole_d` または `xfeld` を使用してください。
+カスタム記述が必要な場合は、独自のデータエレメントを作成してください。
 
-> ABAP may be the one single programming language that does not come with a universal Boolean data type.
-> However, having one is imperative.
-> This recommendation is based on the ABAP Programming Guidelines.
+> ABAPは、普遍的なBooleanデータ型を持たない唯一のプログラミング言語かもしれません。
+> しかし、これを持つことは欠かせません。
+> この推奨はABAPプログラミングガイドラインに基づいています。
 
-### Use ABAP_TRUE and ABAP_FALSE for comparisons
+### 比較にはABAP_TRUEとABAP_FALSEを使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#use-abap_true-and-abap_false-for-comparisons)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#比較にはABAP_TRUEとABAP_FALSEを使う)
 
 ```ABAP
 has_entries = abap_true.
 IF has_entries = abap_false.
 ```
 
-Don't use the character equivalents `'X'` and `' '` or `space`;
-they make it hard to see that this is a Boolean expression:
+同等文字の `'X'` や `' '` や `space` は使用しないでください。
+これらを使用すると、これがBoolean式であることがわかりにくくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 has_entries = 'X'.
 IF has_entries = space.
 ```
 
-Avoid comparisons with `INITIAL` - it forces readers to recollect that `abap_bool`'s default is `abap_false`:
+`INITIAL` との比較は避けてください - `abap_bool` のデフォルト値が `abap_false` であることを覚えておかなければならなくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF has_entries IS NOT INITIAL.
 ```
 
-> ABAP may be the one single programming language that does not come with built-in "constants" for true and false.
-> However, having them is imperative.
-> This recommendation is based on the ABAP Programming Guidelines.
+> ABAPは、真と偽の「定数」が組み込まれていない唯一のプログラミング言語かもしれません。
+> しかし、それらを持つことは欠かせません。
+> この推奨はABAPプログラミングガイドラインに基づいています。
 
 ### Use XSDBOOL to set Boolean variables
 

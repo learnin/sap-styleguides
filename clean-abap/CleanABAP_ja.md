@@ -62,14 +62,14 @@
   - [Booleansを賢く使う](#Booleansを賢く使う)
   - [BooleanにはABAP_BOOLを使う](#BooleanにはABAP_BOOLを使う)
   - [比較にはABAP_TRUEとABAP_FALSEを使う](#比較にはABAP_TRUEとABAP_FALSEを使う)
-  - [Use XSDBOOL to set Boolean variables](#use-xsdbool-to-set-boolean-variables)
-- [Conditions](#conditions)
-  - [Try to make conditions positive](#try-to-make-conditions-positive)
-  - [Prefer IS NOT to NOT IS](#prefer-is-not-to-not-is)
+  - [Boolean変数をセットするにはXSDBOOLを使う](#Boolean変数をセットするにはXSDBOOLを使う)
+- [条件](#条件)
+  - [条件を肯定にしてみる](#条件を肯定にしてみる)
+  - [NOT ISよりもIS NOTを選ぶ](#NOT-ISよりもIS-NOTを選ぶ)
   - [Consider decomposing complex conditions](#consider-decomposing-complex-conditions)
   - [Consider extracting complex conditions](#consider-extracting-complex-conditions)
 - [Ifs](#ifs)
-  - [No empty IF branches](#no-empty-if-branches)
+  - [No empty IF branches](#空のIF分岐を作らない)
   - [Prefer CASE to ELSE IF for multiple alternative conditions](#prefer-case-to-else-if-for-multiple-alternative-conditions)
   - [Keep the nesting depth low](#keep-the-nesting-depth-low)
 - [Regular expressions](#regular-expressions)
@@ -1158,18 +1158,18 @@ IF has_entries IS NOT INITIAL.
 > しかし、それらを持つことは欠かせません。
 > この推奨はABAPプログラミングガイドラインに基づいています。
 
-### Use XSDBOOL to set Boolean variables
+### Boolean変数をセットするにはXSDBOOLを使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#use-xsdbool-to-set-boolean-variables)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#Boolean変数をセットするにはXSDBOOLを使う)
 
 ```ABAP
 DATA(has_entries) = xsdbool( line IS NOT INITIAL ).
 ```
 
-The equivalent `IF`-`THEN`-`ELSE` is much longer for nothing:
+等価の `IF`-`THEN`-`ELSE` の方が無駄に長い。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF line IS INITIAL.
   has_entries = abap_false.
 ELSE.
@@ -1177,58 +1177,54 @@ ELSE.
 ENDIF.
 ```
 
-`xsdbool` is the best method for our purpose, as it directly produces a `char1`,
-which fits our boolean type `abap_bool` best.
-The equivalent functions `boolc` and `boolx` produce different types
-and add an unnecessary implicit type conversion.
+`xsdbool` は、boolean型 `abap_bool` に最も適した `char1` を直接生成するので、この目的には最適な方法です。
+これと同等の関数 `boolc` と `boolx` は異なる型を生成し、余計な暗黙の型変換を行います。
 
-We agree that the name `xsdbool` is unlucky and misleading;
-after all, we're not at all interested in the "XML Schema Definition" parts that the "xsd" prefix suggests.
+私たちは `xsdbool` という名前が不運で誤解を招くということに同意します。
+結局のところ、私たちは「xsd」という接頭辞が示唆する「XML Schema Definition」の部分には全く興味がありません。
 
-A possible alternative to `xsdbool` is the `COND` ternary form.
-Its syntax is intuitive, but a little longer because it needlessly repeats the `THEN abap_true` segment,
-and requires knowledge of the implicit default value `abap_false` -
-which is why we suggest it only as secondary solution.
+`xsdbool` の代替案として、`COND` の三項式が考えられます。
+この構文は直感的ですが、`THEN abap_true` セグメントを不必要に繰り返すため少し長くなりますし、暗黙のデフォルト値である `abap_false` の知識を必要とします。
+これが二次的な解決策としてのみ提案する理由です。
 
 ```ABAP
 DATA(has_entries) = COND abap_bool( WHEN line IS NOT INITIAL THEN abap_true ).
 ```
 
-## Conditions
+## 条件
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#conditions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#条件)
 
-### Try to make conditions positive
+### 条件を肯定にしてみる
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Conditions](#conditions) > [This section](#try-to-make-conditions-positive)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#条件を肯定にしてみる)
 
 ```ABAP
 IF has_entries = abap_true.
 ```
 
-For comparison, see how hard to understand the same statement gets by reversing it:
+比較のために、同じ文を逆にするとどれだけわかりにくくなるかを見てみましょう。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF has_no_entries = abap_false.
 ```
 
-The "try" in the section title means you shouldn't force this
-up to the point where you end up with something like [empty IF branches](#no-empty-if-branches):
+セクションタイトルの「してみる」は、[空のIF分岐](#空のIF分岐を作らない) のようなものが出てくるところまで無理にやってはいけないという意味です。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF has_entries = abap_true.
 ELSE.
-  " only do something in the ELSE block, IF remains empty
+  " ELSE ブロックでのみ何かを行い、IF は空のまま
 ENDIF.
 ```
 
-> Read more in _Chapter 17: Smells and Heuristics: G29: Avoid Negative Conditionals_ of [Robert C. Martin's _Clean Code_].
+> 詳細は [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: G29: Avoid Negative Conditionals_ を参照してください。
 
-### Prefer IS NOT to NOT IS
+### NOT ISよりもIS NOTを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Conditions](#conditions) > [This section](#prefer-is-not-to-not-is)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#NOT-ISよりもIS-NOTを選ぶ)
 
 ```ABAP
 IF variable IS NOT INITIAL.
@@ -1236,26 +1232,23 @@ IF variable NP 'TODO*'.
 IF variable <> 42.
 ```
 
-Negation is logically equivalent
-but requires a "mental turnaround"
-that makes it harder to understand.
+否定は論理的には等価ですが、「頭の中で逆転」が必要になり、理解が難しくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF NOT variable IS INITIAL.
 IF NOT variable CP 'TODO*'.
 IF NOT variable = 42.
 ```
 
-> A more specific variant of
-> [Try to make conditions positive](#try-to-make-conditions-positive).
-> Also as described in the section
+> これは、[条件を肯定にしてみる](#条件を肯定にしてみる) のより具体的なバリエーションです。
+> ABAPプログラミングガイドラインの
 > [Alternative Language Constructs](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenalternative_langu_guidl.htm)
-> in the ABAP programming guidelines.
+> の節でも説明されています。
 
 ### Consider decomposing complex conditions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Conditions](#conditions) > [This section](#consider-decomposing-complex-conditions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#consider-decomposing-complex-conditions)
 
 Conditions can become easier when decomposing them into the elementary parts that make them up:
 
@@ -1286,7 +1279,7 @@ IF ( example_a IS NOT INITIAL OR
 
 ### Consider extracting complex conditions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Conditions](#conditions) > [This section](#consider-extracting-complex-conditions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#consider-extracting-complex-conditions)
 
 It's nearly always a good idea to extract complex conditions to methods of their own:
 
@@ -1308,7 +1301,7 @@ ENDMETHOD.
 
 ### No empty IF branches
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Ifs](#ifs) > [This section](#no-empty-if-branches)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Ifs](#ifs) > [This section](#空のIF分岐を作らない)
 
 ```ABAP
 IF has_entries = abap_false.

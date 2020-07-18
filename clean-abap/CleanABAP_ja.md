@@ -66,14 +66,14 @@
 - [条件](#条件)
   - [条件を肯定にしてみる](#条件を肯定にしてみる)
   - [NOT ISよりもIS NOTを選ぶ](#NOT-ISよりもIS-NOTを選ぶ)
-  - [Consider decomposing complex conditions](#consider-decomposing-complex-conditions)
-  - [Consider extracting complex conditions](#consider-extracting-complex-conditions)
-- [Ifs](#ifs)
-  - [No empty IF branches](#空のIF分岐を作らない)
-  - [Prefer CASE to ELSE IF for multiple alternative conditions](#prefer-case-to-else-if-for-multiple-alternative-conditions)
-  - [Keep the nesting depth low](#keep-the-nesting-depth-low)
-- [Regular expressions](#regular-expressions)
-  - [Prefer simpler methods to regular expressions](#prefer-simpler-methods-to-regular-expressions)
+  - [複素条件を分解することを考える](#複素条件を分解することを考える)
+  - [複雑な条件を抽出することを考える](#複雑な条件を抽出することを考える)
+- [If](#if)
+  - [空のIF分岐を作らない](#空のIF分岐を作らない)
+  - [複数の択一条件にはELSE IFよりもCASEを選ぶ](#複数の択一条件にはELSE IFよりもCASEを選ぶ)
+  - [ネストの深さを浅くする](#ネストの深さを浅くする)
+- [正規表現](#正規表現)
+  - [正規表現よりもシンプルなメソッドを選ぶ](#正規表現よりもシンプルなメソッドを選ぶ)
   - [Prefer basis checks to regular expressions](#prefer-basis-checks-to-regular-expressions)
   - [Consider assembling complex regular expressions](#consider-assembling-complex-regular-expressions)
 - [Classes](#classes)
@@ -599,7 +599,7 @@ SELECT *
   INTO TABLE @itab.
 ```
 
-と比べて [obsolete unescaped form](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenopen_sql_hostvar_obsolete.htm)
+[廃止されたエスケープ省略形式](https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenopen_sql_hostvar_obsolete.htm) と比べて
 
 ```ABAP
 SELECT *
@@ -1246,11 +1246,11 @@ IF NOT variable = 42.
 > [Alternative Language Constructs](https://help.sap.com/doc/abapdocu_753_index_htm/7.53/en-US/index.htm?file=abenalternative_langu_guidl.htm)
 > の節でも説明されています。
 
-### Consider decomposing complex conditions
+### 複素条件を分解することを考える
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#consider-decomposing-complex-conditions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#複素条件を分解することを考える)
 
-Conditions can become easier when decomposing them into the elementary parts that make them up:
+条件は、それらを構成する要素に分解すると簡単になります。
 
 ```ABAP
 DATA(example_provided) = xsdbool( example_a IS NOT INITIAL OR
@@ -1264,10 +1264,10 @@ IF example_provided = abap_true AND
    one_example_fits = abap_true.
 ```
 
-instead of leaving everything in-place:
+すべてを一緒にするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF ( example_a IS NOT INITIAL OR
      example_b IS NOT INITIAL ) AND
    ( applies( example_a ) = abap_true OR
@@ -1275,13 +1275,13 @@ IF ( example_a IS NOT INITIAL OR
      fits( example_b ) = abap_true ).
 ```
 
-> Use the ABAP Development Tools quick fixes to quickly extract conditions and create variables as shown above.
+> ABAP開発ツールのクイックフィックスを使用して、上記のように素早く条件を抽出し、変数を作成します。
 
-### Consider extracting complex conditions
+### 複雑な条件を抽出することを考える
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#consider-extracting-complex-conditions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [条件](#条件) > [本節](#複雑な条件を抽出することを考える)
 
-It's nearly always a good idea to extract complex conditions to methods of their own:
+ほとんどの場合、複雑な条件を独自のメソッドに抽出するのがよいでしょう。
 
 ```ABAP
 IF is_provided( example ).
@@ -1295,13 +1295,13 @@ METHOD is_provided.
 ENDMETHOD.
 ```
 
-## Ifs
+## If
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#ifs)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#if)
 
-### No empty IF branches
+### 空のIF分岐を作らない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Ifs](#ifs) > [This section](#空のIF分岐を作らない)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [If](#if) > [本節](#空のIF分岐を作らない)
 
 ```ABAP
 IF has_entries = abap_false.
@@ -1309,19 +1309,19 @@ IF has_entries = abap_false.
 ENDIF.
 ```
 
-is shorter and clearer than
+の方が、次のコードよりも短くてわかりやすいです。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF has_entries = abap_true.
 ELSE.
   " do some magic
 ENDIF.
 ```
 
-### Prefer CASE to ELSE IF for multiple alternative conditions
+### 複数の択一条件にはELSE IFよりもCASEを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Ifs](#ifs) > [This section](#prefer-case-to-else-if-for-multiple-alternative-conditions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [If](#if) > [本節](#複数の択一条件にはELSE IFよりもCASEを選ぶ)
 
 ```ABAP
 CASE type.
@@ -1334,14 +1334,13 @@ CASE type.
 ENDCASE.
 ```
 
-`CASE` makes it easy to see a set of alternatives that exclude each other.
-It can be faster than a series of `IF`s because it can translate to a different microprocessor command
-instead of a series of subsequently evaluated conditions.
-You can introduce new cases quickly, without having to repeat the discerning variable over and over again.
-The statement even prevents some errors that can occur when accidentally nesting the `IF`-`ELSEIF`s.
+`CASE` を使用すると、相互に排他的な選択肢の組を簡単に確認できます。
+一連の条件を連続して評価するのではなく、別のマイクロプロセッサ命令に変換できるため、一連の `IF` よりも高速に動作する可能性があります。
+対象の変数を何度も繰り返さなくても、新しいケースを素早く追加できます。
+このステートメントは、`IF`-`ELSEIF` を誤ってネストしたときに発生する可能性のあるいくつかのエラーを防ぐこともできます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF type = type-some_type.
   " ...
 ELSEIF type = type-some_other_type.
@@ -1351,12 +1350,12 @@ ELSE.
 ENDIF.
 ```
 
-### Keep the nesting depth low
+### ネストの深さを浅くする
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Ifs](#ifs) > [This section](#keep-the-nesting-depth-low)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [If](#if) > [本節](#ネストの深さを浅くする)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF <this>.
   IF <that>.
   ENDIF.
@@ -1369,31 +1368,31 @@ ELSE.
 ENDIF.
 ```
 
-Nested `IF`s get hard to understand very quickly and require an exponential number of test cases for complete coverage.
+ネストした `IF` はすぐに理解が難しくなり、完全なカバレッジのために指数関数的な数のテストケースが必要になります。
 
-Decision trees can usually be taken apart by forming sub-methods and introducing boolean helper variables.
+デシジョンツリーは通常、サブメソッドを形成し、boolean ヘルパー変数を導入することで分離することができます。
 
-Other cases can be simplified by merging IFs, such as
+他のケースでは、以下のようにIFをマージすることで簡略化することができます。
 
 ```ABAP
 IF <this> AND <that>.
 ```
 
-instead of the needlessly nested
+不要なネストをするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF <this>.
   IF <that>.
 ```
 
-## Regular expressions
+## 正規表現
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#regular-expressions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#正規表現)
 
-### Prefer simpler methods to regular expressions
+### 正規表現よりもシンプルなメソッドを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Regular expressions](#regular-expressions) > [This section](#prefer-simpler-methods-to-regular-expressions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#正規表現よりもシンプルなメソッドを選ぶ)
 
 ```ABAP
 IF input IS NOT INITIAL.
@@ -1403,16 +1402,15 @@ WHILE contains( val = input  sub = 'abc' ).
 " WHILE contains( val = input  regex = 'abc' ).
 ```
 
-Regular expressions become hard to understand very quickly.
-Simple cases are usually easier without them.
+正規表現はすぐに理解するのが難しくなります。
+単純な場合は、通常、それらがない方が簡単です。
 
-Regular expressions also usually consume more memory and processing time
-because they need to be parsed into an expression tree and compiled at runtime into an executable matcher.
-Simple solutions may do with a straight-forward loop and a temporary variable.
+また、正規表現は通常、式ツリーに解析され、実行可能なマッチャーに実行時にコンパイルする必要があるため、より多くのメモリと処理時間を消費します。
+単純な解決策としては、簡単なループと一時的変数を使用します。
 
 ### Prefer basis checks to regular expressions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Regular expressions](#regular-expressions) > [This section](#prefer-basis-checks-to-regular-expressions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#prefer-basis-checks-to-regular-expressions)
 
 ```ABAP
 CALL FUNCTION 'SEO_CLIF_CHECK_NAME'
@@ -1436,7 +1434,7 @@ DATA(is_valid) = matches( val     = class_name
 
 ### Consider assembling complex regular expressions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Regular expressions](#regular-expressions) > [This section](#consider-assembling-complex-regular-expressions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#consider-assembling-complex-regular-expressions)
 
 ```ABAP
 CONSTANTS class_name TYPE string VALUE `CL\_.*`.

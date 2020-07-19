@@ -74,16 +74,16 @@
   - [ネストの深さを浅くする](#ネストの深さを浅くする)
 - [正規表現](#正規表現)
   - [正規表現よりもシンプルなメソッドを選ぶ](#正規表現よりもシンプルなメソッドを選ぶ)
-  - [Prefer basis checks to regular expressions](#prefer-basis-checks-to-regular-expressions)
-  - [Consider assembling complex regular expressions](#consider-assembling-complex-regular-expressions)
-- [Classes](#classes)
-  - [Classes: Object orientation](#classes-object-orientation)
-    - [Prefer objects to static classes](#prefer-objects-to-static-classes)
-    - [Prefer composition to inheritance](#prefer-composition-to-inheritance)
-    - [Don't mix stateful and stateless in the same class](#dont-mix-stateful-and-stateless-in-the-same-class)
-  - [Scope](#scope)
-    - [Global by default, local only where appropriate](#global-by-default-local-only-where-appropriate)
-    - [FINAL if not designed for inheritance](#final-if-not-designed-for-inheritance)
+  - [正規表現よりも基本的なチェックを選ぶ](#正規表現よりも基本的なチェックを選ぶ)
+  - [複雑な正規表現は組み立てることを考える](#複雑な正規表現は組み立てることを考える)
+- [クラス](#クラス)
+  - [クラス：オブジェクト指向](#クラス：オブジェクト指向)
+    - [静的クラスよりもオブジェクトを選ぶ](#静的クラスよりもオブジェクトを選ぶ)
+    - [継承よりもコンポジションを選ぶ](#継承よりもコンポジションを選ぶ)
+    - [同じクラスにステートフルとステートレスを混在させない](#同じクラスにステートフルとステートレスを混在させない)
+  - [スコープ](#スコープ)
+    - [デフォルトではグローバル、必要に応じてローカルのみ](#デフォルトではグローバル、必要に応じてローカルのみ)
+    - [継承を意図しない場合はFINALにする](#継承を意図しない場合はFINALにする)
     - [Members PRIVATE by default, PROTECTED only if needed](#members-private-by-default-protected-only-if-needed)
     - [Consider using immutable instead of getter](#consider-using-immutable-instead-of-getter)
     - [Use READ-ONLY sparingly](#use-read-only-sparingly)
@@ -102,7 +102,7 @@
     - [Omit the self-reference me when calling an instance method](#omit-the-self-reference-me-when-calling-an-instance-method)
   - [Methods: Object orientation](#methods-object-orientation)
     - [Prefer instance to static methods](#prefer-instance-to-static-methods)
-    - [Public instance methods should be part of an interface](#public-instance-methods-should-be-part-of-an-interface)
+    - [パブリックインスタンスメソッドはインタフェースの一部でなければならない](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
   - [Parameter Number](#parameter-number)
     - [Aim for few IMPORTING parameters, at best less than three](#aim-for-few-importing-parameters-at-best-less-than-three)
     - [Split methods instead of adding OPTIONAL parameters](#split-methods-instead-of-adding-optional-parameters)
@@ -1408,9 +1408,9 @@ WHILE contains( val = input  sub = 'abc' ).
 また、正規表現は通常、式ツリーに解析され、実行可能なマッチャーに実行時にコンパイルする必要があるため、より多くのメモリと処理時間を消費します。
 単純な解決策としては、簡単なループと一時的変数を使用します。
 
-### Prefer basis checks to regular expressions
+### 正規表現よりも基本的なチェックを選ぶ
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#prefer-basis-checks-to-regular-expressions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#正規表現よりも基本的なチェックを選ぶ)
 
 ```ABAP
 CALL FUNCTION 'SEO_CLIF_CHECK_NAME'
@@ -1420,21 +1420,20 @@ CALL FUNCTION 'SEO_CLIF_CHECK_NAME'
     ...
 ```
 
-instead of reinventing things
+以下のように、ロジックを再発明するのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(is_valid) = matches( val     = class_name
                           pattern = '[A-Z][A-Z0-9_]{0,29}' ).
 ```
 
-> There seems to be a natural tendency to turn blind to the Don't-Repeat-Yourself (DRY) principle
-> when there are regular expressions around,
-> compare section _Chapter 17: Smells and Heuristics: General: G5: Duplication_ in [Robert C. Martin's _Clean Code_].
+> 正規表現が使用される場合、Don't-Repeat-Yourself (DRY) の原則に目をつぶってしまう傾向があるようです。
+> [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: General: G5: Duplication_ の節を参照してください。
 
-### Consider assembling complex regular expressions
+### 複雑な正規表現は組み立てることを考える
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#consider-assembling-complex-regular-expressions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [正規表現](#正規表現) > [本節](#複雑な正規表現は組み立てることを考える)
 
 ```ABAP
 CONSTANTS class_name TYPE string VALUE `CL\_.*`.
@@ -1442,31 +1441,29 @@ CONSTANTS interface_name TYPE string VALUE `IF\_.*`.
 DATA(object_name) = |{ class_name }\|{ interface_name }|.
 ```
 
-Some complex regular expressions become easier
-when you demonstrate to the reader how they are built up from more elementary pieces.
+複雑な正規表現の中には、より基本的な部分からどのように構築されているかを示すと理解しやすくなるものもあります。
 
-## Classes
+## クラス
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#classes)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#クラス)
 
-### Classes: Object orientation
+### クラス：オブジェクト指向
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [This section](#classes-object-orientation)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [本節](#クラス：オブジェクト指向)
 
-#### Prefer objects to static classes
+#### 静的クラスよりもオブジェクトを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Classes: Object orientation](#classes-object-orientation) > [This section](#prefer-objects-to-static-classes)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [クラス：オブジェクト指向](#クラス-オブジェクト指向) > [本節](#静的クラスよりもオブジェクトを選ぶ)
 
-Static classes give up all advantages gained by object orientation in the first place.
-They especially make it nearly impossible to replace productive dependencies with test doubles in unit tests.
+静的クラスでは、そもそもオブジェクト指向によって得られるすべての利点が失われてしまいます。
+特に、ユニットテストで本番用の依存関係をテストダブルに置き換えることはほぼ不可能です。
 
-If you think about whether to make a class or method static, the answer will nearly always be: no.
+クラスやメソッドを静的にするかどうかを考えると、答えはほとんど常に「いいえ」になります。
 
-One accepted exception to this rule are plain type utils classes.
-Their methods make it easier to interact with certain ABAP types.
-They are not only completely stateless, but so basic that they look like ABAP statements or built-in functions.
-The discriminating factor is that their consumers tie them into their code so tightly
-that they actually don't want to mock them in unit tests.
+このルールの例外として認められているのは、単純なユーティリティクラスです。
+これらのメソッドは、特定のABAP型との相互作用を容易にします。
+これらは完全にステートレスであるだけでなく、ABAPステートメントや組み込み関数のように見えるほど基本的なものです。
+差別化要因は、これらのクラスはそれが使用されるコードに密結合されるので、実際にユニットテストでそれらをモックにしたくはないということです。
 
 ```ABAP
 CLASS /clean/string_utils DEFINITION [...].
@@ -1483,42 +1480,36 @@ METHOD retrieve.
 ENDMETHOD.
 ```
 
-#### Prefer composition to inheritance
+#### 継承よりもコンポジションを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Classes: Object orientation](#classes-object-orientation) > [This section](#prefer-composition-to-inheritance)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [クラス：オブジェクト指向](#クラス-オブジェクト指向) > [本節](#継承よりもコンポジションを選ぶ)
 
-Avoid building hierarchies of classes with inheritance. Instead, favor composition.
+継承を使用してクラスの階層を構築することは避けてください。そうではなく、コンポジションを優先してください。
 
-Clean inheritance is hard to design because you need to respect rules
-like the [Liskov substitution principle](https://en.wikipedia.org/wiki/Liskov_substitution_principle).
-It is also hard to understand because people need to realize and digest the guiding principles behind the hierarchy.
-Inheritance reduces reuse because methods tend to be made available only to sub-classes.
-It also complicates refactoring because moving or changing members tend to require changes to the whole hierarchy tree.
+きれいに継承を設計するのは、[リスコフの置換原則](https://en.wikipedia.org/wiki/Liskov_substitution_principle) のようなルールを尊重する必要があるため、難しいです。
+また、階層の背後にある指針を理解し、消化する必要があるため、理解するのも難しいです。
+継承は、メソッドがサブクラスでしか利用できなくする傾向があるため、再利用を減らします。
+また、メンバーの移動や変更には、階層ツリー全体の変更が必要になる傾向があるため、リファクタリングが複雑になります。
 
-Composition means that you design small, independent objects, each of which serves one specific purpose.
-These objects can be recombined into more complex objects by simple delegation and facade patterns.
-Composition may produce more classes, but has otherwise no further disadvantages.
+コンポジションとは、それぞれが1つの特定の目的を果たす、小さな独立したオブジェクトを設計することを意味します。
+これらのオブジェクトは、単純な委譲やファサードパターンによって、より複雑なオブジェクトに組み替えることができます。
+コンポジションはより多くのクラスを生成する可能性がありますが、それ以外のデメリットはありません。
 
-Don't let this rule discourage you from using inheritance in the right places.
-There are good applications for inheritance,
-for example the [Composite design pattern](https://en.wikipedia.org/wiki/Composite_pattern).
-Just ask yourself critically whether inheritance in your case will really provide more benefits than disadvantages.
-If in doubt, composition generally is the safer choice.
+この規則があるからといって、正しい場所で継承を使うことをためらわないでください。
+[コンポジットデザインパターン](https://en.wikipedia.org/wiki/Composite_pattern) など、継承が適切な用途もあります。
+あなたのケースにおいて、継承が本当にデメリットよりもメリットの方が多いか、批判的に自問してみてください。
+確信がもてなければ、一般的にコンポジションの方が無難です。
 
 > [Interfaces vs. abstract classes](sub-sections/InterfacesVsAbstractClasses.md)
-> compares some details.
+> では、いくつかの詳細を比較しています。
 
-#### Don't mix stateful and stateless in the same class
+#### 同じクラスにステートフルとステートレスを混在させない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Classes: Object orientation](#classes-object-orientation)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [クラス：オブジェクト指向](#クラス-オブジェクト指向)
 
-Don't mix the stateless and the stateful
-programming paradigms in the same class.
+ステートレスとステートフルプログラミングパラダイムを同じクラスに混在させてはいけません。
 
-In stateless programming, methods get input and produce output,
-_without any side effects_, resulting in methods
-that produce the same result
-no matter when and in what order they are called.
+ステートレスプログラミングでは、メソッドは入力を受け取り、_副作用なしに_ 出力を生成するため、メソッドがいつ、どのような順序で呼び出されても同じ結果を生成します。
 
 ```ABAP
 CLASS /clean/xml_converter DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -1543,8 +1534,7 @@ CLASS /clean/xml_converter IMPLEMENTATION.
 ENDCLASS.
 ```
 
-In stateful programming, we manipulate the internal state of objects
-through their methods, meaning it is _full of side effects_.
+ステートフルプログラミングでは、オブジェクトの内部状態をメソッドで操作します。つまり、_副作用がいっぱいある_ ということです。
 
 ```ABAP
 CLASS /clean/log DEFINITION PUBLIC CREATE PUBLIC.
@@ -1561,86 +1551,69 @@ CLASS /clean/log IMPLEMENTATION.
 ENDCLASS.
 ```
 
-Both paradigms are okay and have their applications.
-However, _mixing_ them in the same object produces code
-that is hard to understand and sure to fail
-with obscure carry-over errors and synchronicity problems.
-Don't do that.
+どちらのパラダイムも問題なく、それぞれの用途があります。
+しかし、それらを同じオブジェクト内に _混在させる_ と、コードが理解しにくく、不明瞭な持ち越しエラーや同期性の問題で確実に失敗するようになります。
+そのようなことはしないでください。
 
-### Scope
+### スコープ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [This section](#scope)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [本節](#スコープ)
 
-#### Global by default, local only where appropriate
+#### デフォルトではグローバル、必要に応じてローカルのみ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Scope](#scope) > [This section](#global-by-default-local-only-where-appropriate)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [スコープ](#スコープ) > [本節](#デフォルトではグローバル、必要に応じてローカルのみ)
 
-Work with global classes as default.
-Use local classes only where appropriate.
+デフォルトではグローバルクラスで動作します。
+適切な場所でのみローカルクラスを使用します。
 
-> Global classes are the ones that are visible in the data dictionary.
-> Local classes live within an include of another development object
-> and are only visible to this other object.
+> グローバルクラスは、データディクショナリに表示されるクラスです。
+> ローカルクラスは、別の開発オブジェクトのインクルード内に存在し、この別のオブジェクトにのみ表示されます。
 
-Local classes are suited
+ローカルクラスは以下の場合に適しています。
 
-- for very specific private data structures,
-  for example an iterator for the global class's data,
-  which will only ever be needed here,
+- 例えば、ここでしか必要とされないグローバルクラスのデータのイテレータなど、非常に限定されたプライベートなデータ構造のため
 
-- to extract a complex private piece algorithm,
-  for example to disentangle that special purpose multi-method
-  sort-aggregate algorithm from the rest of your class's code,
+- 例えば、特殊な目的のマルチメソッドソート集計アルゴリズムをクラスの残りのコードから分離するなど、複雑なプライベートアルゴリズムを抽出するため
 
-- to enable mocking certain aspects of the global class,
-  for example by extracing all database access to a separate local class
-  that can the be replaced with a test double in the unit tests.
+- 例えば、すべてのデータベースアクセスをユニットテストのテストダブルに置き換えられる個別のローカルクラスに抽出することで、グローバルクラスの特定の側面をモックできるようにするため
 
-Local classes hinder reuse because they cannot be used elsewhere.
-Although they are easy to extract, people will usually fail to even find them,
-leading to undesired code duplication.
-Orientation, navigation, and debugging in very long local class includes
-is tedious and annoying.
-As ABAP locks on include level, people will not be able to work on
-different parts of the local include simultaneously
-(which would be possible if they were separate global classes).
+ローカルクラスは他の場所では使えないので、再利用の妨げになります。
+抽出するのは簡単ですが、通常、人々はそれを見つけることすらできず、望まないコードの重複につながります。
+非常に長いローカルクラスのインクルードでのオリエンテーション、ナビゲーション、デバッグは面倒で煩わしいものです。
+ABAPはインクルードレベルでロックするので、複数の人がローカルインクルードの異なる部分で同時に作業することができなくなります
+（別々のグローバルクラスであれば可能です）。
 
-Reconsider your use of local classes if
+以下のような場合は、ローカルクラスの使用を再考してください。
 
-- your local include spans dozens of classes and thousands of lines of code,
-- you think about global classes as "packages" that hold other classes,
-- your global classes degenerate into empty hulls,
-- you find duplicate code repeated throughout separate local includes,
-- your developers start locking each other out and become unable to work in parallel,
-- your backlog estimates go sky-high because your teams fail to understand each other's local sub-trees.
+- ローカルインクルードが、数十ものクラスと数千行ものコードにわたっている場合
+- グローバルクラスを他のクラスを保持する「パッケージ」と考えている場合
+- グローバルクラスが空っぽになってしまう場合
+- 別々のローカルインクルードで重複したコードが繰り返されている場合
+- 開発者たちがお互いにロックアウトし始め、並行して作業できなくなる場合
+- チームがお互いのローカルサブツリーを理解できなくなったため、バックログの見積もりが大幅に悪化する場合
 
-#### FINAL if not designed for inheritance
+#### 継承を意図しない場合はFINALにする
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Scope](#scope) > [This section](#final-if-not-designed-for-inheritance)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [スコープ](#スコープ) > [本節](#継承を意図しない場合はFINALにする)
 
-Make classes that are not explicitly designed for inheritance `FINAL`.
+明示的に継承用に設計されていないクラスは `FINAL` にしましょう。
 
-When designing class cooperation,
-your first choice should be [composition, not inheritance](#prefer-composition-to-inheritance).
-Enabling inheritance is not something that should be done lightly,
-as it requires you to think about things like `PROTECTED` vs. `PRIVATE`
-and the [Liskov substitution principle](https://en.wikipedia.org/wiki/Liskov_substitution_principle),
-and freezes a lot of design internals.
-If you didn't consider these things in your class design,
-you should thus prevent accidental inheritance by making your class `FINAL`.
+クラス連携を設計するとき、最初の選択は [継承ではなくコンポジション](#継承よりもコンポジションを選ぶ) であるべきです。
+継承を有効にすることは、 `PROTECTED` 対 `PRIVATE` や、 [リスコフの置換原則](https://en.wikipedia.org/wiki/Liskov_substitution_principle) のようなことを考える必要があり、
+多くの設計内部をフリーズさせてしまうため、軽々しく行うべきことではありません。
+クラス設計でこれらのことを考慮していなかった場合は、
+クラスを `FINAL` にすることで誤って継承されることを防ぐべきです。
 
-There _are_ some good applications for inheritance, of course,
-for example the design pattern [composite](https://en.wikipedia.org/wiki/Composite_pattern).
-Business Add-Ins can also become more useful by allowing sub-classes,
-enabling the customer to reuse most of the original code.
-However, note that all of these cases have inheritance built in by design from the start.
+継承にはもちろん、[コンポジット](https://en.wikipedia.org/wiki/Composite_pattern) デザインパターンなど、いくつかの適切な用途が _あります_。
+ビジネスアドインもまた、サブクラスを許可して、元のコードの大部分を再利用できるようにすることで、より便利にすることができます。
+ただし、これらのケースはすべて最初から設計によって継承が組み込まれていることに注意してください。
 
-Unclean classes that don't [implement interfaces](#public-instance-methods-should-be-part-of-an-interface)
-should be left non-`FINAL` to allow consumers mocking them in their unit tests.
+[インターフェイスを実装](#パブリックインスタンスメソッドはインタフェースの一部でなければならない) しないクリーンでないクラスは、
+ユニットテストでそれらをモックすることを可能にするために、非 `FINAL` のままにしておくべきです。
 
 #### Members PRIVATE by default, PROTECTED only if needed
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Scope](#scope) > [This section](#members-private-by-default-protected-only-if-needed)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Scope](#scope) > [This section](#members-private-by-default-protected-only-if-needed)
 
 Make attributes, methods, and other class members `PRIVATE` by default.
 
@@ -1653,7 +1626,7 @@ because outsiders freeze members in place that should still be liquid.
 
 #### Consider using immutable instead of getter
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Scope](#scope) > [This section](#consider-using-immutable-instead-of-getter)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Scope](#scope) > [This section](#consider-using-immutable-instead-of-getter)
 
 An immutable is an object that never changes after its construction.
 For this kind of object consider using public read-only attributes instead of getter methods.
@@ -1693,7 +1666,7 @@ ENDCLASS.
 
 #### Use READ-ONLY sparingly
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Scope](#scope) > [This section](#use-read-only-sparingly)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Scope](#scope) > [This section](#use-read-only-sparingly)
 
 Many modern programming languages, especially Java, recommend making class members read-only
 wherever appropriate to prevent accidental side effects.
@@ -1713,11 +1686,11 @@ The difference may lead to bad surprises.
 
 ### Constructors
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [This section](#constructors)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [This section](#constructors)
 
 #### Prefer NEW to CREATE OBJECT
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Constructors](#constructors) > [This section](#prefer-new-to-create-object)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#prefer-new-to-create-object)
 
 ```ABAP
 DATA object TYPE REF TO /clean/some_number_range.
@@ -1748,7 +1721,7 @@ CREATE OBJECT number_range TYPE (dynamic_type)
 
 #### If your global class is CREATE PRIVATE, leave the CONSTRUCTOR public
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Constructors](#constructors) > [This section](#if-your-global-class-is-create-private-leave-the-constructor-public)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#if-your-global-class-is-create-private-leave-the-constructor-public)
 
 ```ABAP
 CLASS /clean/some_api DEFINITION PUBLIC FINAL CREATE PRIVATE.
@@ -1766,7 +1739,7 @@ In local classes, make the constructor private, as it should be.
 
 #### Prefer multiple static creation methods to optional parameters
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Constructors](#constructors) > [This section](#prefer-multiple-static-creation-methods-to-optional-parameters)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#prefer-multiple-static-creation-methods-to-optional-parameters)
 
 ```ABAP
 CLASS-METHODS describe_by_data IMPORTING data TYPE any [...]
@@ -1798,7 +1771,7 @@ Consider resolving complex constructions to a multi-step construction with the
 
 #### Use descriptive names for multiple creation methods
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Constructors](#constructors) > [This section](#use-descriptive-names-for-multiple-creation-methods)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#use-descriptive-names-for-multiple-creation-methods)
 
 Good words to start creation methods are `new_`, `create_`, and `construct_`.
 People intuitively connect them to the construction of objects.
@@ -1823,7 +1796,7 @@ CLASS-METHODS create_4 IMPORTING p_data_ref TYPE REF TO data [...]
 
 #### Make singletons only where multiple instances don't make sense
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Classes](#classes) > [Constructors](#constructors) > [This section](#make-singletons-only-where-multiple-instances-dont-make-sense)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#make-singletons-only-where-multiple-instances-dont-make-sense)
 
 ```ABAP
 METHOD new.
@@ -1997,9 +1970,9 @@ CLASS-METHODS create_instance
     VALUE(result) TYPE REF TO /clean/blog_post.
 ```
 
-#### Public instance methods should be part of an interface
+#### パブリックインスタンスメソッドはインタフェースの一部でなければならない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Methods: Object orientation](#methods-object-orientation) > [This section](#public-instance-methods-should-be-part-of-an-interface)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Methods: Object orientation](#methods-object-orientation) > [This section](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
 
 Public instance methods should always be part of an interface.
 This decouples dependencies and simplifies mocking them in unit tests.
@@ -4375,7 +4348,7 @@ IF me->in_test_mode = abap_true.
 Don't sub-class and overwrite methods to mock them in your unit tests.
 Although this works, it is fragile because the tests break easily when refactoring the code.
 It also enables real consumers to inherit your class,
-which [may hit you unprepared when not explicitly designing for it](#final-if-not-designed-for-inheritance).
+which [may hit you unprepared when not explicitly designing for it](#継承を意図しない場合はFINALにする).
 
 ```ABAP
 " anti-pattern

@@ -84,10 +84,10 @@
   - [スコープ](#スコープ)
     - [デフォルトではグローバル, 適切な場所でのみローカル](#デフォルトではグローバル-適切な場所でのみローカル)
     - [継承を意図しない場合はFINALにする](#継承を意図しない場合はFINALにする)
-    - [Members PRIVATE by default, PROTECTED only if needed](#members-private-by-default-protected-only-if-needed)
-    - [Consider using immutable instead of getter](#consider-using-immutable-instead-of-getter)
-    - [Use READ-ONLY sparingly](#use-read-only-sparingly)
-  - [Constructors](#constructors)
+    - [メンバーはデフォルトでPRIVATE, 必要な場合にのみPROTECTEDにする](#メンバーはデフォルトでPRIVATE-必要な場合にのみPROTECTEDにする)
+    - [getter の代わりにイミュータブルを使用することを考える](#getter-の代わりにイミュータブルを使用することを考える)
+    - [READ-ONLY を控えめに使う](#READ-ONLY-を控えめに使う)
+  - [コンストラクタ](#コンストラクタ)
     - [Prefer NEW to CREATE OBJECT](#prefer-new-to-create-object)
     - [If your global class is CREATE PRIVATE, leave the CONSTRUCTOR public](#if-your-global-class-is-create-private-leave-the-constructor-public)
     - [Prefer multiple static creation methods to optional parameters](#prefer-multiple-static-creation-methods-to-optional-parameters)
@@ -1611,25 +1611,24 @@ ABAPはインクルードレベルでロックするので、複数の人がロ�
 [インターフェイスを実装](#パブリックインスタンスメソッドはインタフェースの一部でなければならない) しないクリーンでないクラスは、
 ユニットテストでそれらをモックすることを可能にするために、非 `FINAL` のままにしておくべきです。
 
-#### Members PRIVATE by default, PROTECTED only if needed
+#### メンバーはデフォルトでPRIVATE, 必要な場合にのみPROTECTEDにする
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Scope](#scope) > [This section](#members-private-by-default-protected-only-if-needed)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [スコープ](#スコープ) > [本節](#メンバーはデフォルトでPRIVATE-必要な場合にのみPROTECTEDにする)
 
-Make attributes, methods, and other class members `PRIVATE` by default.
+デフォルトでは属性やメソッド、他のクラス・メンバは `PRIVATE` にします。
 
-Make them only `PROTECTED` if you want to enable sub-classes that override them.
+それらをオーバーライドするサブクラスを有効にしたい場合にのみ、それらを `PROTECTED` にしてください。
 
-Internals of classes should be made available to others only on a need-to-know basis.
-This includes not only outside callers but also sub-classes.
-Making information over-available can cause subtle errors by unexpected redefinitions and hinder refactoring
-because outsiders freeze members in place that should still be liquid.
+クラスの内部は、知る必要がある場合にのみ他者が利用できるようにする必要があります。
+これには外部の呼び出し元だけでなく、サブクラスも含まれます。
+情報を過剰に利用可能にすると、予期せぬ再定義によって微妙なエラーが発生したり、外部の人がまだ流動的であるべきメンバーを凍結してしまうためにリファクタリングが妨げられたりする可能性があります。
 
-#### Consider using immutable instead of getter
+#### getter の代わりにイミュータブルを使用することを考える
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Scope](#scope) > [This section](#consider-using-immutable-instead-of-getter)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [スコープ](#スコープ) > [本節](#getter-の代わりにイミュータブルを使用することを考える)
 
-An immutable is an object that never changes after its construction.
-For this kind of object consider using public read-only attributes instead of getter methods.
+イミュータブルとは、構築後に決して変更されることのないオブジェクトのことです。
+この種のオブジェクトでは、getter メソッドの代わりにパブリックな読み取り専用属性を使用することを検討してください。
 
 ```ABAP
 CLASS /clean/some_data_container DEFINITION.
@@ -1645,7 +1644,7 @@ CLASS /clean/some_data_container DEFINITION.
 ENDCLASS.
 ```
 
-instead of
+以下ではなく
 
 ```ABAP
 CLASS /dirty/some_data_container DEFINITION.
@@ -1660,37 +1659,35 @@ CLASS /dirty/some_data_container DEFINITION.
 ENDCLASS.
 ```
 
-> **Caution**: For objects which **do** have changing values, do not use public read-only attributes.
-> Otherwise this attributes always have to be kept up to date,
-> regardless if their value is needed by any other code or not.
+> **注意**： 値が変化 **する** オブジェクトには、パブリックな読み取り専用属性を使用しないでください。
+> そうしないと、他のコードで値が必要とされているかどうかに関わらず、この属性は常に最新の状態に保ち続ける必要があります。
 
-#### Use READ-ONLY sparingly
+#### READ-ONLY を控えめに使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Scope](#scope) > [This section](#use-read-only-sparingly)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [スコープ](#スコープ) > [本節](#READ-ONLY-を控えめに使う)
 
-Many modern programming languages, especially Java, recommend making class members read-only
-wherever appropriate to prevent accidental side effects.
+多くのモダンなプログラミング言語、特にJavaでは、偶発的な副作用を防ぐために、クラス・メンバーを適切な場所で読み取り専用にすることを推奨しています。
 
-While ABAP _does_ offer the `READ-ONLY` addition for data declarations, we recommend to use it sparingly.
+ABAPはデータ宣言のための `READ-ONLY` 追加機能を提供 _しています_ が、これは控えめに使用することをお勧めします。
 
-First, the addition is only available in the `PUBLIC SECTION`, reducing its applicability drastically.
-You can neither add it to protected or private members nor to local variables in a method.
+第一に、この追加機能は `PUBLIC SECTION` でしか利用できないため、適用範囲が大幅に狭くなっています。
+protected メンバや private メンバにも、メソッド内のローカル変数にも追加することはできません。
 
-Second, the addition works subtly different from what people might expect from other programming languages:
-READ-ONLY data can still be modified freely from any method within the class itself, its friends, and its sub-classes.
-This contradicts the more widespread write-once-modify-never behavior found in other languages.
-The difference may lead to bad surprises.
+第二に、この追加機能は他のプログラミング言語から期待されるものとは微妙に異なります。
+READ-ONLY データは、クラス自体やその仲間、サブクラス内のどのメソッドからでも自由に変更することができます。
+これは、他の言語で見られる、より一般的な「一度書いたら絶対に変更しない」という挙動と矛盾しています。
+この違いは、悪い驚きをもたらすかもしれません。
 
-> To avoid misunderstandings: Protecting variables against accidental modification is a good practice.
-> We would recommend applying it to ABAP as well if there was an appropriate statement.
+> 誤解を避けるために： 変数を偶発的な変更から保護することは良い習慣です。
+> 適切な文があればABAPにも適用することをお勧めします。
 
-### Constructors
+### コンストラクタ
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [This section](#constructors)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [本節](#コンストラクタ)
 
 #### Prefer NEW to CREATE OBJECT
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#prefer-new-to-create-object)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#prefer-new-to-create-object)
 
 ```ABAP
 DATA object TYPE REF TO /clean/some_number_range.
@@ -1721,7 +1718,7 @@ CREATE OBJECT number_range TYPE (dynamic_type)
 
 #### If your global class is CREATE PRIVATE, leave the CONSTRUCTOR public
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#if-your-global-class-is-create-private-leave-the-constructor-public)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#if-your-global-class-is-create-private-leave-the-constructor-public)
 
 ```ABAP
 CLASS /clean/some_api DEFINITION PUBLIC FINAL CREATE PRIVATE.
@@ -1739,7 +1736,7 @@ In local classes, make the constructor private, as it should be.
 
 #### Prefer multiple static creation methods to optional parameters
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#prefer-multiple-static-creation-methods-to-optional-parameters)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#prefer-multiple-static-creation-methods-to-optional-parameters)
 
 ```ABAP
 CLASS-METHODS describe_by_data IMPORTING data TYPE any [...]
@@ -1771,7 +1768,7 @@ Consider resolving complex constructions to a multi-step construction with the
 
 #### Use descriptive names for multiple creation methods
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#use-descriptive-names-for-multiple-creation-methods)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [This section](#use-descriptive-names-for-multiple-creation-methods)
 
 Good words to start creation methods are `new_`, `create_`, and `construct_`.
 People intuitively connect them to the construction of objects.
@@ -1796,7 +1793,7 @@ CLASS-METHODS create_4 IMPORTING p_data_ref TYPE REF TO data [...]
 
 #### Make singletons only where multiple instances don't make sense
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [Constructors](#constructors) > [This section](#make-singletons-only-where-multiple-instances-dont-make-sense)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [This section](#make-singletons-only-where-multiple-instances-dont-make-sense)
 
 ```ABAP
 METHOD new.

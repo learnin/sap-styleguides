@@ -88,9 +88,9 @@
     - [getter の代わりにイミュータブルを使用することを考える](#getter-の代わりにイミュータブルを使用することを考える)
     - [READ-ONLY を控えめに使う](#READ-ONLY-を控えめに使う)
   - [コンストラクタ](#コンストラクタ)
-    - [Prefer NEW to CREATE OBJECT](#prefer-new-to-create-object)
-    - [If your global class is CREATE PRIVATE, leave the CONSTRUCTOR public](#if-your-global-class-is-create-private-leave-the-constructor-public)
-    - [Prefer multiple static creation methods to optional parameters](#prefer-multiple-static-creation-methods-to-optional-parameters)
+    - [CREATE OBJECT よりも NEW を選ぶ](#CREATE-OBJECT-よりも-NEW-を選ぶ)
+    - [グローバルクラスが CREATE PRIVATE の場合 CONSTRUCTOR は public のままにする](#グローバルクラスが-CREATE-PRIVATE-の場合-CONSTRUCTOR-は-public-のままにする)
+    - [オプションパラメータよりも複数の静的な生成用メソッドを選ぶ](#オプションパラメータよりも複数の静的な生成用メソッドを選ぶ)
     - [Use descriptive names for multiple creation methods](#use-descriptive-names-for-multiple-creation-methods)
     - [Make singletons only where multiple instances don't make sense](#make-singletons-only-where-multiple-instances-dont-make-sense)
 - [Methods](#methods)
@@ -105,7 +105,7 @@
     - [パブリックインスタンスメソッドはインタフェースの一部でなければならない](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
   - [Parameter Number](#parameter-number)
     - [Aim for few IMPORTING parameters, at best less than three](#aim-for-few-importing-parameters-at-best-less-than-three)
-    - [Split methods instead of adding OPTIONAL parameters](#split-methods-instead-of-adding-optional-parameters)
+    - [OPTIONALパラメータを追加するのではなくメソッドを分割する](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
     - [Use PREFERRED PARAMETER sparingly](#use-preferred-parameter-sparingly)
     - [RETURN, EXPORT, or CHANGE exactly one parameter](#return-export-or-change-exactly-one-parameter)
   - [Parameter Types](#parameter-types)
@@ -1685,9 +1685,9 @@ READ-ONLY データは、クラス自体やその仲間、サブクラス内の�
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [本節](#コンストラクタ)
 
-#### Prefer NEW to CREATE OBJECT
+#### CREATE OBJECT よりも NEW を選ぶ
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#prefer-new-to-create-object)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#CREATE-OBJECT-よりも-NEW-を選ぶ)
 
 ```ABAP
 DATA object TYPE REF TO /clean/some_number_range.
@@ -1698,17 +1698,17 @@ DATA(object) = NEW /clean/some_number_range( '/CLEAN/CXTGEN' ).
 DATA(object) = CAST /clean/number_range( NEW /clean/some_number_range( '/CLEAN/CXTGEN' ) ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA object TYPE REF TO /dirty/some_number_range.
 CREATE OBJECT object
   EXPORTING
     number_range = '/DIRTY/CXTGEN'.
 ```
 
-except where you need dynamic types, of course
+もちろん、動的な型が必要な場合は除きます。
 
 ```ABAP
 CREATE OBJECT number_range TYPE (dynamic_type)
@@ -1716,9 +1716,9 @@ CREATE OBJECT number_range TYPE (dynamic_type)
     number_range = '/CLEAN/CXTGEN'.
 ```
 
-#### If your global class is CREATE PRIVATE, leave the CONSTRUCTOR public
+#### グローバルクラスが CREATE PRIVATE の場合 CONSTRUCTOR は public のままにする
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#if-your-global-class-is-create-private-leave-the-constructor-public)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#グローバルクラスが-CREATE-PRIVATE-の場合-CONSTRUCTOR-は-public-のままにする)
 
 ```ABAP
 CLASS /clean/some_api DEFINITION PUBLIC FINAL CREATE PRIVATE.
@@ -1726,17 +1726,15 @@ CLASS /clean/some_api DEFINITION PUBLIC FINAL CREATE PRIVATE.
     METHODS constructor.
 ```
 
-We agree that this contradicts itself.
-However, according to the article
-[_Instance Constructor_ of the ABAP Help](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abeninstance_constructor_guidl.htm),
-specifying the `CONSTRUCTOR` in the `PUBLIC SECTION` is required to guarantee correct compilation and syntax validation.
+これ自体が矛盾していることに同意します。
+しかし、[ABAPヘルプの _Instance Constructor_](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abeninstance_constructor_guidl.htm) の記事によると、正しいコンパイルと構文チェックを保証するためには、`CONSTRUCTOR` は `PUBLIC SECTION` で指定する必要があります。
 
-This applies only to global classes.
-In local classes, make the constructor private, as it should be.
+これはグローバルクラスにのみ適用されます。
+ローカルクラスでは、コンストラクタを本来あるべきようにプライベートにします。
 
-#### Prefer multiple static creation methods to optional parameters
+#### オプションパラメータよりも複数の静的な生成用メソッドを選ぶ
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#prefer-multiple-static-creation-methods-to-optional-parameters)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#オプションパラメータよりも複数の静的な生成用メソッドを選ぶ)
 
 ```ABAP
 CLASS-METHODS describe_by_data IMPORTING data TYPE any [...]
@@ -1745,11 +1743,11 @@ CLASS-METHODS describe_by_object_ref IMPORTING object_ref TYPE REF TO object [..
 CLASS-METHODS describe_by_data_ref IMPORTING data_ref TYPE REF TO data [...]
 ```
 
-ABAP does not support [overloading](https://en.wikipedia.org/wiki/Function_overloading).
-Use name variations and not optional parameters to achieve the desired semantics.
+ABAPは[オーバーロード](https://en.wikipedia.org/wiki/Function_overloading) をサポートしていません。
+目的のセマンティクスを達成するために、オプションのパラメータではなく、名前のバリエーションを使用します。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS constructor
   IMPORTING
     data       TYPE any OPTIONAL
@@ -1759,12 +1757,9 @@ METHODS constructor
   [...]
 ```
 
-The general guideline
-[_Split methods instead of adding OPTIONAL parameters_](#split-methods-instead-of-adding-optional-parameters)
-explains the reasoning behind this.
+一般的なガイドラインの [_OPTIONALパラメータを追加するのではなくメソッドを分割する_](#OPTIONALパラメータを追加するのではなくメソッドを分割する) でその理由を説明しています。
 
-Consider resolving complex constructions to a multi-step construction with the
-[Builder design pattern](https://en.wikipedia.org/wiki/Builder_pattern).
+[ビルダーデザインパターン](https://en.wikipedia.org/wiki/Builder_pattern) を使用して、複雑な構築を複数ステップの構築に解決することを考えてみましょう。
 
 #### Use descriptive names for multiple creation methods
 
@@ -2029,9 +2024,9 @@ Many parameters are an indicator that the method may do more than one thing.
 
 You can reduce the number of parameters by combining them into meaningful sets with structures and objects.
 
-#### Split methods instead of adding OPTIONAL parameters
+#### OPTIONALパラメータを追加するのではなくメソッドを分割する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Number](#parameter-number) > [This section](#split-methods-instead-of-adding-optional-parameters)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Number](#parameter-number) > [This section](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
 
 ```ABAP
 METHODS do_one_thing IMPORTING what_i_need TYPE string.

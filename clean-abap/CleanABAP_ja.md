@@ -91,15 +91,15 @@
     - [CREATE OBJECT よりも NEW を選ぶ](#CREATE-OBJECT-よりも-NEW-を選ぶ)
     - [グローバルクラスが CREATE PRIVATE の場合 CONSTRUCTOR は public のままにする](#グローバルクラスが-CREATE-PRIVATE-の場合-CONSTRUCTOR-は-public-のままにする)
     - [オプションパラメータよりも複数の静的な生成用メソッドを選ぶ](#オプションパラメータよりも複数の静的な生成用メソッドを選ぶ)
-    - [Use descriptive names for multiple creation methods](#use-descriptive-names-for-multiple-creation-methods)
-    - [Make singletons only where multiple instances don't make sense](#make-singletons-only-where-multiple-instances-dont-make-sense)
-- [Methods](#methods)
+    - [複数の生成用メソッドには記述的な名前をつける](#複数の生成用メソッドには記述的な名前をつける)
+    - [複数のインスタンスが意味をなさない場合にのみシングルトンにする](#複数のインスタンスが意味をなさない場合にのみシングルトンにする)
+- [メソッド](#メソッド)
   - [Calls](#calls)
-    - [Prefer functional to procedural calls](#prefer-functional-to-procedural-calls)
-    - [Omit RECEIVING](#omit-receiving)
-    - [Omit the optional keyword EXPORTING](#omit-the-optional-keyword-exporting)
-    - [Omit the parameter name in single parameter calls](#omit-the-parameter-name-in-single-parameter-calls)
-    - [Omit the self-reference me when calling an instance method](#omit-the-self-reference-me-when-calling-an-instance-method)
+    - [手続き的な呼び出しよりも関数的な呼び出しを選ぶ](#手続き的な呼び出しよりも関数的な呼び出しを選ぶ)
+    - [RECEIVING を省略する](#RECEIVING-を省略する)
+    - [オプションのキーワード EXPORTING を省略する](#オプションのキーワード-EXPORTING-を省略する)
+    - [単一パラメータでの呼び出し時はパラメータ名を省略する](#単一パラメータでの呼び出し時はパラメータ名を省略する)
+    - [インスタンスメソッドを呼び出す際の自己参照 me を省略する](#インスタンスメソッドを呼び出す際の自己参照-me-を省略する)
   - [Methods: Object orientation](#methods-object-orientation)
     - [Prefer instance to static methods](#prefer-instance-to-static-methods)
     - [パブリックインスタンスメソッドはインタフェースの一部でなければならない](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
@@ -1761,13 +1761,13 @@ METHODS constructor
 
 [ビルダーデザインパターン](https://en.wikipedia.org/wiki/Builder_pattern) を使用して、複雑な構築を複数ステップの構築に解決することを考えてみましょう。
 
-#### Use descriptive names for multiple creation methods
+#### 複数の生成用メソッドには記述的な名前をつける
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [This section](#use-descriptive-names-for-multiple-creation-methods)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#複数の生成用メソッドには記述的な名前をつける)
 
-Good words to start creation methods are `new_`, `create_`, and `construct_`.
-People intuitively connect them to the construction of objects.
-They also add up nicely to verb phrases like `new_from_template`, `create_as_copy`, or `create_by_name`.
+生成用メソッド名は `new_` や `create_`、 `construct_` で始めるのがよいでしょう。
+人は直感的にこれらをオブジェクトの構築に結びつけます。
+また、`new_from_template`、`create_as_copy`、`create_by_name` のような動詞句を追加するのにも適しています。
 
 ```ABAP
 CLASS-METHODS new_describe_by_data IMPORTING p_data TYPE any [...]
@@ -1776,19 +1776,19 @@ CLASS-METHODS new_describe_by_object_ref IMPORTING p_object_ref TYPE REF TO obje
 CLASS-METHODS new_describe_by_data_ref IMPORTING p_data_ref TYPE REF TO data [...]
 ```
 
-instead of something meaningless like
+以下のような無意味なものではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 CLASS-METHODS create_1 IMPORTING p_data TYPE any [...]
 CLASS-METHODS create_2 IMPORTING p_name TYPE any [...]
 CLASS-METHODS create_3 IMPORTING p_object_ref TYPE REF TO object [...]
 CLASS-METHODS create_4 IMPORTING p_data_ref TYPE REF TO data [...]
 ```
 
-#### Make singletons only where multiple instances don't make sense
+#### 複数のインスタンスが意味をなさない場合にのみシングルトンにする
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [This section](#make-singletons-only-where-multiple-instances-dont-make-sense)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [クラス](#クラス) > [コンストラクタ](#コンストラクタ) > [本節](#複数のインスタンスが意味をなさない場合にのみシングルトンにする)
 
 ```ABAP
 METHOD new.
@@ -1799,30 +1799,28 @@ METHOD new.
 ENDMETHOD.
 ```
 
-Apply the singleton pattern where your object-oriented design says
-that having a second instance of something doesn't make sense.
-Use it to ensure that every consumer is working with the same thing in the same state and with the same data.
+シングルトンパターンは、オブジェクト指向設計で何かの2番目のインスタンスが意味をなさない場合にのみ適用してください。
+例えば、すべての利用者が同じ状態で同じものを使って、同じデータで作業していることを保証したい場合に使います。
 
-Do not use the singleton pattern out of habit or because some performance rule tells you so.
-It is the most overused and wrongly applied pattern and
-produces unexpected cross-effects and needlessly complicates testing.
-If there are no design-driven reasons for a unitary object,
-leave that decision to the consumer - he can still reach the same by means outside the constructor,
-for example with a factory.
+シングルトンパターンを習慣的に使ったり、パフォーマンスの法則があるからといって使用しないでください。
+これは最も過剰に使われ、誤って適用されているパターンであり、
+予期せぬ相互作用を発生させ、テストを不必要に複雑にします。
+単一オブジェクトにする設計上の理由がない場合、
+その決定は利用者に委ねてください - 利用者は例えばファクトリなど、コンストラクタ以外の手段で同じことができます。
 
-## Methods
+## メソッド
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#methods)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#メソッド)
 
-These rules apply to methods in classes and function modules.
+これらのルールは、クラスや汎用モジュールのメソッドに適用されます。
 
-### Calls
+### 呼び出し
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#calls)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#呼び出し)
 
-#### Prefer functional to procedural calls
+#### 手続き的な呼び出しよりも関数的な呼び出しを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Calls](#calls) > [This section](#prefer-functional-to-procedural-calls)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [呼び出し](#呼び出し) > [本節](#手続き的な呼び出しよりも関数的な呼び出しを選ぶ)
 
 ```ABAP
 modify->update( node           = /clean/my_bo_c=>node-item
@@ -1831,10 +1829,10 @@ modify->update( node           = /clean/my_bo_c=>node-item
                 changed_fields = changed_fields ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 CALL METHOD modify->update
   EXPORTING
     node           = /dirty/my_bo_c=>node-item
@@ -1843,7 +1841,7 @@ CALL METHOD modify->update
     changed_fields = changed_fields.
 ```
 
-If dynamic typing forbids functional calls, resort to the procedural style
+動的型付けによって関数呼び出しが禁止されている場合は、手続き型を使用します。
 
 ```ABAP
 CALL METHOD modify->(method_name)
@@ -1854,20 +1852,20 @@ CALL METHOD modify->(method_name)
     changed_fields = changed_fields.
 ```
 
-Many of the detailed rules below are just more specific variations of this advice.
+以下の詳細なルールの多くは、このアドバイスのより具体的なバリエーションに過ぎません。
 
-#### Omit RECEIVING
+#### RECEIVING を省略する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Calls](#calls) > [This section](#omit-receiving)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [呼び出し](#呼び出し) > [本節](#RECEIVING-を省略する)
 
 ```ABAP
 DATA(sum) = aggregate_values( values ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 aggregate_values(
   EXPORTING
     values = values
@@ -1875,9 +1873,9 @@ aggregate_values(
     result = DATA(sum) ).
 ```
 
-#### Omit the optional keyword EXPORTING
+#### オプションのキーワード EXPORTING を省略する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Calls](#calls) > [This section](#omit-the-optional-keyword-exporting)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [呼び出し](#呼び出し) > [本節](#オプションのキーワード-EXPORTING-を省略する)
 
 ```ABAP
 modify->update( node           = /clean/my_bo_c=>node-item
@@ -1886,10 +1884,10 @@ modify->update( node           = /clean/my_bo_c=>node-item
                 changed_fields = changed_fields ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 modify->update(
   EXPORTING
     node           = /dirty/my_bo_c=>node-item
@@ -1898,43 +1896,43 @@ modify->update(
     changed_fields = changed_fields ).
 ```
 
-#### Omit the parameter name in single parameter calls
+#### 単一パラメータでの呼び出し時はパラメータ名を省略する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Calls](#calls) > [This section](#omit-the-parameter-name-in-single-parameter-calls)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [呼び出し](#呼び出し) > [本節](#単一パラメータでの呼び出し時はパラメータ名を省略する)
 
 ```ABAP
 DATA(unique_list) = remove_duplicates( list ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(unique_list) = remove_duplicates( list = list ).
 ```
 
-There are cases, however, where the method name alone is not clear enough
-and repeating the parameter name may further understandability:
+しかし、メソッド名だけではわかりにくく、
+パラメータ名を繰り返すことでさらにわかりやすくなる場合もあります。
 
 ```ABAP
 car->drive( speed = 50 ).
 update( asynchronous = abap_true ).
 ```
 
-#### Omit the self-reference me when calling an instance method
+#### インスタンスメソッドを呼び出す際の自己参照 me を省略する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Calls](#calls) > [This section](#omit-the-self-reference-me-when-calling-an-instance-method)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [呼び出し](#呼び出し) > [本節](#インスタンスメソッドを呼び出す際の自己参照-me-を省略する)
 
-Since the self-reference `me->` is implicitly set by the system, omit it when calling an instance method
+自己参照 `me->` はシステムによって暗黙的に設定されているので、インスタンスメソッドを呼び出す際には省略してください。
 
 ```ABAP
 DATA(sum) = aggregate_values( values ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(sum) = me->aggregate_values( values ).
 ```
 

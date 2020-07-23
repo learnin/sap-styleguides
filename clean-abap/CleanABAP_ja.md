@@ -58,11 +58,11 @@
 - [Strings](#strings)
   - [リテラルを定義するには ` を使う](#リテラルを定義するには--を使う)
   - [テキストを組み立てるには | を使う](#テキストを組み立てるには--を使う)
-- [Booleans](#booleans)
-  - [Booleansを賢く使う](#Booleansを賢く使う)
-  - [BooleanにはABAP_BOOLを使う](#BooleanにはABAP_BOOLを使う)
+- [ブーリアン](#ブーリアン)
+  - [ブーリアン型を賢く使う](#ブーリアン型を賢く使う)
+  - [ブーリアン型にはABAP_BOOLを使う](#ブーリアン型にはABAP_BOOLを使う)
   - [比較にはABAP_TRUEとABAP_FALSEを使う](#比較にはABAP_TRUEとABAP_FALSEを使う)
-  - [Boolean変数をセットするにはXSDBOOLを使う](#Boolean変数をセットするにはXSDBOOLを使う)
+  - [ブーリアン変数をセットするにはXSDBOOLを使う](#ブーリアン変数をセットするにはXSDBOOLを使う)
 - [条件](#条件)
   - [条件を肯定にしてみる](#条件を肯定にしてみる)
   - [NOT ISよりもIS NOTを選ぶ](#NOT-ISよりもIS-NOTを選ぶ)
@@ -106,19 +106,19 @@
   - [パラメータ数](#パラメータ数)
     - [IMPORTINGパラメータは少なく, 3つ以下を目指す](#IMPORTINGパラメータは少なく-3つ以下を目指す)
     - [OPTIONALパラメータを追加するのではなくメソッドを分割する](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
-    - [Use PREFERRED PARAMETER sparingly](#use-preferred-parameter-sparingly)
-    - [RETURN, EXPORT, or CHANGE exactly one parameter](#return-export-or-change-exactly-one-parameter)
-  - [Parameter Types](#parameter-types)
-    - [Prefer RETURNING to EXPORTING](#prefer-returning-to-exporting)
-    - [RETURNING large tables is usually okay](#returning-large-tables-is-usually-okay)
-    - [Use either RETURNING or EXPORTING or CHANGING, but not a combination](#use-either-returning-or-exporting-or-changing-but-not-a-combination)
-    - [Use CHANGING sparingly, where suited](#use-changing-sparingly-where-suited)
-    - [boolean型の入力パラメータの代わりにメソッドを分割する](#boolean型の入力パラメータの代わりにメソッドを分割する)
-  - [Parameter Names](#parameter-names)
+    - [PREFERRED PARAMETER は控えめに使う](#PREFERRED-PARAMETER-は控えめに使う)
+    - [RETURN, EXPORT, CHANGE は1つだけのパタメータにする](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
+  - [パラメータの型](#パラメータの型)
+    - [EXPORTING よりも RETURNING を選ぶ](#EXPORTING-よりも-RETURNING-を選ぶ)
+    - [大きなテーブルの RETURNING は通常OK](#大きなテーブルの RETURNING は通常OK)
+    - [RETURNING, EXPORTING, CHANGING は併用せずにどれかを使う](#RETURNING-EXPORTING-CHANGING-は併用せずにどれかを使う)
+    - [CHANGING は適切なところで控えめに使う](#CHANGING-は適切なところで控えめに使う)
+    - [ブーリアン型の入力パラメータの代わりにメソッドを分割する](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
+  - [パラメータ名](#パラメータ名)
     - [Consider calling the RETURNING parameter RESULT](#consider-calling-the-returning-parameter-result)
   - [Parameter Initialization](#parameter-initialization)
     - [Clear or overwrite EXPORTING reference parameters](#clear-or-overwrite-exporting-reference-parameters)
-      - [Take care if input and output could be the same](#take-care-if-input-and-output-could-be-the-same)
+      - [入力と出力が同一になる場合に注意する](#入力と出力が同一になる場合に注意する)
     - [Don't clear VALUE parameters](#dont-clear-value-parameters)
   - [Method Body](#method-body)
     - [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only)
@@ -241,7 +241,7 @@
 Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _Clean Code_] を読んでください。
 [Clean Code Developer initiative](https://clean-code-developer.com/) は一般的にトピックを段階的にスムーズに導入し始めるのに役立つでしょう。
 
-[Booleans](#booleans) や [Conditions](#conditions) 、 [Ifs](#ifs) のようにわかりやすく、広く受け入れられるものから始めることをお勧めします。
+[ブーリアン](#ブーリアン) や [Conditions](#conditions) 、 [Ifs](#ifs) のようにわかりやすく、広く受け入れられるものから始めることをお勧めします。
 
 おそらく [メソッド](#メソッド) 、特に [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
 
@@ -253,7 +253,7 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [やり方](#やり方) > [本節](#レガシーコードをリファクタするには)
 
-[Booleans](#booleans)、[Conditions](#conditions)、[Ifs](#ifs)、[メソッド](#メソッド) は、コンフリクトなしに新しいコードを適用できるため、変更できない、または変更したくないコードが大量にあるレガシープロジェクトで作業している場合に、最も有益なトピックです。
+[ブーリアン](#ブーリアン)、[Conditions](#conditions)、[Ifs](#ifs)、[メソッド](#メソッド) は、コンフリクトなしに新しいコードを適用できるため、変更できない、または変更したくないコードが大量にあるレガシープロジェクトで作業している場合に、最も有益なトピックです。
 
 [命名](#命名) は、古いコードと新しいコードの間に [エンコーディング, 特にハンガリアン記法と接頭辞を避ける](#エンコーディング-特にハンガリアン記法と接頭辞を避ける) のような節を無視した方がよいほどまでの断絶を引き起こす可能性があるため、レガシープロジェクトには非常に厳しいトピックです。
 
@@ -412,7 +412,7 @@ METHODS add_message
 METHODS read_entries
 ```
 
-Boolean 型メソッドの名前を `is_` や `has_` のような動詞で開始すると、読みやすくなります：
+ブーリアン型メソッドの名前を `is_` や `has_` のような動詞で開始すると、読みやすくなります：
 
 ```ABAP
 IF is_empty( table ).
@@ -1071,15 +1071,15 @@ DATA(message) = |Received HTTP code { status_code } with message { text }|.
 DATA(message) = `Received an unexpected HTTP ` && status_code && ` with message ` && text.
 ```
 
-## Booleans
+## ブーリアン
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#booleans)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#ブーリアン)
 
-### Booleansを賢く使う
+### ブーリアン型を賢く使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#Booleansを賢く使う)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [ブーリアン](#ブーリアン) > [本節](#ブーリアン型を賢く使う)
 
-一見、Booleans が自然な選択であるように見える場合はよくあります。
+一見、ブーリアン型が自然な選択であるように見える場合はよくあります。
 
 ```ABAP
 " アンチパターン
@@ -1092,7 +1092,7 @@ is_archived = abap_true.
 archiving_status = /clean/archivation_status=>archiving_in_process.
 ```
 
-一般的に、Booleans は、物事の種類を区別するには適しません。
+一般的に、ブーリアン型は、物事の種類を区別するには適しません。
 なぜなら、どちらか一方だけではないケースがほぼ必ず出てくるためです。
 
 ```ABAP
@@ -1100,38 +1100,38 @@ assert_true( xsdbool( document->is_archived( ) = abap_true AND
                       document->is_partially_archived( ) = abap_true ) ).
 ```
 
-[boolean型の入力パラメータの代わりにメソッドを分割する](#boolean型の入力パラメータの代わりにメソッドを分割する)
-では、さらに、常に Boolean パラメータを疑うべき理由について説明しています。
+[ブーリアン型の入力パラメータの代わりにメソッドを分割する](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
+では、さらに、常にブーリアン型のパラメータを疑うべき理由について説明しています。
 
 > 詳細は
 > [1](http://www.beyondcode.org/articles/booleanVariables.html)
 > を参照してください。
 
-### BooleanにはABAP_BOOLを使う
+### ブーリアン型にはABAP_BOOLを使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#BooleanにはABAP_BOOLを使う)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [ブーリアン](#ブーリアン) > [本節](#ブーリアン型にはABAP_BOOLを使う)
 
 ```ABAP
 DATA has_entries TYPE abap_bool.
 ```
 
 汎用型の `char1` を使用しないでください。
-技術的には互換性がありますが、Boolean 変数を扱っているという事実を曖昧にしてしまいます。
+技術的には互換性がありますが、ブーリアン変数を扱っているという事実を曖昧にしてしまいます。
 
-また、他のBoolean型はしばしば奇妙な副作用があるので避けてください。例えば、`boolean` は3番目の値「undefined」をサポートしており、これは微妙なプログラミングエラーを引き起こします。
+また、他のブーリアン型はしばしば奇妙な副作用があるので避けてください。例えば、`boolean` は3番目の値「undefined」をサポートしており、これは微妙なプログラミングエラーを引き起こします。
 
 場合によっては、Dynpro フィールドなどのデータディクショナリエレメントが必要になることがあります。
 `abap_bool` はデータディクショナリではなく型プール `abap` で定義されているため、ここでは使用できません。
 この場合は、`boole_d` または `xfeld` を使用してください。
 カスタム記述が必要な場合は、独自のデータエレメントを作成してください。
 
-> ABAPは、普遍的なBooleanデータ型を持たない唯一のプログラミング言語かもしれません。
+> ABAPは、普遍的なブーリアンデータ型を持たない唯一のプログラミング言語かもしれません。
 > しかし、これを持つことは欠かせません。
 > この推奨はABAPプログラミングガイドラインに基づいています。
 
 ### 比較にはABAP_TRUEとABAP_FALSEを使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#比較にはABAP_TRUEとABAP_FALSEを使う)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [ブーリアン](#ブーリアン) > [本節](#比較にはABAP_TRUEとABAP_FALSEを使う)
 
 ```ABAP
 has_entries = abap_true.
@@ -1139,7 +1139,7 @@ IF has_entries = abap_false.
 ```
 
 同等文字の `'X'` や `' '` や `space` は使用しないでください。
-これらを使用すると、これがBoolean式であることがわかりにくくなります。
+これらを使用すると、これがブーリアン式であることがわかりにくくなります。
 
 ```ABAP
 " アンチパターン
@@ -1158,9 +1158,9 @@ IF has_entries IS NOT INITIAL.
 > しかし、それらを持つことは欠かせません。
 > この推奨はABAPプログラミングガイドラインに基づいています。
 
-### Boolean変数をセットするにはXSDBOOLを使う
+### ブーリアン変数をセットするにはXSDBOOLを使う
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Booleans](#booleans) > [本節](#Boolean変数をセットするにはXSDBOOLを使う)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [ブーリアン](#ブーリアン) > [本節](#ブーリアン変数をセットするにはXSDBOOLを使う)
 
 ```ABAP
 DATA(has_entries) = xsdbool( line IS NOT INITIAL ).
@@ -1177,7 +1177,7 @@ ELSE.
 ENDIF.
 ```
 
-`xsdbool` は、boolean型 `abap_bool` に最も適した `char1` を直接生成するので、この目的には最適な方法です。
+`xsdbool` は、ブーリアン型 `abap_bool` に最も適した `char1` を直接生成するので、この目的には最適な方法です。
 これと同等の関数 `boolc` と `boolx` は異なる型を生成し、余計な暗黙の型変換を行います。
 
 私たちは `xsdbool` という名前が不運で誤解を招くということに同意します。
@@ -1370,7 +1370,7 @@ ENDIF.
 
 ネストした `IF` はすぐに理解が難しくなり、完全なカバレッジのために指数関数的な数のテストケースが必要になります。
 
-デシジョンツリーは通常、サブメソッドを形成し、boolean ヘルパー変数を導入することで分離することができます。
+デシジョンツリーは通常、サブメソッドを形成し、ブーリアン型のヘルパー変数を導入することで分離することができます。
 
 他のケースでは、以下のようにIFをマージすることで簡略化することができます。
 
@@ -2021,50 +2021,48 @@ FUNCTION seo_class_copy
 
 #### OPTIONALパラメータを追加するのではなくメソッドを分割する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータ数](#パラメータ数) > [This section](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ数](#パラメータ数) > [本節](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
 
 ```ABAP
 METHODS do_one_thing IMPORTING what_i_need TYPE string.
 METHODS do_another_thing IMPORTING something_else TYPE i.
 ```
 
-to achieve the desired semantic as ABAP does not support [overloading](https://en.wikipedia.org/wiki/Function_overloading).
+ABAPは [オーバーロード](https://en.wikipedia.org/wiki/Function_overloading) をサポートしていないため、目的のセマンティックを達成するために
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS do_one_or_the_other
   IMPORTING
     what_i_need    TYPE string OPTIONAL
     something_else TYPE i OPTIONAL.
 ```
 
-Optional parameters confuse callers:
+のようにすると、オプションのパラメータはメソッドの利用者を混乱させます。
 
-- Which ones are really required?
-- Which combinations are valid?
-- Which ones exclude each other?
+- 本当に必須なのはどれか？
+- どの組み合わせが有効か？
+- お互いに排他的なのはどれか？
 
-Multiple methods with specific parameters for the use case avoid this confusion by giving clear guidance which parameter combinations are valid and expected.
+ユースケースのための特定のパラメータを持つ複数のメソッドは、どのパラメータの組み合わせが有効で期待されるかを明確にガイダンスすることで、このような混乱を避けることができます。
 
-#### Use PREFERRED PARAMETER sparingly
+#### PREFERRED PARAMETER は控えめに使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータ数](#パラメータ数) > [This section](#use-preferred-parameter-sparingly)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ数](#パラメータ数) > [本節](#PREFERRED-PARAMETER-は控えめに使う)
 
-The addition `PREFERRED PARAMETER` makes it hard to see which parameter is actually supplied,
-making it harder to understand the code.
-Minimizing the number of parameters, especially optional ones,
-automatically reduces the need for `PREFERRED PARAMETER`.
+`PREFERRED PARAMETER` を追加すると、実際にどのパラメータが供給されているのかがわかりにくくなり、コードを理解するのが難しくなります。
+パラメータの数、特にオプションのパラメータを最小限にすることで、`PREFERRED PARAMETER` の必要性を自然に減らすことができます。
 
-#### RETURN, EXPORT, or CHANGE exactly one parameter
+#### RETURN, EXPORT, CHANGE は1つだけのパタメータにする
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータ数](#パラメータ数) > [This section](#return-export-or-change-exactly-one-parameter)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ数](#パラメータ数) > [本節](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
 
-A good method does _one thing_, and that should be reflected by the method also returning exactly one thing.
-If the output parameters of your method do _not_ form a logical entity,
-your method does more than one thing and you should split it.
+よいメソッドは _一つのこと_ を行いますが、それはメソッドが正確に一つのことを返すことにも反映されます。
+メソッドの出力パラメータが論理的な実体を形成して _いない_ 場合、
+そのメソッドは複数のことを行うので、それを分割する必要があります。
 
-There are cases where the output is a logical entity that consists of multiple things.
-These are easiest represented by returning a structure or object:
+出力が複数のものからなる論理的な実体である場合があります。
+これらは構造体やオブジェクトを返すことで簡単に表現できます。
 
 ```ABAP
 TYPES:
@@ -2081,10 +2079,10 @@ METHODS check_business_partners
     VALUE(result)     TYPE check_result.
 ```
 
-instead of
+次のようにするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS check_business_partners
   IMPORTING
     business_partners TYPE business_partners
@@ -2094,11 +2092,10 @@ METHODS check_business_partners
     messages          TYPE /bobf/t_frw_message.
 ```
 
-Especially in comparison to multiple EXPORTING parameters, this allows people to use the functional call style,
-spares you having to think about `IS SUPPLIED` and saves people from accidentally forgetting
-to retrieve a vital `ERROR_OCCURRED` information.
+特に複数の EXPORTING パラメータと比較して、これにより、関数的な呼び出しスタイルを使用することができ、
+`IS SUPPLIED` について考える必要がなくなり、重要な `ERROR_OCCURRED` 情報を取得することをうっかり忘れてしまうことを防ぐことができます。
 
-Instead of multiple optional output parameters, consider splitting the method according to meaningful call patterns:
+複数のオプションの出力パラメータの代わりに、意味のある呼び出しパターンに従ってメソッドを分割することを検討してください。
 
 ```ABAP
 TYPES:
@@ -2121,13 +2118,13 @@ METHODS check_and_report
     VALUE(result)     TYPE check_result.
 ```
 
-### Parameter Types
+### パラメータの型
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#parameter-types)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#パラメータの型)
 
-#### Prefer RETURNING to EXPORTING
+#### EXPORTING よりも RETURNING を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#prefer-returning-to-exporting)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#EXPORTING-よりも-RETURNING-を選ぶ)
 
 ```ABAP
 METHODS square
@@ -2139,10 +2136,10 @@ METHODS square
 DATA(result) = square( 42 ).
 ```
 
-Instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS square
   IMPORTING
     number TYPE i
@@ -2156,17 +2153,16 @@ square(
     result = DATA(result) ).
 ```
 
-`RETURNING` not only makes the call shorter,
-it also allows method chaining and prevents [same-input-and-output errors](#take-care-if-input-and-output-could-be-the-same).
+`RETURNING` は呼び出しを短くするだけでなく、
+メソッドチェーンを可能にし、[入力と出力が同一の場合のエラー](#入力と出力が同一になる場合に注意する) を防ぐことができます。
 
-#### RETURNING large tables is usually okay
+#### 大きなテーブルの RETURNING は通常OK
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#returning-large-tables-is-usually-okay)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#大きなテーブルの RETURNING は通常OK)
 
-Although the ABAP language documentation and performance guides say otherwise,
-we rarely encounter cases where handing over a large or deeply-nested table in a VALUE parameter
-_really_ causes performance problems.
-We therefore recommend to generally use
+ABAP言語のドキュメントやパフォーマンスガイドには、反対のことが記載されていますが、
+VALUEパラメータで大きなテーブルや深くネストしているテーブルを渡すことで、_実際に_ パフォーマンスの問題が発生することはほとんどありません。
+そのため、一般的には RETURNING でテーブルを返すことをお勧めします。
 
 ```ABAP
 METHODS get_large_table
@@ -2180,11 +2176,11 @@ ENDMETHOD.
 DATA(my_table) = get_large_table( ).
 ```
 
-Only if there is actual proof (= a bad performance measurement) for your individual case
-should you resort to the more cumbersome procedural style
+個々のケースで実際の証拠（＝悪いパフォーマンス計測値）がある場合に限り、
+より面倒な手続き型スタイルに頼るべきです。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS get_large_table
   EXPORTING
     result TYPE /dirty/some_table_type.
@@ -2196,14 +2192,14 @@ ENDMETHOD.
 get_large_table( IMPORTING result = DATA(my_table) ).
 ```
 
-> This section contradicts the ABAP Programming Guidelines and Code Inspector checks,
-> both of whom suggest that large tables should be EXPORTED by reference to avoid performance deficits.
-> We consistently failed to reproduce any performance and memory deficits
-> and received notice about kernel optimization that generally improves RETURNING performance.
+> この節は、ABAPプログラミングガイドラインとコードインスペクタのチェックに矛盾しており、
+> どちらもパフォーマンスの低下を避けるために、大きなテーブルは参照によって EXPORT すべきであると提案しています。
+> 私たちは一貫してパフォーマンス低下とメモリ不足を再現することができず、
+> 一般的に RETURNING のパフォーマンスを向上させているカーネル最適化について知ることになりました。
 
-#### Use either RETURNING or EXPORTING or CHANGING, but not a combination
+#### RETURNING, EXPORTING, CHANGING は併用せずにどれかを使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#use-either-returning-or-exporting-or-changing-but-not-a-combination)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#RETURNING-EXPORTING-CHANGING-は併用せずにどれかを使う)
 
 ```ABAP
 METHODS copy_class
@@ -2216,10 +2212,10 @@ METHODS copy_class
     /clean/class_copy_failure.
 ```
 
-instead of confusing mixtures like
+次のように混ぜ合わせるのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS copy_class
   ...
   RETURNING
@@ -2231,10 +2227,10 @@ METHODS copy_class
     package            TYPE devclass.
 ```
 
-Different sorts of output parameters is an indicator that the method does more than one thing.
-It confuses the reader and makes calling the method needlessly complicated.
+異なる種類の出力パラメータを使用するということは、そのメソッドが複数のことを行っていることを示しています。
+これは読む人を混乱させ、メソッドの呼び出しを不必要に複雑にします。
 
-An acceptable exception to this rule may be builders that consume their input while building their output:
+出力を生成する際に入力を使用するビルダーは、このルールの例外となる場合があります。
 
 ```ABAP
 METHODS build_tree
@@ -2244,7 +2240,7 @@ METHODS build_tree
     VALUE(result) TYPE REF TO tree.
 ```
 
-However, even those can be made clearer by objectifying the input:
+しかし、それらであっても、入力を客観化することで、より明確にすることができます。
 
 ```ABAP
 METHODS build_tree
@@ -2254,12 +2250,11 @@ METHODS build_tree
     VALUE(result) TYPE REF TO tree.
 ```
 
-#### Use CHANGING sparingly, where suited
+#### CHANGING は適切なところで控えめに使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#use-changing-sparingly-where-suited)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#CHANGING-は適切なところで控えめに使う)
 
-`CHANGING` should be reserved for cases where an existing local variable
-that is already filled is updated in only some places:
+`CHANGING` は、既に入力されている既存のローカル変数が部分的に更新される場合のためだけに使用するべきです。
 
 ```ABAP
 METHODS update_references
@@ -2275,40 +2270,39 @@ METHOD update_references.
 ENDMETHOD.
 ```
 
-Do not force your callers to introduce unnecessary local variables only to supply your `CHANGING` parameter.
-Do not use `CHANGING` parameters to initially fill a previously empty variable.
+`CHANGING` パラメータを提供するだけのために、呼び出し元に不要なローカル変数を強制的に導入させることはしないでください。
+以前に空だった変数を最初に埋めるために `CHANGING` パラメータを使用しないでください。
 
-#### boolean型の入力パラメータの代わりにメソッドを分割する
+#### ブーリアン型の入力パラメータの代わりにメソッドを分割する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Types](#parameter-types) > [This section](#boolean型の入力パラメータの代わりにメソッドを分割する)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
 
-Boolean input parameters are often an indicator
-that a method does _two_ things instead of one.
+ブーリアン型の入力パラメータは、しばしばメソッドが1つのことを行うのではなく _2つ_ のことを行っていることを示します。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS update
   IMPORTING
     do_save TYPE abap_bool.
 ```
 
-Also, method calls with a single - and thus unnamed - Boolean parameter
-tend to obscure the parameter's meaning.
+また、単一の、つまり名前のないブーリアン型パラメータを持つメソッドの呼び出しは、
+パラメータの意味を不明瞭にする傾向があります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 update( abap_true ).  " what does 'true' mean? synchronous? simulate? commit?
 ```
 
-Splitting the method may simplify the methods' code
-and describe the different intentions better
+メソッドを分割することで、メソッドのコードを単純化し、
+異なる意図をより良く記述することができます。
 
 ```ABAP
 update_without_saving( ).
 update_and_save( ).
 ```
 
-Common perception suggests that setters for Boolean variables are okay:
+一般的な認識では、ブーリアン変数のセッターは問題ないとされています。
 
 ```ABAP
 METHODS set_is_deleted
@@ -2316,16 +2310,16 @@ METHODS set_is_deleted
     new_value TYPE abap_bool.
 ```
 
-> Read more in
+> 詳細は
 > [1](http://www.beyondcode.org/articles/booleanVariables.html) > [2](https://silkandspinach.net/2004/07/15/avoid-boolean-parameters/) > [3](http://jlebar.com/2011/12/16/Boolean_parameters_to_API_functions_considered_harmful..html)
 
-### Parameter Names
+### パラメータ名
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#parameter-names)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#パラメータ名)
 
 #### Consider calling the RETURNING parameter RESULT
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Names](#parameter-names) > [This section](#consider-calling-the-returning-parameter-result)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ名](#パラメータ名) > [本節](#consider-calling-the-returning-parameter-result)
 
 Good method names are usually so good that the `RETURNING` parameter does not need a name of its own.
 The name would do little more than parrot the method name or repeat something obvious.
@@ -2380,9 +2374,9 @@ ENDMETHOD.
 > Code inspector and Checkman point out `EXPORTING` variables that are never written.
 > Use these static checks to avoid this otherwise rather obscure error source.
 
-##### Take care if input and output could be the same
+##### 入力と出力が同一になる場合に注意する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Initialization](#parameter-initialization) > [This section](#take-care-if-input-and-output-could-be-the-same)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Initialization](#parameter-initialization) > [This section](#入力と出力が同一になる場合に注意する)
 
 Generally, it is a good idea to clear the parameter as a first thing in the method after type and data declarations.
 This makes the statement easy to spot and avoids that the still-contained value is accidentally used by later statements.
@@ -2454,7 +2448,7 @@ A method likely does one thing if
 
 - it has [few input parameters](#IMPORTINGパラメータは少なく-3つ以下を目指す)
 - it [doesn't include Boolean parameters](#boolean型の入力パラメータの代わりにメソッドを分割する)
-- it has [exactly one output parameter](#return-export-or-change-exactly-one-parameter)
+- it has [exactly one output parameter](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
 - it is [small](#keep-methods-small)
 - it [descends one level of abstraction](#descend-one-level-of-abstraction)
 - it only [throws one type of exception](#throw-one-type-of-exception)

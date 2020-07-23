@@ -115,8 +115,8 @@
     - [CHANGING は適切なところで控えめに使う](#CHANGING-は適切なところで控えめに使う)
     - [ブーリアン型の入力パラメータの代わりにメソッドを分割する](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
   - [パラメータ名](#パラメータ名)
-    - [Consider calling the RETURNING parameter RESULT](#consider-calling-the-returning-parameter-result)
-  - [Parameter Initialization](#parameter-initialization)
+    - [RETURNING パラメータに RESULT と名付けることを考える](#RETURNING-パラメータに-RESULT-と名付けることを考える)
+  - [パラメータの初期化](#パラメータの初期化)
     - [Clear or overwrite EXPORTING reference parameters](#clear-or-overwrite-exporting-reference-parameters)
       - [入力と出力が同一になる場合に注意する](#入力と出力が同一になる場合に注意する)
     - [Don't clear VALUE parameters](#dont-clear-value-parameters)
@@ -2317,17 +2317,17 @@ METHODS set_is_deleted
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#パラメータ名)
 
-#### Consider calling the RETURNING parameter RESULT
+#### RETURNING パラメータに RESULT と名付けることを考える
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ名](#パラメータ名) > [本節](#consider-calling-the-returning-parameter-result)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ名](#パラメータ名) > [本節](#RETURNING-パラメータに-RESULT-と名付けることを考える)
 
-Good method names are usually so good that the `RETURNING` parameter does not need a name of its own.
-The name would do little more than parrot the method name or repeat something obvious.
+よいメソッド名は通常、`RETURNING` パラメータにそれ自体の名前を必要としないほどよいものです。
+その名前は、メソッド名をオウム返ししたり、明らかなことを繰り返したりするだけとなります。
 
-Repeating a member name can even produce conflicts that need to be resolved by adding a superfluous `me->`.
+メンバー名を繰り返すと、余計な `me->` を追加して解決する必要のある競合が発生することもあります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS get_name
   RETURNING
     VALUE(name) TYPE string.
@@ -2337,19 +2337,19 @@ METHOD get_name.
 ENDMETHOD.
 ```
 
-In these cases, simply call the parameter `RESULT`, or something like `RV_RESULT` if you prefer Hungarian notation.
+このような場合は、パラメータに単に `RESULT` と名付けます。ハンガリアン記法がお好みの場合は `RV_RESULT` のような名前になります。
 
-Name the `RETURNING` parameter if it is _not_ obvious what it stands for,
-for example in methods that return `me` for method chaining,
-or in methods that create something but don't return the created entity but only its key or so.
+例えば、メソッドチェーンのために `me` を返すメソッドや、
+何かを生成するが生成された実体を返さずにそのキーだけを返すメソッドなど、
+それが何を意味しているのか明らかで _ない_ 場合は、`RETURNING` パラメータに名前を付けます。
 
-### Parameter Initialization
+### パラメータの初期化
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#parameter-initialization)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#パラメータの初期化)
 
 #### Clear or overwrite EXPORTING reference parameters
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Initialization](#parameter-initialization) > [This section](#clear-or-overwrite-exporting-reference-parameters)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの初期化](#パラメータの初期化) > [本節](#clear-or-overwrite-exporting-reference-parameters)
 
 Reference parameters refer to existing memory areas that may be filled beforehand.
 Clear or overwrite them to provide reliable data:
@@ -2376,7 +2376,7 @@ ENDMETHOD.
 
 ##### 入力と出力が同一になる場合に注意する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Initialization](#parameter-initialization) > [This section](#入力と出力が同一になる場合に注意する)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [Methods](#methods) > [パラメータの初期化](#パラメータの初期化) > [本節](#入力と出力が同一になる場合に注意する)
 
 Generally, it is a good idea to clear the parameter as a first thing in the method after type and data declarations.
 This makes the statement easy to spot and avoids that the still-contained value is accidentally used by later statements.
@@ -2406,7 +2406,7 @@ If neither fits, resort to a late `CLEAR`.
 
 #### Don't clear VALUE parameters
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Initialization](#parameter-initialization) > [This section](#dont-clear-value-parameters)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータの初期化](#パラメータの初期化) > [This section](#dont-clear-value-parameters)
 
 Parameters that work by `VALUE` are handed over as new, separate memory areas that are empty by definition.
 Don't clear them again:

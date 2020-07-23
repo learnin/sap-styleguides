@@ -110,7 +110,7 @@
     - [RETURN, EXPORT, CHANGE は1つだけのパタメータにする](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
   - [パラメータの型](#パラメータの型)
     - [EXPORTING よりも RETURNING を選ぶ](#EXPORTING-よりも-RETURNING-を選ぶ)
-    - [大きなテーブルの RETURNING は通常OK](#大きなテーブルの RETURNING は通常OK)
+    - [大きなテーブルの RETURNING は通常OK](#大きなテーブルの-RETURNING-は通常OK)
     - [RETURNING, EXPORTING, CHANGING は併用せずにどれかを使う](#RETURNING-EXPORTING-CHANGING-は併用せずにどれかを使う)
     - [CHANGING は適切なところで控えめに使う](#CHANGING-は適切なところで控えめに使う)
     - [ブーリアン型の入力パラメータの代わりにメソッドを分割する](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
@@ -2158,7 +2158,7 @@ square(
 
 #### 大きなテーブルの RETURNING は通常OK
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#大きなテーブルの RETURNING は通常OK)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの型](#パラメータの型) > [本節](#大きなテーブルの-RETURNING-は通常OK)
 
 ABAP言語のドキュメントやパフォーマンスガイドには、反対のことが記載されていますが、
 VALUEパラメータで大きなテーブルや深くネストしているテーブルを渡すことで、_実際に_ パフォーマンスの問題が発生することはほとんどありません。

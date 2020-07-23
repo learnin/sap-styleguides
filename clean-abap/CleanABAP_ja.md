@@ -100,11 +100,11 @@
     - [オプションのキーワード EXPORTING を省略する](#オプションのキーワード-EXPORTING-を省略する)
     - [単一パラメータでの呼び出し時はパラメータ名を省略する](#単一パラメータでの呼び出し時はパラメータ名を省略する)
     - [インスタンスメソッドを呼び出す際の自己参照 me を省略する](#インスタンスメソッドを呼び出す際の自己参照-me-を省略する)
-  - [Methods: Object orientation](#methods-object-orientation)
-    - [Prefer instance to static methods](#prefer-instance-to-static-methods)
+  - [メソッド：オブジェクト指向](#メソッド：オブジェクト指向)
+    - [静的メソッドよりもインスタンスメソッドを選ぶ](#静的メソッドよりもインスタンスメソッドを選ぶ)
     - [パブリックインスタンスメソッドはインタフェースの一部でなければならない](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
-  - [Parameter Number](#parameter-number)
-    - [Aim for few IMPORTING parameters, at best less than three](#aim-for-few-importing-parameters-at-best-less-than-three)
+  - [パラメータ数](#パラメータ数)
+    - [IMPORTINGパラメータは少なく, 3つ以下を目指す](#IMPORTINGパラメータは少なく-3つ以下を目指す)
     - [OPTIONALパラメータを追加するのではなくメソッドを分割する](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
     - [Use PREFERRED PARAMETER sparingly](#use-preferred-parameter-sparingly)
     - [RETURN, EXPORT, or CHANGE exactly one parameter](#return-export-or-change-exactly-one-parameter)
@@ -1936,23 +1936,23 @@ DATA(sum) = aggregate_values( values ).
 DATA(sum) = me->aggregate_values( values ).
 ```
 
-### Methods: Object orientation
+### メソッド：オブジェクト指向
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#methods-object-orientation)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#メソッド：オブジェクト指向)
 
-#### Prefer instance to static methods
+#### 静的メソッドよりもインスタンスメソッドを選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Methods: Object orientation](#methods-object-orientation) > [This section](#prefer-instance-to-static-methods)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッド：オブジェクト指向](#メソッド：オブジェクト指向) > [本節](#静的メソッドよりもインスタンスメソッドを選ぶ)
 
-Methods should be instance members by default.
-Instance methods better reflect the "object-hood" of the class.
-They can be mocked easier in unit tests.
+メソッドはデフォルトではインスタンスメンバでなければなりません。
+インスタンスメソッドはクラスの「オブジェクトの性質」をよりよく反映します。
+ユニットテストでより簡単にモックすることができます。
 
 ```ABAP
 METHODS publish.
 ```
 
-Methods should be static only in exceptional cases, such as static creation methods.
+メソッドは、静的な生成メソッドのような例外的な場合にのみ静的にすべきです。
 
 ```ABAP
 CLASS-METHODS create_instance
@@ -1962,29 +1962,27 @@ CLASS-METHODS create_instance
 
 #### パブリックインスタンスメソッドはインタフェースの一部でなければならない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Methods: Object orientation](#methods-object-orientation) > [This section](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッド：オブジェクト指向](#メソッド：オブジェクト指向) > [本節](#パブリックインスタンスメソッドはインタフェースの一部でなければならない)
 
-Public instance methods should always be part of an interface.
-This decouples dependencies and simplifies mocking them in unit tests.
+パブリックインスタンスメソッドは常にインタフェースの一部であるべきです。
+これにより、依存関係が切り離され、ユニットテストでのモックが簡単になります。
 
 ```ABAP
 METHOD /clean/blog_post~publish.
 ```
 
-In clean object orientation, having a method public without an interface does not make much sense -
-with few exceptions such as enumeration classes
-which will never have an alternative implementation and will never be mocked in test cases.
+クリーンなオブジェクト指向では、列挙クラスのように代替の実装がなく、テストケースでモックされることもないような少数の例外を除き、インタフェースのないメソッドを公開することはあまり意味がありません。
 
-> [Interfaces vs. abstract classes](sub-sections/InterfacesVsAbstractClasses.md)
-> describes why this also applies to classes that overwrite inherited methods.
+> [インタフェース 対 抽象クラス](sub-sections/InterfacesVsAbstractClasses.md)
+> では、これが継承されたメソッドを上書きするクラスにも適用される理由を説明しています。
 
-### Parameter Number
+### パラメータ数
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#parameter-number)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#パラメータ数)
 
-#### Aim for few IMPORTING parameters, at best less than three
+#### IMPORTINGパラメータは少なく, 3つ以下を目指す
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Number](#parameter-number) > [This section](#aim-for-few-importing-parameters-at-best-less-than-three)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータ数](#パラメータ数) > [本節](#IMPORTINGパラメータは少なく-3つ以下を目指す)
 
 ```ABAP
 FUNCTION seo_class_copy
@@ -1996,10 +1994,10 @@ FUNCTION seo_class_copy
     ...
 ```
 
-would be much clearer than
+の方が、次のコードよりもよほどわかりやすい
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 FUNCTION seo_class_copy
   IMPORTING
     clskey                 TYPE seoclskey
@@ -2016,15 +2014,14 @@ FUNCTION seo_class_copy
     ...
 ```
 
-Too many input parameters let the complexity of a method explode
-because it needs to handle an exponential number of combinations.
-Many parameters are an indicator that the method may do more than one thing.
+入力パラメータが多すぎると、指数関数的な数の組み合わせを処理する必要があるため、メソッドの複雑さが爆発的に増大します。
+パラメータ数が多いということは、メソッドが複数のことを行っているかもしれないことを示しています。
 
-You can reduce the number of parameters by combining them into meaningful sets with structures and objects.
+構造体やオブジェクトと組み合わせて意味のあるセットにすることで、パラメータの数を減らすことができます。
 
 #### OPTIONALパラメータを追加するのではなくメソッドを分割する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Number](#parameter-number) > [This section](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータ数](#パラメータ数) > [This section](#OPTIONALパラメータを追加するのではなくメソッドを分割する)
 
 ```ABAP
 METHODS do_one_thing IMPORTING what_i_need TYPE string.
@@ -2051,7 +2048,7 @@ Multiple methods with specific parameters for the use case avoid this confusion 
 
 #### Use PREFERRED PARAMETER sparingly
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Number](#parameter-number) > [This section](#use-preferred-parameter-sparingly)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータ数](#パラメータ数) > [This section](#use-preferred-parameter-sparingly)
 
 The addition `PREFERRED PARAMETER` makes it hard to see which parameter is actually supplied,
 making it harder to understand the code.
@@ -2060,7 +2057,7 @@ automatically reduces the need for `PREFERRED PARAMETER`.
 
 #### RETURN, EXPORT, or CHANGE exactly one parameter
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Parameter Number](#parameter-number) > [This section](#return-export-or-change-exactly-one-parameter)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータ数](#パラメータ数) > [This section](#return-export-or-change-exactly-one-parameter)
 
 A good method does _one thing_, and that should be reflected by the method also returning exactly one thing.
 If the output parameters of your method do _not_ form a logical entity,
@@ -2455,7 +2452,7 @@ It should do it in the best way possible.
 
 A method likely does one thing if
 
-- it has [few input parameters](#aim-for-few-importing-parameters-at-best-less-than-three)
+- it has [few input parameters](#IMPORTINGパラメータは少なく-3つ以下を目指す)
 - it [doesn't include Boolean parameters](#boolean型の入力パラメータの代わりにメソッドを分割する)
 - it has [exactly one output parameter](#return-export-or-change-exactly-one-parameter)
 - it is [small](#keep-methods-small)

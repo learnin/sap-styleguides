@@ -124,18 +124,18 @@
     - [1つのことだけをうまくやる](#1つのことだけをうまくやる)
     - [正常系かエラー処理に集中する, 両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
     - [抽象度を1段下げる](#抽象度を1段下げる)
-    - [Keep methods small](#keep-methods-small)
-  - [Control flow](#control-flow)
-    - [Fail fast](#fail-fast)
+    - [メソッドを小さく保つ](#メソッドを小さく保つ)
+  - [制御フロー](#制御フロー)
+    - [フェイルファースト](#フェイルファースト)
     - [CHECK vs. RETURN](#check-vs-return)
-    - [Avoid CHECK in other positions](#avoid-check-in-other-positions)
-- [Error Handling](#error-handling)
-  - [Messages](#messages)
-    - [Make messages easy to find](#make-messages-easy-to-find)
-  - [Return Codes](#return-codes)
-    - [Prefer exceptions to return codes](#prefer-exceptions-to-return-codes)
-    - [Don't let failures slip through](#dont-let-failures-slip-through)
-  - [Exceptions](#exceptions)
+    - [他の場所での CHECK は避ける](#他の場所での-CHECK-は避ける)
+- [エラー処理](#エラー処理)
+  - [メッセージ](#メッセージ)
+    - [メッセージを見つけやすくする](#メッセージを見つけやすくする)
+  - [リターンコード](#リターンコード)
+    - [リターンコードよりも例外を選ぶ](#リターンコードよりも例外を選ぶ)
+    - [エラーを取り逃がさない](#エラーを取り逃がさない)
+  - [例外](#例外)
     - [Exceptions are for errors, not for regular cases](#exceptions-are-for-errors-not-for-regular-cases)
     - [Use class-based exceptions](#use-class-based-exceptions)
   - [Throwing](#throwing)
@@ -243,7 +243,7 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 [ブーリアン](#ブーリアン) や [Conditions](#conditions) 、 [Ifs](#ifs) のようにわかりやすく、広く受け入れられるものから始めることをお勧めします。
 
-おそらく [メソッド](#メソッド) 、特に [1つのことだけをうまくやる](#1つのことだけをうまくやる) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
+おそらく [メソッド](#メソッド) 、特に [1つのことだけをうまくやる](#1つのことだけをうまくやる) と [メソッドを小さく保つ](#メソッドを小さく保つ) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
 
 ここに書かれているトピックの中には、経験は豊富だがクリーンコードに慣れていないチームでは難しい議論を引き起こす可能性があるものもあります。これらのトピックは完全に「健全」ですが、最初は慣れるのが難しいかもしれません。
 
@@ -1500,7 +1500,7 @@ ENDMETHOD.
 あなたのケースにおいて、継承が本当にデメリットよりもメリットの方が多いか、批判的に自問してみてください。
 確信がもてなければ、一般的にコンポジションの方が無難です。
 
-> [Interfaces vs. abstract classes](sub-sections/InterfacesVsAbstractClasses.md)
+> [インタフェース vs. 抽象クラス](sub-sections/InterfacesVsAbstractClasses.md)
 > では、いくつかの詳細を比較しています。
 
 #### 同じクラスにステートフルとステートレスを混在させない
@@ -1599,7 +1599,7 @@ ABAPはインクルードレベルでロックするので、複数の人がロ�
 明示的に継承用に設計されていないクラスは `FINAL` にしましょう。
 
 クラス連携を設計するとき、最初の選択は [継承ではなくコンポジション](#継承よりもコンポジションを選ぶ) であるべきです。
-継承を有効にすることは、 `PROTECTED` 対 `PRIVATE` や、 [リスコフの置換原則](https://en.wikipedia.org/wiki/Liskov_substitution_principle) のようなことを考える必要があり、
+継承を有効にすることは、 `PROTECTED` vs. `PRIVATE` や、 [リスコフの置換原則](https://en.wikipedia.org/wiki/Liskov_substitution_principle) のようなことを考える必要があり、
 多くの設計内部をフリーズさせてしまうため、軽々しく行うべきことではありません。
 クラス設計でこれらのことを考慮していなかった場合は、
 クラスを `FINAL` にすることで誤って継承されることを防ぐべきです。
@@ -1973,7 +1973,7 @@ METHOD /clean/blog_post~publish.
 
 クリーンなオブジェクト指向では、列挙クラスのように代替の実装がなく、テストケースでモックされることもないような少数の例外を除き、インタフェースのないメソッドを公開することはあまり意味がありません。
 
-> [インタフェース 対 抽象クラス](sub-sections/InterfacesVsAbstractClasses.md)
+> [インタフェース vs. 抽象クラス](sub-sections/InterfacesVsAbstractClasses.md)
 > では、これが継承されたメソッドを上書きするクラスにも適用される理由を説明しています。
 
 ### パラメータ数
@@ -2449,7 +2449,7 @@ ENDMETHOD.
 - [入力パラメータは少なく](#IMPORTINGパラメータは少なく-3つ以下を目指す)
 - [ブーリアン型のパラメータを含まない](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
 - [きっちり一つの出力パラメータ](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
-- [小さい](#keep-methods-small)
+- [小さい](#メソッドを小さく保つ)
 - [抽象度を1段下げる](#抽象度を1段下げる)
 - [例外は1つの型のみをスローする](#例外は1つの型のみをスローする)
 - そのメソッドから意味のある他のメソッドを抽出できない
@@ -2526,7 +2526,7 @@ ENDMETHOD.
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッドボディ](#メソッドボディ) > [本節](#抽象度を1段下げる)
 
-メソッド内の文は、メソッド自体よりも1つ下の抽象度でなければなりません。
+メソッド内のステートメントは、メソッド自体よりも1つ下の抽象度でなければなりません。
 これに対応して、それらはすべて同じ抽象度でなければなりません。
 
 ```ABAP
@@ -2552,11 +2552,11 @@ ENDMETHOD.
 メソッドの作者に、コードを見ずに、そのメソッドが何をするのかを短い言葉で説明してもらうことです。
 箇条書きの数字は、メソッドが呼び出すべきサブメソッド、または実行すべきステートメントです。
 
-#### Keep methods small
+#### メソッドを小さく保つ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [メソッドボディ](#メソッドボディ) > [This section](#keep-methods-small)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッドボディ](#メソッドボディ) > [本節](#メソッドを小さく保つ)
 
-Methods should have less than 20 statements, optimal around 3 to 5 statements.
+メソッドのステートメント数は20未満であるべきで、3～5ステートメント程度が最適です。
 
 ```ABAP
 METHOD read_and_parse_version_filters.
@@ -2566,10 +2566,10 @@ METHOD read_and_parse_version_filters.
 ENDMETHOD.
 ```
 
-The following `DATA` declaration alone is sufficient to see that the surrounding method does way more than one thing:
+以下の `DATA` 宣言だけで、周囲のメソッドが一つ以上のことをしていることがわかります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA:
   class           TYPE vseoclass,
   attributes      TYPE seoo_attributes_r,
@@ -2596,8 +2596,8 @@ DATA:
   new_clskey_save TYPE seoclskey.
 ```
 
-Of course there are occasions where it does not make sense to reduce a larger method further.
-This is perfectly okay as long as the method remains [focused on one thing](#1つのことだけをうまくやる):
+もちろん、大きなメソッドをさらに減らすのは意味がない場合もあります。
+これは、メソッドが [1つのことに集中している](#1つのことだけをうまくやる) 限り、全く問題ありません。
 
 ```ABAP
 METHOD decide_what_to_do.
@@ -2616,7 +2616,7 @@ METHOD decide_what_to_do.
 ENDMETHOD.
 ```
 
-However, it still makes sense to validate whether the verbose code hides a more suitable pattern:
+しかし、冗長なコードをより適切なパターンがないか検証することは、まだ意味があります。
 
 ```ABAP
 METHOD decide_what_to_do.
@@ -2624,18 +2624,18 @@ METHOD decide_what_to_do.
 ENDMETHOD.
 ```
 
-> Cutting methods very small can have bad impact on performance because it increases the number of method calls.
-> The [section _Mind the performance_](#mind-the-performance) gives guidance on how to balance Clean Code and performance.
+> メソッドを非常に細かくすると、メソッドの呼び出し回数が増えるため、パフォーマンスに悪影響を及ぼす可能性があります。
+> [_パフォーマンスに注意する_](#パフォーマンスに注意する) では、Clean Code とパフォーマンスのバランスをとる方法についてのガイダンスを提供しています。
 
-### Control flow
+### 制御フロー
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#control-flow)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#制御フロー)
 
-#### Fail fast
+#### フェイルファースト
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Control flow](#control-flow) > [This section](#fail-fast)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [制御フロー](#制御フロー) > [本節](#フェイルファースト)
 
-Validate and fail as early as possible:
+できるだけ早めに検証して失敗させましょう。
 
 ```ABAP
 METHOD do_something.
@@ -2647,10 +2647,10 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-Later validations are harder to spot and understand and may have already wasted resources to get there.
+後になってからの検証では、発見や理解が難しく、その時点までにすでに無駄なリソースを使ってしまっている可能性があります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD do_something.
   DATA(massive_object) = build_expensive_object_from( input ).
   IF massive_object IS NOT BOUND. " happens if input is initial
@@ -2662,12 +2662,11 @@ ENDMETHOD.
 
 #### CHECK vs. RETURN
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Control flow](#control-flow) > [This section](#check-vs-return)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [制御フロー](#制御フロー) > [本節](#check-vs-return)
 
-There is no consensus on whether you should use `CHECK` or `RETURN` to exit a method
-if the input doesn't meet expectations.
+入力が期待に沿わない場合、`CHECK` や `RETURN` を使ってメソッドを終了させるべきかどうかについては、コンセンサスがありません。
 
-While `CHECK` definitely provides the shorter syntax
+`CHECK` は確かに短い構文を提供していますが
 
 ```ABAP
 METHOD read_customizing.
@@ -2676,8 +2675,7 @@ METHOD read_customizing.
 ENDMETHOD.
 ```
 
-the statement's name doesn't reveal what happens if the condition fails,
-such that people will probably understand the long form better:
+ステートメントの名前は、条件が失敗した場合に何が起こるかを明らかにしないので、人々はおそらく長い形式の方が理解しやすいでしょう。
 
 ```ABAP
 METHOD read_customizing.
@@ -2688,8 +2686,7 @@ METHOD read_customizing.
 ENDMETHOD.
 ```
 
-You can avoid the question completely by reversing the validation
-and adopting a single-return control flow
+検証を逆にしてシングルリターン制御フローを採用することで、質問を完全に回避することができます。
 
 ```ABAP
 METHOD read_customizing.
@@ -2699,73 +2696,70 @@ METHOD read_customizing.
 ENDMETHOD.
 ```
 
-In any case, consider whether returning nothing is really the appropriate behavior.
-Methods should provide a meaningful result, meaning either a filled return parameter, or an exception.
-Returning nothing is in many cases similar to returning `null`, which should be avoided.
+いずれにしても、何も返さないことが本当に適切な動作なのかどうかを考えてみてください。
+メソッドは意味のある結果、つまり、値の入った戻り値のパラメータか、例外のどちらかをを提供しなければなりません。
+何も返さないというのは、多くの場合 `null` を返すのと似ていますが、これは避けるべきです。
 
-> The [section _Exiting Procedures_ in the ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenexit_procedure_guidl.htm)
-> recommends using `CHECK` in this instance.
-> Community discussion suggests that the statement is so unclear
-> that many people will not understand the program's behavior.
+> [ABAP プログラミングガイドラインの _Exiting Procedures_](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenexit_procedure_guidl.htm) の節では、この場合に `CHECK` を使用することを推奨しています。
+> コミュニティでの議論では、この文は非常に不明瞭なので、多くの人がプログラムの動作を理解できないことが示唆されています。
 
-#### Avoid CHECK in other positions
+#### 他の場所での CHECK は避ける
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Control flow](#control-flow) > [This section](#avoid-check-in-other-positions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [制御フロー](#制御フロー) > [本節](#他の場所での-CHECK-は避ける)
 
-Do not use `CHECK` outside of the initialization section of a method.
-The statement behaves differently in different positions and may lead to unclear, unexpected effects.
+メソッドの初期化セクション以外で `CHECK` を使用しないでください。
+ステートメントの挙動は、その位置によって変化し、不明瞭で予想外の結果を招く可能性があります。
 
-For example,
-[`CHECK` in a `LOOP` ends the current iteration and proceeds with the next one](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abapcheck_loop.htm);
-people might accidentally expect it to end the method or exit the loop.
-Prefer using an `IF` statement in combination with `CONTINUE` instead, since `CONTINUE` only can be used in loops.
+例えば、[`LOOP` 内の `CHECK` は現在のイテレーションを終了して次のイテレーションに進みます](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abapcheck_loop.htm)。
+メソッドを終了したり、ループを抜けることを誤って期待してしまう人もいるかもしれません。
+`CONTINUE` はループの中でしか使えないので、代わりに `CONTINUE` と組み合わせて `IF` 文を使うことをお勧めします。
 
-> Based on the [section _Exiting Procedures_ in the ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenexit_procedure_guidl.htm).
-> Note that this contradicts the [keyword reference for `CHECK` in loops](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abapcheck_loop.htm).
+> [ABAP プログラミングガイドラインの _Exiting Procedures_](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abenexit_procedure_guidl.htm) の節に基づいています。
+> これは、[ループ内の `CHECK` のキーワードリファレンス](https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abapcheck_loop.htm) と矛盾していることに注意してください。
 
-## Error Handling
+## エラー処理
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [This section](#error-handling)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [本節](#エラー処理)
 
-### Messages
+### メッセージ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [This section](#messages)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [本節](#メッセージ)
 
-#### Make messages easy to find
+#### メッセージを見つけやすくする
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Messages](#messages) > [This section](#make-messages-easy-to-find)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [メッセージ](#メッセージ) > [本節](#メッセージを見つけやすくする)
 
-To make messages easy to find through a where-used search from transaction SE91, use the following pattern:
+トランザクションSE91からの使用先検索でメッセージを見つけやすくするために、以下のパターンを使用してください。
 
 ```ABAP
 MESSAGE e001(ad) INTO DATA(message).
 ```
 
-In case variable `message` is not needed, add the pragma `##NEEDED`:
+変数 `message` が不要な場合は、`##NEEDED` というプラグマを追加します。
 
 ```ABAP
 MESSAGE e001(ad) INTO DATA(message) ##NEEDED.
 ```
 
-Avoid the following:
+以下のようなコードは避けてください。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF 1 = 2. MESSAGE e001(ad). ENDIF.
 ```
 
-This is an anti-pattern since:
+これは次の理由によりアンチパターンです。
 
-- It contains unreachable code.
-- It tests a condition which can never be true for equality.
+- 到達不可能なコードが含まれています。
+- 決して真になりえない等価条件をテストします。
 
-### Return Codes
+### リターンコード
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [This section](#return-codes)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [本節](#リターンコード)
 
-#### Prefer exceptions to return codes
+#### リターンコードよりも例外を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Return Codes](#return-codes) > [This section](#prefer-exceptions-to-return-codes)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [リターンコード](#リターンコード) > [本節](#リターンコードよりも例外を選ぶ)
 
 ```ABAP
 METHOD try_this_and_that.
@@ -2773,37 +2767,37 @@ METHOD try_this_and_that.
 ENDMETHOD.
 ```
 
-instead of
+次のようにするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD try_this_and_that.
   error_occurred = abap_true.
 ENDMETHOD.
 ```
 
-Exceptions have multiple advantages over return codes:
+例外にはリターンコードよりも複数の利点があります。
 
-- Exceptions keep your method signatures clean:
-  you can return the result of the method as a `RETURNING` parameter and still throw exceptions alongside.
-  Return codes pollute your signatures with additional parameters for error handling.
+- 例外はメソッドのシグネチャをクリーンな状態に保ちます。
+  `RETURNING` パラメータとしてメソッドの結果を返し、それと並行して例外を投げることができます。
+  リターンコードは、エラー処理のための追加のパラメータでシグネチャを汚します。
 
-- The caller doesn't have to react to them immediately.
-  He can simply write down the happy path of his code.
-  The exception-handling `CATCH` can be at the very end of his method, or completely outside.
+- 呼び出し側はすぐに反応する必要はありません。
+  シンプルに自分のコードの正常系処理を書けばいいのです。
+  例外処理の `CATCH` は、メソッドの最後にあってもいいし、完全にメソッドの外側にあってもいいのです。
+  
+- 例外は、その属性やメソッドを通じてエラーの詳細を提供することができます。
+  リターンコードでは、ログも返すなど、独自に別の解決策を考案する必要があります。
 
-- Exceptions can provide details on the error in their attributes and through methods.
-  Return codes require you to devise a different solution on your own, such as also returning a log.
+- 環境は、呼び出し元に例外を処理するための構文エラーを通知します。
+  リターンコードは誰にも気づかれずに誤って無視されてしまうことがあります。
 
-- The environment reminds the caller with syntax errors to handle exceptions.
-  Return codes can be accidentally ignored without anybody noticing.
+#### エラーを取り逃がさない
 
-#### Don't let failures slip through
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [リターンコード](#リターンコード) > [本節](#エラーを取り逃がさない)
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Return Codes](#return-codes) > [This section](#dont-let-failures-slip-through)
-
-If you do have to use return codes, for example because you call Functions and older code not under your control,
-make sure you don't let failures slip through.
+自分の管理下ではない関数や古いコードを呼び出すなどしてリターンコードを使用しなければならない場合は、
+エラーを取り逃がすことのないようにしてください。
 
 ```ABAP
 DATA:
@@ -2821,13 +2815,13 @@ IF response-type = 'E'.
 ENDIF.
 ```
 
-### Exceptions
+### 例外
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [This section](#exceptions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [本節](#例外)
 
 #### Exceptions are for errors, not for regular cases
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Exceptions](#exceptions) > [This section](#exceptions-are-for-errors-not-for-regular-cases)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [例外](#例外) > [本節](#exceptions-are-for-errors-not-for-regular-cases)
 
 ```ABAP
 " anti-pattern
@@ -2864,7 +2858,7 @@ and often gather lots of context information.
 
 #### Use class-based exceptions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Exceptions](#exceptions) > [This section](#use-class-based-exceptions)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Exceptions](#exceptions) > [This section](#use-class-based-exceptions)
 
 ```ABAP
 TRY.
@@ -2885,11 +2879,11 @@ get_component_types(
 
 ### Throwing
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [This section](#throwing)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [This section](#throwing)
 
 #### Use own super classes
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#use-own-super-classes)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#use-own-super-classes)
 
 ```ABAP
 CLASS cx_fra_static_check DEFINITION ABSTRACT INHERITING FROM cx_static_check.
@@ -2904,7 +2898,7 @@ Enables you to add common functionality to all exceptions, such as special text 
 
 #### Throw one type of exception
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#例外は1つの型のみをスローする)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#例外は1つの型のみをスローする)
 
 ```ABAP
 METHODS generate
@@ -2932,7 +2926,7 @@ as described in [Use sub-classes to enable callers to distinguish error situatio
 
 #### Use sub-classes to enable callers to distinguish error situations
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#use-sub-classes-to-enable-callers-to-distinguish-error-situations)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#use-sub-classes-to-enable-callers-to-distinguish-error-situations)
 
 ```ABAP
 CLASS cx_bad_generation_variable DEFINITION INHERITING FROM cx_generation_error.
@@ -2976,7 +2970,7 @@ ENDTRY.
 
 #### Throw CX_STATIC_CHECK for manageable exceptions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#throw-cx_static_check-for-manageable-exceptions)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#throw-cx_static_check-for-manageable-exceptions)
 
 If an exception can be expected to occur and be reasonably handled by the receiver,
 throw a checked exception inheriting from `CX_STATIC_CHECK`: failing user input validation,
@@ -3003,7 +2997,7 @@ and will take care of reacting to the error situation.
 
 #### Throw CX_NO_CHECK for usually unrecoverable situations
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#throw-cx_no_check-for-usually-unrecoverable-situations)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#throw-cx_no_check-for-usually-unrecoverable-situations)
 
 If an exception is so severe that the receiver is unlikely to recover from it, use `CX_NO_CHECK`:
 failure to read a must-have resource, failure to resolve the requested dependency, etc.
@@ -3030,7 +3024,7 @@ this service should be able to catch and ignore the exception instead of being f
 
 #### Consider CX_DYNAMIC_CHECK for avoidable exceptions
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#consider-cx_dynamic_check-for-avoidable-exceptions)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#consider-cx_dynamic_check-for-avoidable-exceptions)
 
 Use cases for `CX_DYNAMIC_CHECK` are rare,
 and in general we recommend to resort to the other exception types.
@@ -3062,7 +3056,7 @@ to omit the unnecessary `CATCH` clause.
 
 #### Dump for totally unrecoverable situations
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#dump-for-totally-unrecoverable-situations)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#dump-for-totally-unrecoverable-situations)
 
 If a situation is so severe that you are totally sure the receiver is unlikely to recover from it,
 or that clearly indicates a programming error, dump instead of throwing an exception:
@@ -3078,7 +3072,7 @@ Use this only if you are sure about that.
 
 #### Prefer RAISE EXCEPTION NEW to RAISE EXCEPTION TYPE
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#prefer-raise-exception-new-to-raise-exception-type)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#prefer-raise-exception-new-to-raise-exception-type)
 
 Note: Available from NW 7.52 onwards.
 
@@ -3105,11 +3099,11 @@ RAISE EXCEPTION TYPE cx_generation_error
 
 ### Catching
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [This section](#catching)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [This section](#catching)
 
 #### Wrap foreign exceptions instead of letting them invade your code
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Catching](#catching) > [This section](#wrap-foreign-exceptions-instead-of-letting-them-invade-your-code)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Catching](#catching) > [This section](#wrap-foreign-exceptions-instead-of-letting-them-invade-your-code)
 
 ```ABAP
 METHODS generate RAISING cx_generation_failure.
@@ -3193,7 +3187,7 @@ and resort to comments only if that fails.
 > The clean variant takes 9.6 microseconds to fix the input `31-02-2018`, the dirty variant only 4.5 microseconds.
 > This may be a problem when the method is run very often in a high-performance application;
 > for regular user input validation, it should be acceptable.
-> Resort to the section [Mind the performance](#mind-the-performance) to deal with Clean Code and performance issues.
+> Resort to the section [パフォーマンスに注意する](#パフォーマンスに注意する) to deal with Clean Code and performance issues.
 
 ### 不適切な命名をコメントで補おうとしないでください
 

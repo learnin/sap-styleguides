@@ -117,13 +117,13 @@
   - [パラメータ名](#パラメータ名)
     - [RETURNING パラメータに RESULT と名付けることを考える](#RETURNING-パラメータに-RESULT-と名付けることを考える)
   - [パラメータの初期化](#パラメータの初期化)
-    - [Clear or overwrite EXPORTING reference parameters](#clear-or-overwrite-exporting-reference-parameters)
+    - [EXPORTING 参照パラメータはクリアするか上書きする](#EXPORTING-参照パラメータはクリアするか上書きする)
       - [入力と出力が同一になる場合に注意する](#入力と出力が同一になる場合に注意する)
-    - [Don't clear VALUE parameters](#dont-clear-value-parameters)
-  - [Method Body](#method-body)
-    - [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only)
+    - [VALUE パラメータをクリアしない](#VALUE-パラメータをクリアしない)
+  - [メソッドボディ](#メソッドボディ)
+    - [1つのことだけをうまくやる](#1つのことだけをうまくやる)
     - [正常系かエラー処理に集中する, 両方ではなく](#正常系かエラー処理に集中する-両方ではなく)
-    - [Descend one level of abstraction](#descend-one-level-of-abstraction)
+    - [抽象度を1段下げる](#抽象度を1段下げる)
     - [Keep methods small](#keep-methods-small)
   - [Control flow](#control-flow)
     - [Fail fast](#fail-fast)
@@ -140,7 +140,7 @@
     - [Use class-based exceptions](#use-class-based-exceptions)
   - [Throwing](#throwing)
     - [Use own super classes](#use-own-super-classes)
-    - [Throw one type of exception](#throw-one-type-of-exception)
+    - [Throw one type of exception](#例外は1つの型のみをスローする)
     - [Use sub-classes to enable callers to distinguish error situations](#use-sub-classes-to-enable-callers-to-distinguish-error-situations)
     - [Throw CX_STATIC_CHECK for manageable exceptions](#throw-cx_static_check-for-manageable-exceptions)
     - [Throw CX_NO_CHECK for usually unrecoverable situations](#throw-cx_no_check-for-usually-unrecoverable-situations)
@@ -243,7 +243,7 @@ Clean Code を初めて利用する場合は、まず、[Robert C. Martin の _C
 
 [ブーリアン](#ブーリアン) や [Conditions](#conditions) 、 [Ifs](#ifs) のようにわかりやすく、広く受け入れられるものから始めることをお勧めします。
 
-おそらく [メソッド](#メソッド) 、特に [Do one thing, do it well, do it only](#do-one-thing-do-it-well-do-it-only) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
+おそらく [メソッド](#メソッド) 、特に [1つのことだけをうまくやる](#1つのことだけをうまくやる) と [Small](#keep-methods-small) の節がもっとも有益でしょう。なぜなら、これらはコードの全体的な構造を大幅に改善するからです。
 
 ここに書かれているトピックの中には、経験は豊富だがクリーンコードに慣れていないチームでは難しい議論を引き起こす可能性があるものもあります。これらのトピックは完全に「健全」ですが、最初は慣れるのが難しいかもしれません。
 
@@ -2347,12 +2347,12 @@ ENDMETHOD.
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#パラメータの初期化)
 
-#### Clear or overwrite EXPORTING reference parameters
+#### EXPORTING 参照パラメータはクリアするか上書きする
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの初期化](#パラメータの初期化) > [本節](#clear-or-overwrite-exporting-reference-parameters)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの初期化](#パラメータの初期化) > [本節](#EXPORTING-参照パラメータはクリアするか上書きする)
 
-Reference parameters refer to existing memory areas that may be filled beforehand.
-Clear or overwrite them to provide reliable data:
+参照パラメータは、あらかじめ埋められている可能性のある既存のメモリ領域を参照します。
+信頼性の高いデータを提供するために、それらをクリアまたは上書きしてください。
 
 ```ABAP
 METHODS square
@@ -2371,21 +2371,21 @@ METHOD square.
 ENDMETHOD.
 ```
 
-> Code inspector and Checkman point out `EXPORTING` variables that are never written.
-> Use these static checks to avoid this otherwise rather obscure error source.
+> コードインスペクタと Checkman は、決して書き込まれない `EXPORTING` 変数を指摘します。
+> これらの静的チェックを使用して、このような不明瞭なエラー原因を回避してください。
 
 ##### 入力と出力が同一になる場合に注意する
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [Methods](#methods) > [パラメータの初期化](#パラメータの初期化) > [本節](#入力と出力が同一になる場合に注意する)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの初期化](#パラメータの初期化) > [本節](#入力と出力が同一になる場合に注意する)
 
-Generally, it is a good idea to clear the parameter as a first thing in the method after type and data declarations.
-This makes the statement easy to spot and avoids that the still-contained value is accidentally used by later statements.
+一般的に、型やデータの宣言の後に、メソッド内で最初にパラメータをクリアするのはよいアイデアです。
+これにより、ステートメントを発見しやすくなり、後のステートメントでまだ格納されている値を誤って使用してしまうことを避けることができます。
 
-However, some parameter configurations could use the same variable as input and output.
-In this case, an early `CLEAR` would delete the input value before it can be used, producing wrong results.
+しかし、パラメータ構成によっては、入力と出力で同じ変数を使用することがあります。
+この場合、早期の `CLEAR` は入力値を使用する前に削除してしまい、間違った結果をもたらします。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA value TYPE i.
 
 square_dirty(
@@ -2400,16 +2400,16 @@ METHOD square_dirty.
 ENDMETHOD.
 ```
 
-Consider redesigning such methods by replacing `EXPORTING` with `RETURNING`.
-Also consider overwriting the `EXPORTING` parameter in a single result calculation statement.
-If neither fits, resort to a late `CLEAR`.
+このようなメソッドの戻り値を `EXPORTING` から `RETURNING` に変更することを検討してください。
+または、単一の計算結果文で `EXPORTING` パラメータを上書きすることも検討してください。
+どちらも適合しない場合にのみ、後で `CLEAR` を使用してください。
 
-#### Don't clear VALUE parameters
+#### VALUE パラメータをクリアしない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [パラメータの初期化](#パラメータの初期化) > [This section](#dont-clear-value-parameters)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [パラメータの初期化](#パラメータの初期化) > [本節](#VALUE-パラメータをクリアしない)
 
-Parameters that work by `VALUE` are handed over as new, separate memory areas that are empty by definition.
-Don't clear them again:
+`VALUE` で動作するパラメータは、定義では空の新しい独立したメモリ領域として渡されます。
+再度クリアしないようにしてください。
 
 ```ABAP
 METHODS square
@@ -2421,7 +2421,7 @@ METHOD square.
 ENDMETHOD.
 ```
 
-`RETURNING` parameters are always `VALUE` parameters, so you never have to clear them:
+`RETURNING` パラメータは常に `VALUE` パラメータなので、クリアする必要はありません。
 
 ```ABAP
 METHODS square
@@ -2433,39 +2433,37 @@ METHOD square.
 ENDMETHOD.
 ```
 
-### Method Body
+### メソッドボディ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [This section](#method-body)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [本節](#メソッドボディ)
 
-#### Do one thing, do it well, do it only
+#### 1つのことだけをうまくやる
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#do-one-thing-do-it-well-do-it-only)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッドボディ](#メソッドボディ) > [本節](#1つのことだけをうまくやる)
 
-A method should do one thing, and only one thing.
-It should do it in the best way possible.
+メソッドは一つのことを行うべきであり、一つのことだけを行うべきです。
+それは可能な限り最善の方法で行うべきです。
 
-A method likely does one thing if
+以下の場合、メソッドはおそらく1つのことを行います。
 
-- it has [few input parameters](#IMPORTINGパラメータは少なく-3つ以下を目指す)
-- it [doesn't include Boolean parameters](#boolean型の入力パラメータの代わりにメソッドを分割する)
-- it has [exactly one output parameter](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
-- it is [small](#keep-methods-small)
-- it [descends one level of abstraction](#descend-one-level-of-abstraction)
-- it only [throws one type of exception](#throw-one-type-of-exception)
-- you cannot extract meaningful other methods
-- you cannot meaningfully group its statements into sections
+- [入力パラメータは少なく](#IMPORTINGパラメータは少なく-3つ以下を目指す)
+- [ブーリアン型のパラメータを含まない](#ブーリアン型の入力パラメータの代わりにメソッドを分割する)
+- [きっちり一つの出力パラメータ](#RETURN-EXPORT-CHANGE-は1つだけのパタメータにする)
+- [小さい](#keep-methods-small)
+- [抽象度を1段下げる](#抽象度を1段下げる)
+- [例外は1つの型のみをスローする](#例外は1つの型のみをスローする)
+- そのメソッドから意味のある他のメソッドを抽出できない
+- そのメソッド内の文を意味のあるまとまりに分類できない
 
 #### 正常系かエラー処理に集中する, 両方ではなく
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#正常系かエラー処理に集中す。-両方ではなく)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッドボディ](#メソッドボディ) > [本節](#正常系かエラー処理に集中する-両方ではなく)
 
-As a specialization of the rule [_Do one thing, do it well, do it only_](#do-one-thing-do-it-well-do-it-only),
-a method should either follow the happy-path it's built for,
-or the error-handling-detour in case it can't,
-but probably not both.
+[_1つのことだけをうまくやる_](#1つのことだけをうまくやる) というルールを特化したものとして、
+メソッドは目的のハッピーパスを処理するか、そうでない場合にはエラー処理の迂回路を処理すべきですが、その両方ではありません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD append_xs.
   IF input > 0.
     DATA(remainder) = input.
@@ -2481,7 +2479,7 @@ METHOD append_xs.
 ENDMETHOD.
 ```
 
-Can be decomposed into
+これは、以下のように分解することができます。
 
 ```ABAP
 METHOD append_xs.
@@ -2502,7 +2500,7 @@ METHOD validate.
 ENDMETHOD.
 ```
 
-or, to stress the validation part
+または、検証の部分を強調するために次のように書くこともできます。
 
 ```ABAP
 METHOD append_xs.
@@ -2524,12 +2522,12 @@ METHOD append_xs_without_check.
 ENDMETHOD.
 ```
 
-#### Descend one level of abstraction
+#### 抽象度を1段下げる
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#descend-one-level-of-abstraction)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [メソッド](#メソッド) > [メソッドボディ](#メソッドボディ) > [本節](#抽象度を1段下げる)
 
-Statements in a method should be one level of abstraction below the method itself.
-Correspondingly, they should all be on the same level of abstraction.
+メソッド内の文は、メソッド自体よりも1つ下の抽象度でなければなりません。
+これに対応して、それらはすべて同じ抽象度でなければなりません。
 
 ```ABAP
 METHOD create_and_publish.
@@ -2538,10 +2536,10 @@ METHOD create_and_publish.
 ENDMETHOD.
 ```
 
-instead of confusing mixtures of low level (`trim`, `to_upper`, ...) and high level (`publish`, ...) concepts like
+次のように、低レベル(`trim`、 `to_upper`、 ...)と高レベル(`publish`、 ...)の概念を混ぜ合わせるのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD create_and_publish.
   post = NEW blog_post( ).
   DATA(user_name) = trim( to_upper( sy-uname ) ).
@@ -2550,13 +2548,13 @@ METHOD create_and_publish.
 ENDMETHOD.
 ```
 
-A reliable way to find out what the right level of abstraction is is this:
-Let the method's author explain what the method does in few, short words, without looking at the code.
-The bullets (s)he numbers are the sub-methods the method should call or the statements it should execute.
+抽象化の正しいレベルを知るための信頼性の高い方法は、
+メソッドの作者に、コードを見ずに、そのメソッドが何をするのかを短い言葉で説明してもらうことです。
+箇条書きの数字は、メソッドが呼び出すべきサブメソッド、または実行すべきステートメントです。
 
 #### Keep methods small
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [Method Body](#method-body) > [This section](#keep-methods-small)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Methods](#methods) > [メソッドボディ](#メソッドボディ) > [This section](#keep-methods-small)
 
 Methods should have less than 20 statements, optimal around 3 to 5 statements.
 
@@ -2599,7 +2597,7 @@ DATA:
 ```
 
 Of course there are occasions where it does not make sense to reduce a larger method further.
-This is perfectly okay as long as the method remains [focused on one thing](#do-one-thing-do-it-well-do-it-only):
+This is perfectly okay as long as the method remains [focused on one thing](#1つのことだけをうまくやる):
 
 ```ABAP
 METHOD decide_what_to_do.
@@ -2906,7 +2904,7 @@ Enables you to add common functionality to all exceptions, such as special text 
 
 #### Throw one type of exception
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#throw-one-type-of-exception)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#error-handling) > [Throwing](#throwing) > [This section](#例外は1つの型のみをスローする)
 
 ```ABAP
 METHODS generate
@@ -3612,7 +3610,7 @@ DATA(result) = do_something( ).
 DATA(else) = calculate_this( result ).
 ```
 
-The urge to add separating blank lines may be an indicator that your method doesn't [do one thing](#do-one-thing-do-it-well-do-it-only).
+The urge to add separating blank lines may be an indicator that your method doesn't [do one thing](#1つのことだけをうまくやる).
 
 ### Don't obsess with separating blank lines
 

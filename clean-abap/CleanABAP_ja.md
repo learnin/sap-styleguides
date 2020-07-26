@@ -136,13 +136,13 @@
     - [リターンコードよりも例外を選ぶ](#リターンコードよりも例外を選ぶ)
     - [エラーを取り逃がさない](#エラーを取り逃がさない)
   - [例外](#例外)
-    - [Exceptions are for errors, not for regular cases](#exceptions-are-for-errors-not-for-regular-cases)
-    - [Use class-based exceptions](#use-class-based-exceptions)
-  - [Throwing](#throwing)
-    - [Use own super classes](#use-own-super-classes)
-    - [Throw one type of exception](#例外は1つの型のみをスローする)
-    - [Use sub-classes to enable callers to distinguish error situations](#use-sub-classes-to-enable-callers-to-distinguish-error-situations)
-    - [Throw CX_STATIC_CHECK for manageable exceptions](#throw-cx_static_check-for-manageable-exceptions)
+    - [例外はエラーのために使い, 通常のケースでは使用しない](#例外はエラーのために使い-通常のケースでは使用しない)
+    - [クラスベースの例外を使う](#クラスベースの例外を使う)
+  - [スロー](#スロー)
+    - [独自のスーパークラスを使う](#独自のスーパークラスを使う)
+    - [例外は1つの型のみをスローする](#例外は1つの型のみをスローする)
+    - [呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う](#呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う)
+    - [管理可能な例外のために CX_STATIC_CHECK をスローする](#管理可能な例外のために-CX_STATIC_CHECK-をスローする)
     - [Throw CX_NO_CHECK for usually unrecoverable situations](#throw-cx_no_check-for-usually-unrecoverable-situations)
     - [Consider CX_DYNAMIC_CHECK for avoidable exceptions](#consider-cx_dynamic_check-for-avoidable-exceptions)
     - [Dump for totally unrecoverable situations](#dump-for-totally-unrecoverable-situations)
@@ -2819,12 +2819,12 @@ ENDIF.
 
 > [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [本節](#例外)
 
-#### Exceptions are for errors, not for regular cases
+#### 例外はエラーのために使い, 通常のケースでは使用しない
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [例外](#例外) > [本節](#exceptions-are-for-errors-not-for-regular-cases)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [例外](#例外) > [本節](#例外はエラーのために使い-通常のケースでは使用しない)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS entry_exists_in_db
   IMPORTING
     key TYPE char10
@@ -2832,7 +2832,7 @@ METHODS entry_exists_in_db
     cx_not_found_exception.
 ```
 
-If something is a regular, valid case, it should be handled with regular result parameters.
+通常の、有効なケースであれば、通常の結果パラメータで処理されるべきです。
 
 ```ABAP
 METHODS entry_exists_in_db
@@ -2842,7 +2842,7 @@ METHODS entry_exists_in_db
     VALUE(result) TYPE abap_bool.
 ```
 
-Exceptions should be reserved for cases that you don't expect and that reflect error situations.
+例外は、予期しない場合やエラーの状況を反映した場合にのみ使用してください。
 
 ```ABAP
 METHODS assert_user_input_is_valid
@@ -2852,13 +2852,12 @@ METHODS assert_user_input_is_valid
     cx_bad_user_input.
 ```
 
-Misusing exceptions misguides the reader into thinking something went wrong, when really everything is just fine.
-Exceptions are also much slower than regular code because they need to be constructed
-and often gather lots of context information.
+例外の使い方を誤ると、実際には何も問題がないのに、何か問題が起きたように読者に誤解を与えてしまいます。
+また、例外は構築する必要があり、多くのコンテキスト情報を収集することが多いため、通常のコードよりもはるかに遅くなります。
 
-#### Use class-based exceptions
+#### クラスベースの例外を使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Exceptions](#exceptions) > [This section](#use-class-based-exceptions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [例外](#例外) > [本節](#クラスベースの例外を使う)
 
 ```ABAP
 TRY.
@@ -2867,38 +2866,37 @@ TRY.
 ENDTRY.
 ```
 
-The outdated non-class-based exceptions have the same features as return codes and shouldn't be used anymore.
+時代遅れの非クラスベースの例外はリターンコードと同じ機能を持っているので、もう使うべきではありません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 get_component_types(
   EXCEPTIONS
     has_deep_components = 1
     OTHERS              = 2 ).
 ```
 
-### Throwing
+### スロー
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [This section](#throwing)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [本節](#スロー)
 
-#### Use own super classes
+#### 独自のスーパークラスを使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#use-own-super-classes)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#独自のスーパークラスを使う)
 
 ```ABAP
 CLASS cx_fra_static_check DEFINITION ABSTRACT INHERITING FROM cx_static_check.
 CLASS cx_fra_no_check DEFINITION ABSTRACT INHERITING FROM cx_no_check.
 ```
+ABAP標準クラスを直接継承するのではなく、
+アプリケーションの各例外タイプ用の抽象スーパークラスを作成することを検討してください。
+これにより、すべての _アプリケーションの_ 例外を `CATCH` できるようになりますし、
+特殊なテキスト処理など、すべての例外に共通の機能を追加することができます。
+`ABSTRACT` は、これらの非記述的なエラーを誤って直接使用してしまうことを防ぎます。
 
-Consider creating abstract super classes for each exception type for your application,
-instead of sub-classing the foundation classes directly.
-Allows you to `CATCH` all _your_ exceptions.
-Enables you to add common functionality to all exceptions, such as special text handling.
-`ABSTRACT` prevents people from accidentally using these non-descriptive errors directly.
+#### 例外は1つの型のみをスローする
 
-#### Throw one type of exception
-
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#例外は1つの型のみをスローする)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#例外は1つの型のみをスローする)
 
 ```ABAP
 METHODS generate
@@ -2906,13 +2904,13 @@ METHODS generate
     cx_generation_error.
 ```
 
-In the vast majority of cases, throwing multiple types of exceptions has no use.
-The caller usually is neither interested nor able to distinguish the error situations.
-He will therefore typically handle them all in the same way -
-and if this is the case, why distinguish them in the first place?
+大多数のケースでは、複数の型の例外を投げても何の意味もありません。
+呼び出し側は通常、エラーの状況に興味もないし、それを区別することもできません。
+そのため、呼び出し元は一般的に、すべての例外を同じように処理することになります。
+そして、もしそうであるなら、なぜ最初にそれらを区別するのでしょうか?
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS generate
   RAISING
     cx_abap_generation
@@ -2920,13 +2918,13 @@ METHODS generate
     cx_model_read_error.
 ```
 
-A better solution to recognize different error situations is using one exception type
-but adding sub-classes that allow - but don't require - reacting to individual error situations,
-as described in [Use sub-classes to enable callers to distinguish error situations](#use-sub-classes-to-enable-callers-to-distinguish-error-situations).
+異なるエラー状況を認識するためのよりよい解決策は、1 つの例外タイプを使用して、
+[呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う](#呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う) で説明されているように、
+個々のエラー状況に反応できるようにする（ただし必須ではありません）サブクラスを追加することです。
 
-#### Use sub-classes to enable callers to distinguish error situations
+#### 呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#use-sub-classes-to-enable-callers-to-distinguish-error-situations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う)
 
 ```ABAP
 CLASS cx_bad_generation_variable DEFINITION INHERITING FROM cx_generation_error.
@@ -2943,7 +2941,7 @@ TRY.
 ENDTRY.
 ```
 
-If there are many different error situations, use error codes instead:
+多くの異なるエラー状況がある場合は、代わりにエラーコードを使用します。
 
 ```ABAP
 CLASS cx_generation_error DEFINITION ...
@@ -2968,13 +2966,13 @@ TRY.
 ENDTRY.
 ```
 
-#### Throw CX_STATIC_CHECK for manageable exceptions
+#### 管理可能な例外のために CX_STATIC_CHECK をスローする
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#throw-cx_static_check-for-manageable-exceptions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#管理可能な例外のために-CX_STATIC_CHECK-をスローする)
 
-If an exception can be expected to occur and be reasonably handled by the receiver,
-throw a checked exception inheriting from `CX_STATIC_CHECK`: failing user input validation,
-missing resource for which there are fallbacks, etc.
+例外が発生することが予想され、キャッチした側が合理的に処理できる場合、
+（ユーザ入力の検証に失敗した場合や、フォールバックが存在するリソースが見つからないなどの場合）
+`CX_STATIC_CHECK` を継承した検査例外をスローします。
 
 ```ABAP
 CLASS cx_file_not_found DEFINITION INHERITING FROM cx_static_check.
@@ -2986,18 +2984,17 @@ METHODS read_file
     cx_file_not_found.
 ```
 
-This exception type _must_ be given in method signatures and _must_ be caught or forwarded to avoid syntax errors.
-It is therefore plain to see for the consumer and ensures that (s)he won't be surprised by an unexpected exception
-and will take care of reacting to the error situation.
+この例外型はメソッドシグネチャで与え _られなければならず_、構文エラーを回避するためには、例外をキャッチするか伝播 _させなければなりません_。
+したがって、利用者にとってはわかりやすく、予期せぬ例外に驚くことなく、エラー状況への対応に気を配ることができるようになります。
 
-> This is in sync with the [ABAP Programming Guidelines](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenexception_category_guidl.htm)
-> but contradicts [Robert C. Martin's _Clean Code_],
-> which recommends to prefer unchecked exceptions;
-> [Exceptions](sub-sections/Exceptions.md) explains why.
+> これは[ABAPプログラミングガイドライン](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenexception_category_guidl.htm) と同期していますが、
+> [Robert C. Martin の Clean Code]と矛盾しており、
+> そちらでは非検査例外を選ぶことを推奨しています。
+> [例外](sub-sections/Exceptions.md) で理由を説明しています。
 
 #### Throw CX_NO_CHECK for usually unrecoverable situations
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#throw-cx_no_check-for-usually-unrecoverable-situations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#throw-cx_no_check-for-usually-unrecoverable-situations)
 
 If an exception is so severe that the receiver is unlikely to recover from it, use `CX_NO_CHECK`:
 failure to read a must-have resource, failure to resolve the requested dependency, etc.

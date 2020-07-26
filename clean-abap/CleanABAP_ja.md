@@ -151,7 +151,7 @@
     - [Wrap foreign exceptions instead of letting them invade your code](#wrap-foreign-exceptions-instead-of-letting-them-invade-your-code)
 - [Comments](#comments)
   - [Express yourself in code, not in comments](#express-yourself-in-code-not-in-comments)
-  - [不適切な命名をコメントで補おうとしないでください](#不適切な命名をコメントで補おうとしないでください)
+  - [不適切な命名をコメントで補おうとしない](#不適切な命名をコメントで補おうとしない)
   - [Use methods instead of comments to segment your code](#use-methods-instead-of-comments-to-segment-your-code)
   - [Write comments to explain the why, not the what](#write-comments-to-explain-the-why-not-the-what)
   - [Design goes into the design documents, not the code](#design-goes-into-the-design-documents-not-the-code)
@@ -336,7 +336,7 @@ METHODS read_t005 ...
 CLASS /dirty/t005_reader ...
 ```
 
-[不適切な命名をコメントで補おうとしないでください](#不適切な命名をコメントで補おうとしないでください)
+[不適切な命名をコメントで補おうとしない](#不適切な命名をコメントで補おうとしない)
 
 > 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 2: Meaningful Names: Use Intention-Revealing Names_ を参照してください。
 
@@ -3186,9 +3186,9 @@ and resort to comments only if that fails.
 > for regular user input validation, it should be acceptable.
 > Resort to the section [パフォーマンスに注意する](#パフォーマンスに注意する) to deal with Clean Code and performance issues.
 
-### 不適切な命名をコメントで補おうとしないでください
+### 不適切な命名をコメントで補おうとしない
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Comments](#comments) > [This section](#不適切な命名をコメントで補おうとしないでください)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Comments](#comments) > [This section](#不適切な命名をコメントで補おうとしない)
 
 ```ABAP
 DATA(input_has_entries) = has_entries( input ).

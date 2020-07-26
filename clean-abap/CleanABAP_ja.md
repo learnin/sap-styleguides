@@ -2988,7 +2988,7 @@ METHODS read_file
 したがって、利用者にとってはわかりやすく、予期せぬ例外に驚くことなく、エラー状況への対応に気を配ることができるようになります。
 
 > これは[ABAPプログラミングガイドライン](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abenexception_category_guidl.htm) と同期していますが、
-> [Robert C. Martin の Clean Code]と矛盾しており、
+> [Robert C. Martin の _Clean Code_]と矛盾しており、
 > そちらでは非検査例外を選ぶことを推奨しています。
 > [例外](sub-sections/Exceptions.md) で理由を説明しています。
 

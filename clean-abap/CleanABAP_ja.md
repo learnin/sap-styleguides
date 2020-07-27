@@ -143,8 +143,8 @@
     - [例外は1つの型のみをスローする](#例外は1つの型のみをスローする)
     - [呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う](#呼び出し元がエラー状況を区別できるようにするためにサブクラスを使う)
     - [管理可能な例外のために CX_STATIC_CHECK をスローする](#管理可能な例外のために-CX_STATIC_CHECK-をスローする)
-    - [Throw CX_NO_CHECK for usually unrecoverable situations](#throw-cx_no_check-for-usually-unrecoverable-situations)
-    - [Consider CX_DYNAMIC_CHECK for avoidable exceptions](#consider-cx_dynamic_check-for-avoidable-exceptions)
+    - [通常は回復不可能な場合に CX_NO_CHECK をスローする](#通常は回復不可能な場合に-CX_NO_CHECK-をスローする)
+    - [回避可能な例外には CX_DYNAMIC_CHECK を検討する](#回避可能な例外には-CX_DYNAMIC_CHECK-を検討する)
     - [Dump for totally unrecoverable situations](#dump-for-totally-unrecoverable-situations)
     - [Prefer RAISE EXCEPTION NEW to RAISE EXCEPTION TYPE](#prefer-raise-exception-new-to-raise-exception-type)
   - [Catching](#catching)
@@ -2992,12 +2992,13 @@ METHODS read_file
 > そちらでは非検査例外を選ぶことを推奨しています。
 > [例外](sub-sections/Exceptions.md) で理由を説明しています。
 
-#### Throw CX_NO_CHECK for usually unrecoverable situations
+#### 通常は回復不可能な場合に CX_NO_CHECK をスローする
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#throw-cx_no_check-for-usually-unrecoverable-situations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#通常は回復不可能な場合に-CX_NO_CHECK-をスローする)
 
-If an exception is so severe that the receiver is unlikely to recover from it, use `CX_NO_CHECK`:
-failure to read a must-have resource, failure to resolve the requested dependency, etc.
+例外が非常に深刻で、キャッチした側がそこから回復する可能性が低い場合、
+（必須リソースの読み込みに失敗した場合や、要求された依存関係の解決に失敗した場合など）
+`CX_NO_CHECK` を使用してください。
 
 ```ABAP
 CLASS cx_out_of_memory DEFINITION INHERITING FROM cx_no_check.
@@ -3007,27 +3008,23 @@ METHODS create_guid
     VALUE(result) TYPE /bobf/conf_key.
 ```
 
-`CX_NO_CHECK` _cannot_ be declared in method signatures,
-such that its occurrence will come as a bad surprise to the consumer.
-In the case of unrecoverable situations, this is okay
-because the consumer will not be able to do anything useful about it anyway.
+`CX_NO_CHECK` は、メソッドシグネチャで宣言することが _できません_。
+そのため、発生すると、利用者には悪い驚きとなります。
+回復不可能な状況の場合には、利用者はいずれにせよそれについて何も有用なことができないので、これは問題ありません。
 
-However, there _may_ be cases where the consumer actually wants to recognize and react to this kind of failure.
-For example, a dependency manager could throw a `CX_NO_CHECK` if it's unable to provide an implementation
-for a requested interface because regular application code will not be able to continue.
-However, there may be a test report that tries to instantiate all kinds of things just to see if it's working,
-and that will report failure simply as a red entry in a list -
-this service should be able to catch and ignore the exception instead of being forced to dump.
+しかし、利用者が実際にこの種のエラーを認識して対応したい場合もある _かもしれません_。
+例えば、依存関係マネージャは、要求されたインタフェースの実装を提供できない場合、通常のアプリケーションコードが継続できなくなるため、`CX_NO_CHECK` を投げるかもしれません。
+しかし、動作しているかどうかを確認するためだけにあらゆる種類のものをインスタンス化しようとするテストレポートがあるかもしれず、
+それはエラーを単にリストの赤い項目として報告するでしょう。
+このサービスは、強制的にダンプされるのではなく、例外をキャッチして無視できるようにしなければなりません。
 
-#### Consider CX_DYNAMIC_CHECK for avoidable exceptions
+#### 回避可能な例外には CX_DYNAMIC_CHECK を検討する
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#consider-cx_dynamic_check-for-avoidable-exceptions)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#回避可能な例外には-CX_DYNAMIC_CHECK-を検討する)
 
-Use cases for `CX_DYNAMIC_CHECK` are rare,
-and in general we recommend to resort to the other exception types.
-However, you may want to consider this kind of exception
-as a replacement for `CX_STATIC_CHECK` if the caller has full,
-conscious control over whether an exception can occur.
+`CX_DYNAMIC_CHECK` の活用事例は稀であり、
+一般的には他の例外型を使用することをお勧めします。
+しかし、呼び出し元が例外が発生するかどうかを完全に意識的に制御できる場合には、`CX_STATIC_CHECK` の代わりにこの種の例外を検討してもよいかもしれません．
 
 ```ABAP
 DATA value TYPE decfloat.
@@ -3039,21 +3036,17 @@ cl_abap_math=>get_db_length_decs(
     length = DATA(length) ).
 ```
 
-For example, consider the method `get_db_length_decs`
-of class `cl_abap_math`, that tells you the number of digits
-and decimal places of a decimal floating point number.
-This method raises the dynamic exception `cx_parameter_invalid_type`
-if the input parameter does not reflect a decimal floating point number.
-Usually, this method will be called
-for a fully and statically typed variable,
-such that the developer knows
-whether that exception can ever occur or not.
-In this case, the dynamic exception would enable the caller
-to omit the unnecessary `CATCH` clause.
+例えば、浮動小数点数の桁数と小数点以下の桁数を教えてくれる
+`cl_abap_math` クラスの `get_db_length_decs` メソッドを考えてみましょう。
+このメソッドは、入力パラメータが10進浮動小数点数を反映していない場合、
+動的例外 `cx_parameter_invalid_type` を発生させます。
+通常、このメソッドは完全に静的に型付けされた変数に対して呼び出されるので、
+開発者はその例外が発生する可能性があるかどうかを知っています。
+この場合、動的例外により、呼び出し元は不要な `CATCH` 句を省略することができます。
 
 #### Dump for totally unrecoverable situations
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#dump-for-totally-unrecoverable-situations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#dump-for-totally-unrecoverable-situations)
 
 If a situation is so severe that you are totally sure the receiver is unlikely to recover from it,
 or that clearly indicates a programming error, dump instead of throwing an exception:

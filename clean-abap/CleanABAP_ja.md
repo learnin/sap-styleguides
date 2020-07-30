@@ -145,8 +145,8 @@
     - [管理可能な例外のために CX_STATIC_CHECK をスローする](#管理可能な例外のために-CX_STATIC_CHECK-をスローする)
     - [通常は回復不可能な場合に CX_NO_CHECK をスローする](#通常は回復不可能な場合に-CX_NO_CHECK-をスローする)
     - [回避可能な例外には CX_DYNAMIC_CHECK を検討する](#回避可能な例外には-CX_DYNAMIC_CHECK-を検討する)
-    - [Dump for totally unrecoverable situations](#dump-for-totally-unrecoverable-situations)
-    - [Prefer RAISE EXCEPTION NEW to RAISE EXCEPTION TYPE](#prefer-raise-exception-new-to-raise-exception-type)
+    - [まったく回復不可能な状況ではダンプする](#まったく回復不可能な状況ではダンプする)
+    - [RAISE EXCEPTION TYPE よりも RAISE EXCEPTION NEW を選ぶ](#RAISE-EXCEPTION-TYPE-よりも-RAISE-EXCEPTION-NEW-を選ぶ)
   - [Catching](#catching)
     - [Wrap foreign exceptions instead of letting them invade your code](#wrap-foreign-exceptions-instead-of-letting-them-invade-your-code)
 - [Comments](#comments)
@@ -3044,33 +3044,33 @@ cl_abap_math=>get_db_length_decs(
 開発者はその例外が発生する可能性があるかどうかを知っています。
 この場合、動的例外により、呼び出し元は不要な `CATCH` 句を省略することができます。
 
-#### Dump for totally unrecoverable situations
+#### まったく回復不可能な状況ではダンプする
 
-> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#dump-for-totally-unrecoverable-situations)
+> [Clean ABAP](#clean-abap) > [目次](#目次) > [エラー処理](#エラー処理) > [スロー](#スロー) > [本節](#まったく回復不可能な状況ではダンプする)
 
-If a situation is so severe that you are totally sure the receiver is unlikely to recover from it,
-or that clearly indicates a programming error, dump instead of throwing an exception:
-failure to acquire memory, failed index reads on a table that must be filled, etc.
+状況が非常に深刻で、エラーを受け取った側がそこから回復する可能性が低いと完全に確信している場合や、
+明らかにプログラミングエラーを示している場合は、例外を投げるのではなくダンプしてください。
+メモリの取得に失敗した場合や、埋めなければならないテーブルのインデックス読み取りに失敗した場合などです。
 
 ```ABAP
 RAISE SHORTDUMP TYPE cx_sy_create_object_error.  " >= NW 7.53
 MESSAGE x666(general).                           " < NW 7.53
 ```
 
-This behavior will prevent any kind of consumer from doing anything useful afterwards.
-Use this only if you are sure about that.
+これにより、どのような種類の利用者も、その後、何か有用なことをすることができなくなります。
+そのためダンプは、確信がある場合にのみ使用してください。
 
-#### Prefer RAISE EXCEPTION NEW to RAISE EXCEPTION TYPE
+#### RAISE EXCEPTION TYPE よりも RAISE EXCEPTION NEW を選ぶ
 
-> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#prefer-raise-exception-new-to-raise-exception-type)
+> [Clean ABAP](#clean-abap) > [Content](#content) > [Error Handling](#エラー処理) > [Throwing](#throwing) > [This section](#RAISE-EXCEPTION-TYPE-よりも-RAISE-EXCEPTION-NEW-を選ぶ)
 
-Note: Available from NW 7.52 onwards.
+注：NW 7.52 以降から利用可能。
 
 ```ABAP
 RAISE EXCEPTION NEW cx_generation_error( previous = exception ).
 ```
 
-in general is shorter than the needlessly longer
+は、一般的に、不必要に長い次のコードよりも短くなります。
 
 ```ABAP
 RAISE EXCEPTION TYPE cx_generation_error
@@ -3078,7 +3078,7 @@ RAISE EXCEPTION TYPE cx_generation_error
     previous = exception.
 ```
 
-However, if you make massive use of the addition `MESSAGE`, you may want to stick with the `TYPE` variant:
+しかし、`MESSAGE` を大量に使用するならば、`TYPE` を使用した方がいいかもしれません。
 
 ```ABAP
 RAISE EXCEPTION TYPE cx_generation_error

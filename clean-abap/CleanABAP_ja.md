@@ -173,7 +173,7 @@
   - [Condense your code](#condense-your-code)
   - [Add a single blank line to separate things, but not more](#add-a-single-blank-line-to-separate-things-but-not-more)
   - [Don't obsess with separating blank lines](#dont-obsess-with-separating-blank-lines)
-  - [同じオブジェクトへの代入時は位置を合わせるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を合わせるが-別のオブジェクトの場合はしない)
+  - [同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を合揃えるが別のオブジェクトの場合はしない)
   - [Close brackets at line end](#close-brackets-at-line-end)
   - [Keep single parameter calls on one line](#keep-single-parameter-calls-on-one-line)
   - [Keep parameters behind the call](#keep-parameters-behind-the-call)
@@ -3441,7 +3441,7 @@ MESSAGE e001(ad) INTO DATA(message). "#EC NEEDED
 以下の提案は [書くためではなく読むために最適化されています](#書くためではなく読むために最適化する)。
 ABAP のプリティプリントはこれらをカバーしていないので、
 名前の長さなどが変更されたときに、ステートメントを再フォーマットするために追加の手作業が発生するものもあります。
-これを避けたい場合は、[同じオブジェクトへの代入時は位置を合わせるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を合わせるが-別のオブジェクトの場合はしない)
+これを避けたい場合は、[同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を揃えるが-別のオブジェクトの場合はしない)
 のようなルールをやめることを検討してください。
 
 ### 一貫性を保つ
@@ -3626,9 +3626,9 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-### 同じオブジェクトへの代入時は位置を合わせるが, 別のオブジェクトの場合はしない
+### 同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#同じオブジェクトへの代入時は位置を合わせるが-別のオブジェクトの場合はしない)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#同じオブジェクトへの代入時は位置を揃えるが-別のオブジェクトの場合はしない)
 
 To highlight that these things somehow belong together
 

@@ -173,7 +173,7 @@
   - [Condense your code](#condense-your-code)
   - [Add a single blank line to separate things, but not more](#add-a-single-blank-line-to-separate-things-but-not-more)
   - [Don't obsess with separating blank lines](#dont-obsess-with-separating-blank-lines)
-  - [同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を合揃えるが別のオブジェクトの場合はしない)
+  - [同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を揃えるが-別のオブジェクトの場合はしない)
   - [Close brackets at line end](#close-brackets-at-line-end)
   - [Keep single parameter calls on one line](#keep-single-parameter-calls-on-one-line)
   - [Keep parameters behind the call](#keep-parameters-behind-the-call)

@@ -164,16 +164,16 @@
   - [ABAP Doc は公開 API のみに書く](#ABAP-Doc-は公開-API-のみに書く)
   - [疑似コメントよりもプラグマを選ぶ](#疑似コメントよりもプラグマを選ぶ)
 - [フォーマット](#フォーマット)
-  - [Be consistent](#be-consistent)
-  - [Optimize for reading, not for writing](#optimize-for-reading-not-for-writing)
-  - [Use the Pretty Printer before activating](#use-the-pretty-printer-before-activating)
-  - [Use your Pretty Printer team settings](#use-your-pretty-printer-team-settings)
+  - [一貫性を保つ](#一貫性を保つ)
+  - [書くためではなく読むために最適化する](#書くためではなく読むために最適化する)
+  - [有効化する前にプリティプリントを使う](#有効化する前にプリティプリントを使う)
+  - [プリティプリントのチーム設定を使う](#プリティプリントのチーム設定を使う)
   - [No more than one statement per line](#no-more-than-one-statement-per-line)
   - [Stick to a reasonable line length](#stick-to-a-reasonable-line-length)
   - [Condense your code](#condense-your-code)
   - [Add a single blank line to separate things, but not more](#add-a-single-blank-line-to-separate-things-but-not-more)
   - [Don't obsess with separating blank lines](#dont-obsess-with-separating-blank-lines)
-  - [Align assignments to the same object, but not to different ones](#align-assignments-to-the-same-object-but-not-to-different-ones)
+  - [同じオブジェクトへの代入時は位置を合わせるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を合わせるが-別のオブジェクトの場合はしない)
   - [Close brackets at line end](#close-brackets-at-line-end)
   - [Keep single parameter calls on one line](#keep-single-parameter-calls-on-one-line)
   - [Keep parameters behind the call](#keep-parameters-behind-the-call)
@@ -3438,35 +3438,36 @@ MESSAGE e001(ad) INTO DATA(message). "#EC NEEDED
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#フォーマット)
 
-The suggestions below are [optimized for reading, not for writing](#optimize-for-reading-not-for-writing).
-As ABAP's Pretty Printer doesn't cover them, some of them produce additional manual work to reformat statements
-when name lengths etc. change; if you want to avoid this, consider dropping rules like
-[Align assignments to the same object, but not to different ones](#align-assignments-to-the-same-object-but-not-to-different-ones).
+以下の提案は [書くためではなく読むために最適化されています](#書くためではなく読むために最適化する)。
+ABAP のプリティプリントはこれらをカバーしていないので、
+名前の長さなどが変更されたときに、ステートメントを再フォーマットするために追加の手作業が発生するものもあります。
+これを避けたい場合は、[同じオブジェクトへの代入時は位置を合わせるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を合わせるが-別のオブジェクトの場合はしない)
+のようなルールをやめることを検討してください。
 
-### Be consistent
+### 一貫性を保つ
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#be-consistent)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#一貫性を保つ)
 
-Format all code of a project in the same way.
-Let all team members use the same formatting style.
+プロジェクトのすべてのコードを同じようにフォーマットしてください。
+チームメンバー全員に同じフォーマットスタイルを使用させます。
 
-If you edit foreign code, adhere to that project's formatting style
-instead of insisting on your personal style.
+外部のコードを編集する場合は、個人的なスタイルにこだわるのではなく、
+そのプロジェクトのフォーマットスタイルに従ってください。
 
-If you change your formatting rules over time,
-use [refactoring best practices](#how-to-refactor-legacy-code)
-to update your code over time.
+時間の経過とともにフォーマットルールを変更する場合は、
+[リファクタリングのベストプラクティス](#レガシーコードをリファクタするには)
+を使用して、時間の経過とともにコードを更新してください。
 
-### Optimize for reading, not for writing
+### 書くためではなく読むために最適化する
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [Formatting](#フォーマット) > [本節](#optimize-for-reading-not-for-writing)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#書くためではなく読むために最適化する)
 
-Developers spend most time _reading_ code.
-Actually _writing_ code takes up a way smaller portion of the day.
+開発者はほとんどの時間をコードを _読むこと_ に費やしています。
+実際のところ、1日のうちコードを _書いている_ 時間はずっと少ないです。
 
-As a consequence, you should optimize your code formatting for reading and debugging, not for writing.
+結果として、コードのフォーマットは書くためではなく、読むためとデバッグのために最適化すべきです。
 
-For example, you should prefer
+例えば、以下のようなものが好ましいでしょう。
 
 ```ABAP
 DATA:
@@ -3475,49 +3476,47 @@ DATA:
   e TYPE f.
 ```
 
-to hacks such as
+次のようなハックよりも。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA:
   a TYPE b
   ,c TYPE d
   ,e TYPE f.
 ```
 
-### Use the Pretty Printer before activating
+### 有効化する前にプリティプリントを使う
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#use-the-pretty-printer-before-activating)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#有効化する前にプリティプリントを使う)
 
-Apply the pretty printer - Shift+F1 in SE80, SE24, and ADT - before activating an object.
+オブジェクトを有効化する前に、プリティプリント - SE80、SE24、ADT で Shift+F1 - を適用してください。
 
-If you modify a larger unformatted legacy code base,
-you may want to apply the Pretty Printer only to selected lines
-to avoid huge change lists and transport dependencies.
-Consider pretty-printing the complete development object
-in a separate Transport Request or Note.
+より大きなフォーマットされていないレガシーコードベースを修正する場合、
+変更リストや移送の依存関係が大きくなるのを避けるために、
+選択された行のみにプリティプリントを適用することをお勧めします。
+別の移送依頼やノートの中で、開発オブジェクト全体をにプリティプリントすることを検討してください。
 
-> Read more in _Chapter 5: Formatting: Team Rules_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 5: Formatting: Team Rules_ を参照してください。
 
-### Use your Pretty Printer team settings
+### プリティプリントのチーム設定を使う
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#use-your-pretty-printer-team-settings)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#プリティプリントのチーム設定を使う)
 
-Always use your team settings.
-Specify them under
-_Menu_ > _Utilities_ > _Settings ..._ > _ABAP Editor_ > _Pretty Printer_.
+常にチームの設定を使用してください。
+以下で指定します。  
+_メニュー_ > _ユーティリティ_ > _設定 ..._ > _ABAP エディタ_ > _プリティプリント_
 
-Set _Indent_ and _Convert Uppercase/Lowercase_ > _Uppercase Keyword_
-as agreed in your team.
+チーム内で合意した通りに _開始位置_ と _大文字/小文字の変換_ > _キーワード大文字_ を設定します。
 
-> [Upper vs. Lower Case](sub-sections/UpperVsLowerCase.md) explains
-> why we do not give clear guidance for the type case of keywords.
+> [Upper vs. Lower Case](sub-sections/UpperVsLowerCase.md) では
+> キーワードのタイプケースについて明確なガイダンスを出していない理由を説明しています。
 >
-> Read more in _Chapter 5: Formatting: Team Rules_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 5: Formatting: Team Rules_ を参照してください。
 
 ### No more than one statement per line
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#no-more-than-one-statement-per-line)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [Formatting](#フォーマット) > [本節](#no-more-than-one-statement-per-line)
 
 ```ABAP
 DATA do_this TYPE i.
@@ -3627,9 +3626,9 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-### Align assignments to the same object, but not to different ones
+### 同じオブジェクトへの代入時は位置を合わせるが, 別のオブジェクトの場合はしない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#align-assignments-to-the-same-object-but-not-to-different-ones)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#同じオブジェクトへの代入時は位置を合わせるが-別のオブジェクトの場合はしない)
 
 To highlight that these things somehow belong together
 

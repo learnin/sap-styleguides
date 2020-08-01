@@ -154,16 +154,16 @@
   - [不適切な命名をコメントで補おうとしない](#不適切な命名をコメントで補おうとしない)
   - [コードをセグメント化するのにコメントではなくメソッドを使用する](#コードをセグメント化するのにコメントではなくメソッドを使用する)
   - [何をではなく, なぜを説明するためにコメントを書く](#何をではなく-なぜを説明するためにコメントを書く)
-  - [Design goes into the design documents, not the code](#design-goes-into-the-design-documents-not-the-code)
-  - [Comment with ", not with \*](#comment-with--not-with-)
-  - [Put comments before the statement they relate to](#put-comments-before-the-statement-they-relate-to)
-  - [Delete code instead of commenting it](#delete-code-instead-of-commenting-it)
-  - [Use FIXME, TODO, and XXX and add your ID](#use-fixme-todo-and-xxx-and-add-your-id)
-  - [Don't add method signature and end-of comments](#dont-add-method-signature-and-end-of-comments)
-  - [Don't duplicate message texts as comments](#dont-duplicate-message-texts-as-comments)
-  - [ABAP Doc only for public APIs](#abap-doc-only-for-public-apis)
-  - [Prefer pragmas to pseudo comments](#prefer-pragmas-to-pseudo-comments)
-- [Formatting](#formatting)
+  - [設計はコードではなく設計ドキュメントに書く](#設計はコードではなく設計ドキュメントに書く)
+  - [コメントには \* ではなく " を使う](#コメントには-ではなく-を使う)
+  - [関連する文の前にコメントを置く](#関連する文の前にコメントを置く)
+  - [コメントアウトではなくコードを削除する](#コメントアウトではなくコードを削除する)
+  - [FIXME, TODO, XXXを使い, 自分のIDを追加する](#FIXME-TODO-XXXを使い-自分のIDを追加する)
+  - [メソッドシグネチャや末尾にコメントを書かない](#メソッドシグネチャや末尾にコメントを書かない)
+  - [コメントにメッセージテキストを書かない](#コメントにメッセージテキストを書かない)
+  - [ABAP Doc は公開 API のみに書く](#ABAP-Doc-は公開-API-のみに書く)
+  - [疑似コメントよりもプラグマを選ぶ](#疑似コメントよりもプラグマを選ぶ)
+- [フォーマット](#フォーマット)
   - [Be consistent](#be-consistent)
   - [Optimize for reading, not for writing](#optimize-for-reading-not-for-writing)
   - [Use the Pretty Printer before activating](#use-the-pretty-printer-before-activating)
@@ -3237,29 +3237,29 @@ DATA(first_line) = table[ 1 ].
 SELECT * FROM d_alert_root WHERE key = key.
 ```
 
-### Design goes into the design documents, not the code
+### 設計はコードではなく設計ドキュメントに書く
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#design-goes-into-the-design-documents-not-the-code)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#設計はコードではなく設計ドキュメントに書く)
 
 ```ABAP
-" anti-pattern
-" This class serves a double purpose. First, it does one thing. Then, it does another thing.
-" It does so by executing a lot of code that is distributed over the local helper classes.
-" To understand what's going on, let us at first ponder the nature of the universe as such.
-" Have a look at this and that to get the details.
+" アンチパターン
+" このクラスには二重の目的があります まず、一つのことをします。次に別のことをします。
+" これは、ローカルのヘルパークラスに分散された多くのコードを実行することによって行われます。
+" 何が起こっているのかを理解するために、まず宇宙の性質を考えてみましょう。
+" 詳しくはあちらこちらを見てください。
 ```
 
-Nobody reads that - seriously.
-If people need to read a textbook to be able to use your code,
-this may be an indicator that your code has severe design issues that you should solve otherwise.
-Some code _does_ need some explanation beyond a single line of comment;
-consider linking the design document in these cases.
+冗談抜きに、誰も読みません。
+あなたのコードを使うために教科書を読まなければならない場合、
+コードには他の方法で解決しなければならない深刻な設計上の問題があることを示している可能性があります。
+コードによっては、1行のコメントを超えた説明が必要なものも _あります_。
+このような場合には、設計ドキュメントをリンクすることを検討してください。
 
-### Comment with ", not with \*
+### コメントには \* ではなく " を使う
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#comment-with--not-with-)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#コメントには-ではなく-を使う)
 
-Quote comments indent along with the statements they comment
+クォートのついたコメントは、コメントする文と一緒にインデントします。
 
 ```ABAP
 METHOD do_it.
@@ -3270,10 +3270,10 @@ METHOD do_it.
 ENDMETHOD.
 ```
 
-Asterisked comments tend to indent to weird places
+アスタリスクのついたコメントは、変な位置にインデントされる傾向があります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD do_it.
   IF input IS NOT INITIAL.
 * delegate pattern
@@ -3282,46 +3282,46 @@ METHOD do_it.
 ENDMETHOD.
 ```
 
-### Put comments before the statement they relate to
+### 関連する文の前にコメントを置く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#put-comments-before-the-statement-they-relate-to)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#関連する文の前にコメントを置く)
 
 ```ABAP
 " delegate pattern
 output = calculate_result( input ).
 ```
 
-Clearer than
+これは次のコードよりもより明確です。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 output = calculate_result( input ).
 " delegate pattern
 ```
 
-And less invasive than
+また、次のコードよりも侵食が少ないです。
 
 ```ABAP
 output = calculate_result( input ).  " delegate pattern
 ```
 
-### Delete code instead of commenting it
+### コメントアウトではなくコードを削除する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#delete-code-instead-of-commenting-it)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#コメントアウトではなくコードを削除する)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 * output = calculate_result( input ).
 ```
 
-When you find something like this, delete it.
-The code is obviously not needed because your application works and all tests are green.
-Deleted code can be reproduced from the version history later on.
-If you need to preserve a piece of code permanently, copy it to a file or a `$TMP` or `HOME` object.
+このようなものを見つけたら、削除してください。
+アプリケーションが動作し、すべてのテストが通っているなら、そのコードは明らかに必要ありません。
+削除したコードは、後でバージョン履歴から再現することができます。
+コードの一部を永久に保存する必要がある場合は、ファイルや `$TMP` や `HOME` オブジェクトにコピーしてください。
 
-### Use FIXME, TODO, and XXX and add your ID
+### FIXME, TODO, XXXを使い, 自分のIDを追加する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#use-fixme-todo-and-xxx-and-add-your-id)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#FIXME-TODO-XXXを使い-自分のIDを追加する)
 
 ```ABAP
 METHOD do_something.
@@ -3329,21 +3329,21 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-- `FIXME` points to errors that are too small or too much in-the-making for internal incidents.
-- `TODO`s are places where you want to complete something in the near(!) future.
-- `XXX` marks code that works but could be better.
+- `FIXME` は非常に小さなエラーや、内部的なインシデントに対する多くのエラーの兆しを指します。
+- `TODO` は近い（！）将来に何かを完成させたい場所につけます。
+- `XXX` は動作するが改善が必要なコードにマークします。
 
-When you enter such a comment, add your nick, initials, or user to enable your co-developers to contact you
-and ask questions if the comment is unclear.
+このようなコメントを入力する際には、ニックネームやイニシャル、ユーザーを追加しておくと、共同開発者が連絡を取ったり、
+コメントが不明瞭な場合に質問をしたりできるようになります。
 
-### Don't add method signature and end-of comments
+### メソッドシグネチャや末尾にコメントを書かない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#dont-add-method-signature-and-end-of-comments)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#メソッドシグネチャや末尾にコメントを書かない)
 
-Method signature comments don't help anybody.
+メソッドシグニチャのコメントは役に立ちません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 * <SIGNATURE>---------------------------------------------------------------------------------------+
 * | Static Public Method CALIBRATION_KPIS=>CALCULATE_KPI
 * +-------------------------------------------------------------------------------------------------+
@@ -3354,23 +3354,21 @@ Method signature comments don't help anybody.
 * +--------------------------------------------------------------------------------------</SIGNATURE>
 ```
 
-Decades ago, when you couldn't see the method signature when inspecting its code,
-or working with printouts that had dozens of pages, these comments may have made sense.
-But all modern ABAP IDEs (SE24, SE80, ADT) show the method signature easily
-such that these comments have become nothing but noise.
+数十年前、コードを検査するときにメソッドシグニチャを見ることができなかったとき、
+あるいは何十ページもあるプリントアウトを使って作業していたとき、これらのコメントは意味のあるものだったかもしれません。
+しかし、現代のすべてのABAP IDE (SE24, SE80, ADT) はメソッドシグネチャを簡単に表示するので、
+これらのコメントはノイズ以外の何物でもなくなりました。
 
-> In the form-based editor of SE24/SE80, press button _Signature_.
-> In the ABAP Development Tools, mark the method name and press F2
-> or add the view _ABAP Element Info_ to your perspective.
+> SE24/SE80のフォームベースのエディタで、_Signature_ ボタンを押します。
+> ABAP Development Tools で、メソッド名を選択して F2 を押すか、
+> _ABAP Element Info_ ビューをパースペクティブに追加します。
 
-Similarly, end-of comments are superfluous.
-These comments may have been helpful decades ago,
-when programs and functions and the nested IFs inside were hundreds of lines of code long.
-But our modern coding style produces methods short enough to readily see
-what opening statement an `ENDIF` or `ENDMETHOD` belongs to:
+同様に、末尾コメントも余計なものです。
+これらのコメントは、プログラムや関数、そしてその中にあるネストされたIFが何百行もの長いコードであった数十年前には便利だったかもしれません。
+しかし、現代のコーディングスタイルでは、`ENDIF` や `ENDMETHOD` がどの開始文に属しているのかを容易に確認できるような短いメソッドを作成しています。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD get_kpi_calc.
   IF has_entries = abap_false.
     result = 42.
@@ -3378,27 +3376,26 @@ METHOD get_kpi_calc.
 ENDMETHOD.   " get_kpi_calc
 ```
 
-### Don't duplicate message texts as comments
+### コメントにメッセージテキストを書かない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#dont-duplicate-message-texts-as-comments)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#コメントにメッセージテキストを書かない)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 " alert category not filled
 MESSAGE e003 INTO dummy.
 ```
 
-Messages change independently from your code,
-and nobody will remember adjusting the comment,
-such that it will outdate and even become misleading quickly
-and without anybody noticing.
+メッセージはコードから独立して変化し、
+誰もコメントを調整したことを覚えていないので、
+誰も気づくことなく、すぐに時代遅れになり、誤解を招くことさえあります。
 
-The modern IDEs give you easy ways to see the text behind a message,
-for example in the ABAP Development Tools,
-mark the message ID and press Shift+F2.
+最近のIDEでは、メッセージのテキストを簡単に見ることができます。
+例えば ABAP Development Tools では、
+メッセージIDを選択して Shift+F2 を押します。
 
-If you want it more explicit,
-consider extracting the message to a method of its own.
+より明示的にしたい場合は、
+メッセージを独自のメソッドに抽出することを検討してください。
 
 ```ABAP
 METHOD create_alert_not_found_message.
@@ -3406,44 +3403,40 @@ METHOD create_alert_not_found_message.
 ENDMETHOD.
 ```
 
-### ABAP Doc only for public APIs
+### ABAP Doc は公開 API のみに書く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#abap-doc-only-for-public-apis)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#ABAP-Doc-は公開-API-のみに書く)
 
-Write ABAP Doc to document public APIs,
-meaning APIs that are intended for developers
-in other teams or applications.
-Don't write ABAP Doc for internal stuff.
+公開API、つまり他のチームやアプリケーションの開発者向けのAPIを文書化するためにABAP Docを書いてください。
+内部用のためにABAP Docを書いてはいけません。
 
-ABAP Doc suffers from the same weaknesses as all comments,
-that is, it outdates quickly and then becomes misleading.
-As a consequence, you should employ it only where it makes sense,
-not enforce writing ABAP Doc for each and everything.
+ABAP Docは、すぐに時代遅れになり、誤解を招くようになるという、すべてのコメントと同じ弱点を抱えています。
+結果として、意味のあるところでのみ使用すべきであり、すべてのものにABAP Docを書くことを強制するべきではありません。
 
-> Read more in _Chapter 4: Good Comments: Javadocs in Public APIs_ and _Chapter 4: Bad Comments:
-> Javadocs in Nonpublic Code_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 4: Good Comments: Javadocs in Public APIs_ と _Chapter 4: Bad Comments:
+> Javadocs in Nonpublic Code_ を参照してください。
 
-### Prefer pragmas to pseudo comments
+### 疑似コメントよりもプラグマを選ぶ
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Comments](#comments) > [This section](#prefer-pragmas-to-pseudo-comments)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [コメント](#コメント) > [本節](#疑似コメントよりもプラグマを選ぶ)
 
-Prefer pragmas to pseudo comments to suppress irrelevant warnings and errors identified by the ATC. Pseudo comments
-have mostly become obsolete and have been replaced by pragmas.
+ATCが識別した無関係な警告やエラーを抑制するには、疑似コメントではなくプラグマを使います。
+疑似コメントはほとんど廃止されており、プラグマに置き換えられています。
 
 ```ABAP
 " pattern
 MESSAGE e001(ad) INTO DATA(message) ##NEEDED.
 
-" anti-pattern
+" アンチパターン
 MESSAGE e001(ad) INTO DATA(message). "#EC NEEDED
 ```
 
-Use program `ABAP_SLIN_PRAGMAS` or table `SLIN_DESC` to find the mapping between obsolete pseudo comments and the pragmas that
-have replaced them.
+`ABAP_SLIN_PRAGMAS` プログラムまたは `SLIN_DESC` テーブルを使用して、
+廃止された疑似コメントとそれを置き換えたプラグマの間のマッピングを見つけることができます。
 
-## Formatting
+## フォーマット
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [This section](#formatting)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#フォーマット)
 
 The suggestions below are [optimized for reading, not for writing](#optimize-for-reading-not-for-writing).
 As ABAP's Pretty Printer doesn't cover them, some of them produce additional manual work to reformat statements
@@ -3452,7 +3445,7 @@ when name lengths etc. change; if you want to avoid this, consider dropping rule
 
 ### Be consistent
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [This section](#be-consistent)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#be-consistent)
 
 Format all code of a project in the same way.
 Let all team members use the same formatting style.
@@ -3466,7 +3459,7 @@ to update your code over time.
 
 ### Optimize for reading, not for writing
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#optimize-for-reading-not-for-writing)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [Formatting](#フォーマット) > [本節](#optimize-for-reading-not-for-writing)
 
 Developers spend most time _reading_ code.
 Actually _writing_ code takes up a way smaller portion of the day.
@@ -3494,7 +3487,7 @@ DATA:
 
 ### Use the Pretty Printer before activating
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#use-the-pretty-printer-before-activating)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#use-the-pretty-printer-before-activating)
 
 Apply the pretty printer - Shift+F1 in SE80, SE24, and ADT - before activating an object.
 
@@ -3508,7 +3501,7 @@ in a separate Transport Request or Note.
 
 ### Use your Pretty Printer team settings
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#use-your-pretty-printer-team-settings)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#use-your-pretty-printer-team-settings)
 
 Always use your team settings.
 Specify them under
@@ -3524,7 +3517,7 @@ as agreed in your team.
 
 ### No more than one statement per line
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#no-more-than-one-statement-per-line)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#no-more-than-one-statement-per-line)
 
 ```ABAP
 DATA do_this TYPE i.
@@ -3540,7 +3533,7 @@ DATA do_this TYPE i. do_this = input + 3.
 
 ### Stick to a reasonable line length
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#stick-to-a-reasonable-line-length)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#stick-to-a-reasonable-line-length)
 
 Adhere to a maximum line length of 120 characters.
 
@@ -3558,7 +3551,7 @@ maybe because of the general verbosity of the language.
 
 ### Condense your code
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#condense-your-code)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#condense-your-code)
 
 ```ABAP
 DATA(result) = calculate( items ).
@@ -3573,7 +3566,7 @@ DATA(result)        =      calculate(    items =   items )   .
 
 ### Add a single blank line to separate things, but not more
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#add-a-single-blank-line-to-separate-things-but-not-more)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#add-a-single-blank-line-to-separate-things-but-not-more)
 
 ```ABAP
 DATA(result) = do_something( ).
@@ -3596,7 +3589,7 @@ The urge to add separating blank lines may be an indicator that your method does
 
 ### Don't obsess with separating blank lines
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#dont-obsess-with-separating-blank-lines)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#dont-obsess-with-separating-blank-lines)
 
 ```ABAP
 METHOD do_something.
@@ -3636,7 +3629,7 @@ ENDMETHOD.
 
 ### Align assignments to the same object, but not to different ones
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#align-assignments-to-the-same-object-but-not-to-different-ones)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#align-assignments-to-the-same-object-but-not-to-different-ones)
 
 To highlight that these things somehow belong together
 
@@ -3663,7 +3656,7 @@ hdb_access = fra_hdbr_access=>s_get_instance( ).
 
 ### Close brackets at line end
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#close-brackets-at-line-end)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#close-brackets-at-line-end)
 
 ```ABAP
 modify->update( node           = if_fra_alert_c=>node-item
@@ -3685,7 +3678,7 @@ modify->update( node           = if_fra_alert_c=>node-item
 
 ### Keep single parameter calls on one line
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#keep-single-parameter-calls-on-one-line)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#keep-single-parameter-calls-on-one-line)
 
 ```ABAP
 DATA(unique_list) = remove_duplicates( list ).
@@ -3705,7 +3698,7 @@ DATA(unique_list) = remove_duplicates(
 
 ### Keep parameters behind the call
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#keep-parameters-behind-the-call)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#keep-parameters-behind-the-call)
 
 ```ABAP
 DATA(sum) = add_two_numbers( value_1 = 5
@@ -3722,7 +3715,7 @@ DATA(sum) = add_two_numbers(
 
 ### If you break, indent parameters under the call
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#if-you-break-indent-parameters-under-the-call)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#if-you-break-indent-parameters-under-the-call)
 
 ```ABAP
 DATA(sum) = add_two_numbers(
@@ -3742,7 +3735,7 @@ However, this is the best pattern if you want to avoid the formatting to be brok
 
 ### Line-break multiple parameters
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#line-break-multiple-parameters)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#line-break-multiple-parameters)
 
 ```ABAP
 DATA(sum) = add_two_numbers( value_1 = 5
@@ -3759,7 +3752,7 @@ DATA(sum) = add_two_numbers( value_1 = 5 value_2 = 6 ).
 
 ### Align parameters
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#align-parameters)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#align-parameters)
 
 ```ABAP
 modify->update( node           = if_fra_alert_c=>node-item
@@ -3782,7 +3775,7 @@ modify->update( node = if_fra_alert_c=>node-item
 
 ### Break the call to a new line if the line gets too long
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#break-the-call-to-a-new-line-if-the-line-gets-too-long)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#break-the-call-to-a-new-line-if-the-line-gets-too-long)
 
 ```ABAP
 DATA(some_super_long_param_name) =
@@ -3793,7 +3786,7 @@ DATA(some_super_long_param_name) =
 
 ### Indent and snap to tab
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#indent-and-snap-to-tab)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#indent-and-snap-to-tab)
 
 Indent parameter keywords by 2 spaces and parameters by 4 spaces:
 
@@ -3819,7 +3812,7 @@ Use the Tab key to indent. It's okay if this adds one more space than needed.
 
 ### Indent in-line declarations like method calls
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#indent-in-line-declarations-like-method-calls)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#indent-in-line-declarations-like-method-calls)
 
 Indent in-line declarations with VALUE or NEW as if they were method calls:
 
@@ -3832,7 +3825,7 @@ DATA(result) = merge_structures( a = VALUE #( field_1 = 'X'
 
 ### 型句の位置を揃えない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#formatting) > [This section](#型句の位置を揃えない)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#型句の位置を揃えない)
 
 ```ABAP
 DATA name TYPE seoclsname.

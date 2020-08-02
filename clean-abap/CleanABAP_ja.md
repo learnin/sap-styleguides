@@ -168,23 +168,23 @@
   - [書くためではなく読むために最適化する](#書くためではなく読むために最適化する)
   - [有効化する前にプリティプリントを使う](#有効化する前にプリティプリントを使う)
   - [プリティプリントのチーム設定を使う](#プリティプリントのチーム設定を使う)
-  - [No more than one statement per line](#no-more-than-one-statement-per-line)
-  - [Stick to a reasonable line length](#stick-to-a-reasonable-line-length)
-  - [Condense your code](#condense-your-code)
-  - [Add a single blank line to separate things, but not more](#add-a-single-blank-line-to-separate-things-but-not-more)
-  - [Don't obsess with separating blank lines](#dont-obsess-with-separating-blank-lines)
+  - [1行につき, 最大1つのステートメント](#1行につき-最大1つのステートメント)
+  - [適度な行の長さを守る](#適度な行の長さを守る)
+  - [コードを凝縮する](#コードを凝縮する)
+  - [区切るための空白行は1行のみとする](#区切るための空白行は1行のみとする)
+  - [空白行で区切ることにこだわらない](#空白行で区切ることにこだわらない)
   - [同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない](#同じオブジェクトへの代入時は位置を揃えるが-別のオブジェクトの場合はしない)
-  - [Close brackets at line end](#close-brackets-at-line-end)
-  - [Keep single parameter calls on one line](#keep-single-parameter-calls-on-one-line)
-  - [Keep parameters behind the call](#keep-parameters-behind-the-call)
-  - [If you break, indent parameters under the call](#if-you-break-indent-parameters-under-the-call)
-  - [Line-break multiple parameters](#line-break-multiple-parameters)
-  - [Align parameters](#align-parameters)
-  - [Break the call to a new line if the line gets too long](#break-the-call-to-a-new-line-if-the-line-gets-too-long)
-  - [Indent and snap to tab](#indent-and-snap-to-tab)
-  - [Indent in-line declarations like method calls](#indent-in-line-declarations-like-method-calls)
+  - [行末でカッコを閉じる](#行末でカッコを閉じる)
+  - [単一パラメータでの呼び出しは1行で書く](#単一パラメータでの呼び出しは1行で書く)
+  - [呼び出しの後にパラメータを置く](#呼び出しの後にパラメータを置く)
+  - [改行する場合, 呼び出しの下のパラメータをインデントする](#改行する場合-呼び出しの下のパラメータをインデントする)
+  - [複数のパラメータを改行する](#複数のパラメータを改行する)
+  - [パラメータを整列させる](#パラメータを整列させる)
+  - [行が長くなりすぎる場合, 呼び出しを改行する](#行が長くなりすぎる場合-呼び出しを改行する)
+  - [インデントしてタブにスナップする](#インデントしてタブにスナップする)
+  - [インライン宣言はメソッド呼び出しのようにインデントする](#インライン宣言はメソッド呼び出しのようにインデントする)
   - [型句の位置を揃えない](#型句の位置を揃えない)
-- [Testing](#testing)
+- [テスト](#テスト)
   - [Principles](#principles)
     - [Write testable code](#write-testable-code)
     - [Enable others to mock you](#enable-others-to-mock-you)
@@ -3514,58 +3514,56 @@ _メニュー_ > _ユーティリティ_ > _設定 ..._ > _ABAP エディタ_ > 
 >
 > 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 5: Formatting: Team Rules_ を参照してください。
 
-### No more than one statement per line
+### 1行につき, 最大1つのステートメント
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [Formatting](#フォーマット) > [本節](#no-more-than-one-statement-per-line)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#1行につき-最大1つのステートメント)
 
 ```ABAP
 DATA do_this TYPE i.
 do_this = input + 3.
 ```
 
-Even if some occurrences may trick you into the misconception that this was readable:
+たとえ何かの拍子に次のコードが読みやすいと誤認してしまったとしても
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA do_this TYPE i. do_this = input + 3.
 ```
 
-### Stick to a reasonable line length
+### 適度な行の長さを守る
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#stick-to-a-reasonable-line-length)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#適度な行の長さを守る)
 
-Adhere to a maximum line length of 120 characters.
+行の長さは最大120文字までとしてください。
 
-The human eye reads text more comfortably if the lines are not too wide -
-ask a UI designer or eye movement researcher of your choice.
-You will also appreciate the narrower code when debugging or comparing two sources next to each other.
+人間の目は、行の幅が広すぎない方が快適にテキストを読みます - 
+UI デザイナーや目の動きの研究者に聞いてみてください。
+また、デバッグや隣り合った2つのソースを比較する際には、コードの幅が狭い方がありがたいと感じるでしょう。
 
-The 80 or even 72 characters limit originating in the old terminal devices is a little too restrictive.
-While 100 characters are often recommended and a viable choice, 120 characters seem to work a little better for ABAP,
-maybe because of the general verbosity of the language.
+古い端末装置に由来する80文字、あるいは72文字という制限は、少し制限が強すぎます。
+よく100文字が推奨され、実行可能な選択肢ですが、ABAPでは言語の一般的な冗長さのためか、120文字の方がもう少し適しているようです。
 
-> As a reminder you can configure in ADT the print margin to 120 characters,
-> which then is visualized in the code view as a vertical line.
-> Configure it under _Menu_ > _Window_ > _Preferences_ > _General_ > _Editors_ > _Text Editors_.
+> 備考：ADT で印刷マージンを 120 文字に設定すると、コードビューに縦線として表示されます。
+> _Menu_ > _Window_ > _Preferences_ > _General_ > _Editors_ > _Text Editors_ で設定します。
 
-### Condense your code
+### コードを凝縮する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#condense-your-code)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#コードを凝縮する)
 
 ```ABAP
 DATA(result) = calculate( items ).
 ```
 
-instead of adding unneeded blanks
+次のように、不要な空白を追加するのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(result)        =      calculate(    items =   items )   .
 ```
 
-### Add a single blank line to separate things, but not more
+### 区切るための空白行は1行のみとする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#add-a-single-blank-line-to-separate-things-but-not-more)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#区切るための空白行は1行のみとする)
 
 ```ABAP
 DATA(result) = do_something( ).
@@ -3573,10 +3571,10 @@ DATA(result) = do_something( ).
 DATA(else) = calculate_this( result ).
 ```
 
-to highlight that the two statements do different things. But there is no reason for
+1行の空白行により、2つのステートメントが異なることをするということを強調します。複数行の空白行には理由がありません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(result) = do_something( ).
 
 
@@ -3584,11 +3582,11 @@ DATA(result) = do_something( ).
 DATA(else) = calculate_this( result ).
 ```
 
-The urge to add separating blank lines may be an indicator that your method doesn't [do one thing](#1つのことだけをうまくやる).
+区切りの空白行を追加したいという衝動は、メソッドが [1つのことだけをして](#1つのことだけをうまくやる) いないことを示唆しているかもしれません。
 
-### Don't obsess with separating blank lines
+### 空白行で区切ることにこだわらない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#dont-obsess-with-separating-blank-lines)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#空白行で区切ることにこだわらない)
 
 ```ABAP
 METHOD do_something.
@@ -3597,10 +3595,10 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-No reason for the bad habit to tear your code apart with blank lines
+空白行でコードをバラバラにする悪い習慣には理由がありません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD do_something.
 
   do_this( ).
@@ -3610,7 +3608,7 @@ METHOD do_something.
 ENDMETHOD.
 ```
 
-Blank lines actually only make sense if you have statements that span multiple lines
+空白行は、実際には複数行にまたがるステートメントがある場合にのみ意味を持ちます。
 
 ```ABAP
 METHOD do_something.
@@ -3628,34 +3626,34 @@ ENDMETHOD.
 
 ### 同じオブジェクトへの代入時は位置を揃えるが, 別のオブジェクトの場合はしない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#同じオブジェクトへの代入時は位置を揃えるが-別のオブジェクトの場合はしない)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#同じオブジェクトへの代入時は位置を揃えるが-別のオブジェクトの場合はしない)
 
-To highlight that these things somehow belong together
+これらのものが何らかの形で一緒に属していることを強調するために
 
 ```ABAP
 structure-type = 'A'.
 structure-id   = '4711'.
 ```
 
-or even better
+あるいはもっとよいのは
 
 ```ABAP
 structure = VALUE #( type = 'A'
                      id   = '4711' ).
 ```
 
-But leave things ragged that have nothing to do with each other:
+しかし、お互いに関係のないことはそのままにしておいてください。
 
 ```ABAP
 customizing_reader = fra_cust_obj_model_reader=>s_get_instance( ).
 hdb_access = fra_hdbr_access=>s_get_instance( ).
 ```
 
-> Read more in _Chapter 5: Formatting: Horizontal Alignment_ of [Robert C. Martin's _Clean Code_].
+> 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 5: Formatting: Horizontal Alignment_ を参照してください。
 
-### Close brackets at line end
+### 行末でカッコを閉じる
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#close-brackets-at-line-end)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#行末でカッコを閉じる)
 
 ```ABAP
 modify->update( node           = if_fra_alert_c=>node-item
@@ -3664,10 +3662,10 @@ modify->update( node           = if_fra_alert_c=>node-item
                 changed_fields = changed_fields ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 modify->update( node           = if_fra_alert_c=>node-item
                 key            = item->key
                 data           = item
@@ -3675,19 +3673,19 @@ modify->update( node           = if_fra_alert_c=>node-item
 ).
 ```
 
-### Keep single parameter calls on one line
+### 単一パラメータでの呼び出しは1行で書く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#keep-single-parameter-calls-on-one-line)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#単一パラメータでの呼び出しは1行で書く)
 
 ```ABAP
 DATA(unique_list) = remove_duplicates( list ).
 remove_duplicates( CHANGING list = list ).
 ```
 
-instead of the needlessly longer
+次のように、不必要に長くするのではなく
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(unique_list) = remove_duplicates(
                            list ).
 DATA(unique_list) = remove_duplicates(
@@ -3695,16 +3693,16 @@ DATA(unique_list) = remove_duplicates(
                            list = list ).
 ```
 
-### Keep parameters behind the call
+### 呼び出しの後にパラメータを置く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#keep-parameters-behind-the-call)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#呼び出しの後にパラメータを置く)
 
 ```ABAP
 DATA(sum) = add_two_numbers( value_1 = 5
                              value_2 = 6 ).
 ```
 
-When this makes the lines very long, you can break the parameters into the next line:
+これにより、行が非常に長くなる場合は、パラメータを次の行に書きます。
 
 ```ABAP
 DATA(sum) = add_two_numbers(
@@ -3712,9 +3710,9 @@ DATA(sum) = add_two_numbers(
                 value_2 = VALUE #( ( `Calculation failed with a very weird result` ) ) ).
 ```
 
-### If you break, indent parameters under the call
+### 改行する場合, 呼び出しの下のパラメータをインデントする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#if-you-break-indent-parameters-under-the-call)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#改行する場合-呼び出しの下のパラメータをインデントする)
 
 ```ABAP
 DATA(sum) = add_two_numbers(
@@ -3722,7 +3720,7 @@ DATA(sum) = add_two_numbers(
                 value_2 = 6 ).
 ```
 
-Aligning the parameters elsewhere makes it hard to spot what they belong to:
+パラメータを他の位置に合わせると、何に属しているのかを見分けるのが難しくなります。
 
 ```ABAP
 DATA(sum) = add_two_numbers(
@@ -3730,28 +3728,28 @@ DATA(sum) = add_two_numbers(
     value_2 = 6 ).
 ```
 
-However, this is the best pattern if you want to avoid the formatting to be broken by a name length change.
+しかし、名前の長さの変更でフォーマットが崩れるのを避けたい場合には、このパターンが最適です。
 
-### Line-break multiple parameters
+### 複数のパラメータを改行する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#line-break-multiple-parameters)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#複数のパラメータを改行する)
 
 ```ABAP
 DATA(sum) = add_two_numbers( value_1 = 5
                              value_2 = 6 ).
 ```
 
-Yes, this wastes space.
-However, otherwise, it's hard to spot where one parameter ends and the next starts:
+はい、これはスペースを浪費します。
+しかし、こうしなければ、あるパラメータがどこで終わり、次のパラメータがどこから始まるのかを見分けるのが難しくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(sum) = add_two_numbers( value_1 = 5 value_2 = 6 ).
 ```
 
-### Align parameters
+### パラメータを整列させる
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#align-parameters)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#パラメータを整列させる)
 
 ```ABAP
 modify->update( node           = if_fra_alert_c=>node-item
@@ -3760,21 +3758,21 @@ modify->update( node           = if_fra_alert_c=>node-item
                 changed_fields = changed_fields ).
 ```
 
-Ragged margins make it hard to see where the parameter ends and its value begins:
+余白が不規則になると、パラメータの終了位置と値の開始位置がわかりにくくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 modify->update( node = if_fra_alert_c=>node-item
                 key = item->key
                 data = item
                 changed_fields = changed_fields ).
 ```
 
-> This is on the other side the best pattern if you want to avoid the formatting to be broken by a name length change.
+> 逆に、名前の長さの変更でフォーマットが崩れるのを避けたい場合には、このパターンが最適です。
 
-### Break the call to a new line if the line gets too long
+### 行が長くなりすぎる場合, 呼び出しを改行する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#break-the-call-to-a-new-line-if-the-line-gets-too-long)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#行が長くなりすぎる場合-呼び出しを改行する)
 
 ```ABAP
 DATA(some_super_long_param_name) =
@@ -3783,11 +3781,11 @@ DATA(some_super_long_param_name) =
       value_2 = 6 ).
 ```
 
-### Indent and snap to tab
+### インデントしてタブにスナップする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#indent-and-snap-to-tab)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#インデントしてタブにスナップする)
 
-Indent parameter keywords by 2 spaces and parameters by 4 spaces:
+パラメータのキーワードを2スペースで、パラメータを4スペースでインデントします。
 
 ```ABAP
 DATA(sum) = add_two_numbers(
@@ -3798,7 +3796,7 @@ DATA(sum) = add_two_numbers(
                 errors  = errors ).
 ```
 
-If you have no keywords, indent the parameters by 4 spaces.
+キーワードがない場合は、パラメータを4スペースでインデントします。
 
 ```ABAP
 DATA(sum) = add_two_numbers(
@@ -3806,14 +3804,14 @@ DATA(sum) = add_two_numbers(
                 value_2 = 6 ).
 ```
 
-Use the Tab key to indent. It's okay if this adds one more space than needed.
-(This happens if the `DATA(sum) =` part at the left has an uneven number of characters.)
+インデントするにはTabキーを使用します。これで必要以上にスペースが1つ増えても問題ありません。
+(左の `DATA(sum) =` の部分の文字数が奇数の場合に発生します)
 
-### Indent in-line declarations like method calls
+### インライン宣言はメソッド呼び出しのようにインデントする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#indent-in-line-declarations-like-method-calls)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#インライン宣言はメソッド呼び出しのようにインデントする)
 
-Indent in-line declarations with VALUE or NEW as if they were method calls:
+VALUE または NEW を使ったインライン宣言は、メソッド呼び出しのようにインデントします。
 
 ```ABAP
 DATA(result) = merge_structures( a = VALUE #( field_1 = 'X'
@@ -3824,26 +3822,26 @@ DATA(result) = merge_structures( a = VALUE #( field_1 = 'X'
 
 ### 型句の位置を揃えない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Formatting](#フォーマット) > [This section](#型句の位置を揃えない)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [フォーマット](#フォーマット) > [本節](#型句の位置を揃えない)
 
 ```ABAP
 DATA name TYPE seoclsname.
 DATA reader TYPE REF TO /clean/reader.
 ```
 
-A variable and its type belong together and should therefore be visually grouped in close proximity.
-Aligning the `TYPE` clauses draws attention away from that and suggests that the variables form one vertical group, and their types another one.
-Alignment also produces needless editing overhead, requiring you to adjust all indentations when the length of the longest variable name changes.
+変数とその型は一緒に属しているため、視覚的に近接してグループ化されるべきです。
+`TYPE` 句を整列させることは、このことから注意を逸らし、変数が一つの縦のグループを形成し、その型が別のグループを形成することを示唆します。
+また、整列によって不要な編集のオーバーヘッドが生じ、最長の変数名の長さが変更されたときにすべてのインデントを調整する必要があります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA name   TYPE seoclsname.
 DATA reader TYPE REF TO /clean/reader.
 ```
 
-## Testing
+## テスト
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [This section](#testing)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#テスト)
 
 ### Principles
 

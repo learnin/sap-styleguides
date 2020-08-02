@@ -193,7 +193,7 @@
     - [内部の private ではなく, public をテストする](#内部の-private-ではなく-public-をテストする)
     - [カバレッジにこだわらない](#カバレッジにこだわらない)
   - [テストクラス](#テストクラス)
-    - [Call local test classes by their purpose](#call-local-test-classes-by-their-purpose)
+    - [ローカルテストクラスは目的に応じて命名する](#ローカルテストクラスは目的に応じて命名する)
     - [Put tests in local classes](#put-tests-in-local-classes)
     - [Put help methods in help classes](#put-help-methods-in-help-classes)
     - [How to execute test classes](#how-to-execute-test-classes)
@@ -3936,26 +3936,26 @@ private メソッドや protected メソッドをテストする緊急の必要�
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#テストクラス)
 
-#### Call local test classes by their purpose
+#### ローカルテストクラスは目的に応じて命名する
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Test Classes](#テストクラス) > [本節](#call-local-test-classes-by-their-purpose)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストクラス](#テストクラス) > [本節](#ローカルテストクラスは目的に応じて命名する)
 
-Name local test classes either by the "when" part of the story
+ローカルテストクラスの名前は、ストーリーの「when」の部分で名付けます。
 
 ```ABAP
 CLASS ltc_<public method name> DEFINITION FOR TESTING ... ."
 ```
 
-or the "given" part of the story
+もしくはストーリーの「given」部分で名付けます。
 
 ```ABAP
 CLASS ltc_<common setup semantics> DEFINITION FOR TESTING ... .
 ```
 
 ```ABAP
-" anti-patterns
-CLASS ltc_fra_online_detection_api DEFINITION FOR TESTING ... . " We know that's the class under test - why repeat it?
-CLASS ltc_test DEFINITION FOR TESTING ....                      " Of course it's a test, what else should it be?
+" アンチパターン
+CLASS ltc_fra_online_detection_api DEFINITION FOR TESTING ... . " それがテスト対象のクラスであることはわかっています。なぜ繰り返すのでしょうか？
+CLASS ltc_test DEFINITION FOR TESTING ....                      " もちろんこれはテストです。他に何がありえるでしょうか？
 ```
 
 #### Put tests in local classes

@@ -40,7 +40,7 @@
   - [デザインパターンを賢く使う](#デザインパターンを賢く使う)
 - [定数](#定数)
   - [マジックナンバーの代わりに定数を使う](#マジックナンバーの代わりに定数を使う)
-  - [定数インターフェースよりも列挙クラスを選ぶ](#定数インターフェースよりも列挙クラスを選ぶ)
+  - [定数インタフェースよりも列挙クラスを選ぶ](#定数インタフェースよりも列挙クラスを選ぶ)
   - [列挙クラスを使用しない場合は定数をグループ化する](#列挙クラスを使用しない場合は定数をグループ化する)
 - [変数](#変数)
   - [事前宣言よりもインライン宣言を選ぶ](#事前宣言よりもインライン宣言を選ぶ)
@@ -185,14 +185,14 @@
   - [インライン宣言はメソッド呼び出しのようにインデントする](#インライン宣言はメソッド呼び出しのようにインデントする)
   - [型句の位置を揃えない](#型句の位置を揃えない)
 - [テスト](#テスト)
-  - [Principles](#principles)
-    - [Write testable code](#write-testable-code)
-    - [Enable others to mock you](#enable-others-to-mock-you)
-    - [Readability rules](#readability-rules)
-    - [Don't make copies or write test reports](#dont-make-copies-or-write-test-reports)
-    - [Test publics, not private internals](#test-publics-not-private-internals)
-    - [Don't obsess about coverage](#dont-obsess-about-coverage)
-  - [Test Classes](#test-classes)
+  - [原則](#原則)
+    - [テスタブルなコードを書く](#テスタブルなコードを書く)
+    - [他の人がモックできるようにする](#他の人がモックできるようにする)
+    - [可読性のルール](#可読性のルール)
+    - [コピーを作成したり, テストレポートを書いたりしない](#コピーを作成したり-テストレポートを書いたりしない)
+    - [内部の private ではなく, public をテストする](#内部の-private-ではなく-public-をテストする)
+    - [カバレッジにこだわらない](#カバレッジにこだわらない)
+  - [テストクラス](#テストクラス)
     - [Call local test classes by their purpose](#call-local-test-classes-by-their-purpose)
     - [Put tests in local classes](#put-tests-in-local-classes)
     - [Put help methods in help classes](#put-help-methods-in-help-classes)
@@ -396,7 +396,7 @@ SAP では、テーブルの名前を単数形、例えば「国のテーブル�
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [命名](#命名) > [本節](#クラスには名詞を、メソッドには動詞を使う)
 
-クラス、インターフェース、オブジェクトの名前には名詞や名詞句を使用しましょう：
+クラス、インタフェース、オブジェクトの名前には名詞や名詞句を使用しましょう：
 
 ```ABAP
 CLASS /clean/account
@@ -469,7 +469,7 @@ METHODS query_those.
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [命名](#命名) > [本節](#パターン名はそれを意図する場合にのみ使う)
 
-本当にそれを意図しているのでなければ、クラスやインターフェースにソフトウェアデザインパターンの名前を使わないようにしましょう。例えば、本当にファクトリーデザインパターンを実装していない限り、クラス名を `file_factory` とはしないでください。最も一般的なパターンには、
+本当にそれを意図しているのでなければ、クラスやインタフェースにソフトウェアデザインパターンの名前を使わないようにしましょう。例えば、本当にファクトリーデザインパターンを実装していない限り、クラス名を `file_factory` とはしないでください。最も一般的なパターンには、
 [singleton](https://en.wikipedia.org/wiki/Singleton_pattern)、
 [factory](https://en.wikipedia.org/wiki/Factory_method_pattern)、
 [facade](https://en.wikipedia.org/wiki/Facade_pattern)、
@@ -534,7 +534,7 @@ ENDMETHOD.
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [言語](#言語) > [本節](#手続き型プログラミングよりもオブジェクト指向を選ぶ)
 
-オブジェクト指向のプログラム(クラスやインターフェース)は、手続き的なコード(関数やプログラム)よりもセグメント化されており、リファクタリングやテストをより容易に行うことができます。手続き的なオブジェクト (RFC のための関数、トランザクションのためのプログラム) を書かなければいけない状況もありますが、これらのオブジェクトは実際の関数を提供するクラスを呼び出すことに限定すべきです。
+オブジェクト指向のプログラム(クラスやインタフェース)は、手続き的なコード(関数やプログラム)よりもセグメント化されており、リファクタリングやテストをより容易に行うことができます。手続き的なオブジェクト (RFC のための関数、トランザクションのためのプログラム) を書かなければいけない状況もありますが、これらのオブジェクトは実際の関数を提供するクラスを呼び出すことに限定すべきです。
 
 ```ABAP
 FUNCTION check_business_partner [...].
@@ -649,9 +649,9 @@ IF abap_type = 'D'.
 > 詳細については [Robert C. Martin の _Clean Code_] の _Chapter 17: Smells and Heuristics: G25:
 > Replace Magic Numbers with Named Constants_ を参照してください。
 
-### 定数インターフェースよりも列挙クラスを選ぶ
+### 定数インタフェースよりも列挙クラスを選ぶ
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [定数](#定数) > [本節](#定数インターフェースよりも列挙クラスを選ぶ)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [定数](#定数) > [本節](#定数インタフェースよりも列挙クラスを選ぶ)
 
 ```ABAP
 CLASS /clean/message_severity DEFINITION PUBLIC ABSTRACT FINAL.
@@ -696,7 +696,7 @@ ENDINTERFACE.
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [定数](#定数) > [本節](#列挙クラスを使用しない場合は定数をグループ化する)
 
-インターフェイスなどで緩く定数を集める場合は、それらをグループ化します。
+インタフェースなどで緩く定数を集める場合は、それらをグループ化します。
 
 ```ABAP
 CONSTANTS:
@@ -1608,7 +1608,7 @@ ABAPはインクルードレベルでロックするので、複数の人がロ�
 ビジネスアドインもまた、サブクラスを許可して、元のコードの大部分を再利用できるようにすることで、より便利にすることができます。
 ただし、これらのケースはすべて最初から設計によって継承が組み込まれていることに注意してください。
 
-[インターフェイスを実装](#パブリックインスタンスメソッドはインタフェースの一部でなければならない) しないクリーンでないクラスは、
+[インタフェースを実装](#パブリックインスタンスメソッドはインタフェースの一部でなければならない) しないクリーンでないクラスは、
 ユニットテストでそれらをモックすることを可能にするために、非 `FINAL` のままにしておくべきです。
 
 #### メンバーはデフォルトでPRIVATE, 必要な場合にのみPROTECTEDにする
@@ -3843,103 +3843,102 @@ DATA reader TYPE REF TO /clean/reader.
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [本節](#テスト)
 
-### Principles
+### 原則
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#principles)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#原則)
 
-#### Write testable code
+#### テスタブルなコードを書く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Principles](#principles) > [This section](#write-testable-code)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [原則](#原則) > [本節](#テスタブルなコードを書く)
 
-Write all code in a way that allows you to test it in an automatic fashion.
+すべてのコードを自動的にテストできるように書いてください。
 
-If this requires refactoring your code, do it.
-Do that first, before you start adding other features.
+そのためにコードのリファクタリングが必要な場合は、それを実行してください。
+他の機能を追加し始める前に、まずそれを行います。
 
-If you add to legacy code that is too badly structured to be tested,
-refactor it at least to the extent that you can test your additions.
+構造が悪すぎてテストできないレガシーコードに追加する場合は、
+少なくとも追加したものをテストできる範囲でリファクタリングしましょう。
 
-#### Enable others to mock you
+#### 他の人がモックできるようにする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Principles](#principles) > [This section](#enable-others-to-mock-you)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [原則](#原則) > [本節](#他の人がモックできるようにする)
 
-If you write code to be consumed by others, enable them to write unit tests for their own code,
-for example by adding interfaces in all outward-facing places,
-providing helpful test doubles that facilitate integration tests,
-or applying dependency inversion to enable them to substitute the productive configuration with a test config.
+他の人に利用されるコードを書いている場合、その人のコードのユニットテストが書けるようにしてください。
+例えば、すべての外向きの場所にインタフェースを追加したり、
+統合テストを容易にする有用なテストダブルを提供したり、
+依存関係の反転を適用して本番の設定をテスト設定で置き換えることができるようにしてください。
 
-#### Readability rules
+#### 可読性のルール
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Principles](#principles) > [This section](#readability-rules)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [原則](#原則) > [本節](#可読性のルール)
 
-Make your test code even more readable than your productive code.
-You can tackle bad productive code with good tests, but if you don't even get the tests, you're lost.
+テストコードを製品コードよりもさらに読みやすいものにしましょう。
+よいテストがあれば悪い製品コードに取り組むことができますが、テストすらも悪ければ途方に暮れてしまいます。
 
-Keep your test code so simple and stupid that you will still understand it in a year from now.
+1年後も理解できるように、テストコードをシンプルで愚鈍なものにしておきましょう。
 
-Stick to standards and patterns, to enable your co-workers to quickly get into the code.
+標準とパターンにこだわることで、同僚がすぐにコードを理解できるようになります。
 
-#### Don't make copies or write test reports
+#### コピーを作成したり, テストレポートを書いたりしない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Principles](#principles) > [This section](#dont-make-copies-or-write-test-reports)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [原則](#原則) > [本節](#コピーを作成したり-テストレポートを書いたりしない)
 
-Don't start working on a backlog item by making a `$TMP` copy of a development object and playing around with it.
-Others won't notice these objects and therefore won't know the status of your work.
-You will probably waste a lot of time by making the working copy in the first place.
-You will also forget to delete the copy afterwards, spamming your system and dependencies.
-(Don't believe this? Go to your development system and check your `$TMP` right now.)
+開発オブジェクトの `$TMP` コピーを作って、それをいじくり回すことで、バックログ項目の作業を開始しないでください。
+他の人はこれらのオブジェクトに気づかないので、あなたの作業の状況を知ることができません。
+最初に作業コピーを作成することで、おそらく多くの時間を浪費することになるでしょう。
+また、後からコピーを削除するのを忘れてしまい、システムや依存関係をスパム化してしまうでしょう。
+（信じられませんか？今すぐ開発システムに行って `$TMP` を確認してください。）
 
-Also, don't start by writing a test report that calls something in a specific way,
-and repeat that to verify that things are still working when you're working on it.
-This is poor man's testing: repeating a test report by hand and verifying by eye whether everything is still fine.
-Take the next step and automate this report in a unit test,
-with an automatic assertion that tells you whether the code is still okay.
-First, you will spare yourself the effort of having to write the unit tests afterwards.
-Second, you will save a lot of time for the manual repetitions, plus avoid getting bored and tired over it.
+また、特定の方法で何かを呼び出すテストレポートを書き始めて、
+まだ動作しているか検証することを繰り返してはいけません。
+これは、テストレポートを手動で繰り返し、すべてがまだ正常かどうかを目視で検証するという、貧者のテストです。
+次のステップとして、コードがまだ大丈夫かどうかを自動アサーションで教えてくれるように、このレポートをユニットテストで自動化してください。
+まず、後からユニットテストを書く手間を省くことができます。
+次に、手動の繰り返しのための多くの時間を節約でき、さらに、退屈したり疲れたりすることを避けることができます。
 
-#### Test publics, not private internals
+#### 内部の private ではなく, public をテストする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Principles](#principles) > [This section](#test-publics-not-private-internals)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [原則](#原則) > [本節](#内部の-private-ではなく-public-をテストする)
 
-Public parts of classes, especially the interfaces they implement, are rather stable and unlikely to change.
-Let your unit tests validate only the publics to make them robust
-and minimize the effort you have to spend when you refactor the class.
-Protected and private internals, in contrast, may change very quickly through refactoring,
-such that each refactoring would needlessly break your tests.
+クラスの public な部分、特に実装しているインタフェースはかなり安定しており、変更される可能性は低いです。
+ユニットテストでは、public のみを検証することで堅牢性を高め、
+クラスのリファクタリング時に費やす労力を最小限に抑えます。
+対照的に、内部の protected と private は、リファクタリングによってとてもすぐに変更される可能性があるため、
+テストが不必要に壊れてしまいます。
 
-An urgent need to test private or protected methods may be an early warning sign for several kinds of design flaws.
-Ask yourself:
+private メソッドや protected メソッドをテストする緊急の必要性は、数種の設計上の欠陥に対する早期警告サインかもしれません。
+自分自身に問いかけてみてください：
 
-- Did you accidentally bury a concept in your class that wants to come out into its own class,
-  with its own dedicated suite of tests?
+- 専用のテストスイートを持った独自のクラスに登場させたいコンセプトを、
+  誤って自分のクラスに埋めてしまったことはありませんか？
 
-- Did you forget to separate the domain logic from the glue code?
-  For example, implementing the domain logic directly in the class that is plugged into BOPF as an action,
-  determination, or validation, or that was generated by SAP Gateway as a `*_DPC_EXT` data provider, may not the best idea.
+- ドメインロジックをグルーコードから分離するのを忘れていませんか？
+  例えば、action、determination、または validation として BOPF に接続されているクラスや、
+  SAP Gateway によって `*_DPC_EXT` データプロバイダとして生成されたクラスに
+  ドメインロジックを直接実装するのは、最善の方法ではないかもしれません。
 
-- Are your interfaces too complicated and request too much data that is irrelevant or that cannot be mocked easily?
+- インタフェースが複雑すぎて、無関係なデータや、簡単にモックできないようなデータを要求していませんか？
 
-#### Don't obsess about coverage
+#### カバレッジにこだわらない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Principles](#principles) > [This section](#dont-obsess-about-coverage)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [原則](#原則) > [本節](#カバレッジにこだわらない)
 
-Code coverage is there to help you find code you forgot to test, not to meet some random KPI:
+コードカバレッジは、テストし忘れたコードを見つけるのを助けるためにあり、ランダムなKPIを満たすためにあるのではありません。
 
-Don't make up tests without or with dummy asserts just to reach the coverage.
-Better leave things untested to make transparent that you cannot safely refactor them.
-You can have < 100% coverage and still have perfect tests.
-There are cases - such as IFs in the constructor to insert test doubles -
-that may make it unpractical to reach 100%.
-Good tests tend to cover the same statement multiple times, for different branches and conditions.
-They will in fact have imaginary > 100% coverage.
+カバレッジに到達させるだけのために、アサートのないテストやダミーアサートを使ったテストを作ってはいけません。
+安全にリファクタリングできないことがわかるように、テストしないままにしておいた方がいいでしょう。
+カバレッジが100%未満でも、完璧なテストを行うことができます。
+コンストラクタの中にテストダブルを挿入するIFが含まれているなど、100%に達することが現実的でない場合もあります。
+よいテストは、異なる分岐や条件に対して、同じ文を複数回カバーする傾向があります。
+実際には、想像上の100%以上のカバレッジがあることになります。
 
-### Test Classes
+### テストクラス
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#test-classes)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#テストクラス)
 
 #### Call local test classes by their purpose
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Classes](#test-classes) > [This section](#call-local-test-classes-by-their-purpose)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Test Classes](#テストクラス) > [本節](#call-local-test-classes-by-their-purpose)
 
 Name local test classes either by the "when" part of the story
 
@@ -4080,7 +4079,7 @@ However, tidying up the tests is the actual way to go for the long run.
 
 > [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Code Under Test](#code-under-test) > [This section](#test-against-interfaces-not-implementations)
 
-A practical consequence of the [_Test publics, not private internals_](#test-publics-not-private-internals),
+A practical consequence of the [_内部の private ではなく, public をテストする_](#内部の-private-ではなく-public-をテストする),
 type your code under test with an _interface_
 
 ```ABAP

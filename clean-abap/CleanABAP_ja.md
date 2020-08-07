@@ -200,9 +200,9 @@
   - [テスト対象コード](#テスト対象コード)
     - [テスト対象コードに意味のある名前を付けるか, デフォルトを CUT にする](#テスト対象コードに意味のある名前を付けるか-デフォルトを-CUT-にする)
     - [実装ではなくインタフェースに対してテストする](#実装ではなくインタフェースに対してテストする)
-    - [Extract the call to the code under test to its own method](#extract-the-call-to-the-code-under-test-to-its-own-method)
-  - [Injection](#injection)
-    - [Use dependency inversion to inject test doubles](#use-dependency-inversion-to-inject-test-doubles)
+    - [テスト対象コードの呼び出しをメソッドに抽出する](#テスト対象コードの呼び出しをメソッドに抽出する)
+  - [インジェクション](#インジェクション)
+    - [依存関係を逆転させてテストダブルをインジェクトする](#依存関係を逆転させてテストダブルをインジェクトする)
     - [Consider to use the tool ABAP test double](#consider-to-use-the-tool-abap-test-double)
     - [Exploit the test tools](#exploit-the-test-tools)
     - [Use test seams as temporary workaround](#use-test-seams-as-temporary-workaround)
@@ -3866,7 +3866,7 @@ DATA reader TYPE REF TO /clean/reader.
 他の人に利用されるコードを書いている場合、その人のコードのユニットテストが書けるようにしてください。
 例えば、すべての外向きの場所にインタフェースを追加したり、
 統合テストを容易にする有用なテストダブルを提供したり、
-依存関係の反転を適用して本番の設定をテスト設定で置き換えることができるようにしてください。
+依存関係の逆転を適用して本番の設定をテスト設定で置き換えることができるようにしてください。
 
 #### 可読性のルール
 
@@ -4089,12 +4089,12 @@ DATA code_under_test TYPE REF TO some_interface.
 DATA code_under_test TYPE REF TO some_class.
 ```
 
-#### Extract the call to the code under test to its own method
+#### テスト対象コードの呼び出しをメソッドに抽出する
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Code Under Test](#テスト対象コード) > [本節](#extract-the-call-to-the-code-under-test-to-its-own-method)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テスト対象コード](#テスト対象コード) > [本節](#テスト対象コードの呼び出しをメソッドに抽出する)
 
-If the method to be tested requires a lot of parameters or prepared data,
-it can help to extract the call to it to a helper method of its own that defaults the uninteresting parameters:
+テスト対象のメソッドが多くのパラメータやデータの準備を必要とする場合、
+そのメソッドの呼び出しを独自のヘルパーメソッドに抽出し、重要でないパラメータをデフォルトにすることができます。
 
 ```ABAP
 METHODS map_xml_to_itab
@@ -4112,24 +4112,24 @@ ENDMETHOD.
 DATA(itab) = map_xml_to_itab( '<xml></xml>' ).
 ```
 
-Calling the original method directly can swamp your test with a lot of meaningless details:
+元のメソッドを直接呼び出すと、テストが大量の無意味な詳細情報でいっぱいになってしまう可能性があります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA(itab) = cut->map_xml_to_itab( xml_string = '<xml></xml>'
                                    config     = VALUE #( 'some meaningless stuff' )
                                    format     = VALUE #( 'more meaningless stuff' ) ).
 ```
 
-### Injection
+### インジェクション
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#injection)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#インジェクション)
 
-#### Use dependency inversion to inject test doubles
+#### 依存関係を逆転させてテストダブルをインジェクトする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#use-dependency-inversion-to-inject-test-doubles)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#依存関係を逆転させてテストダブルをインジェクトする)
 
-Dependency inversion means that you hand over all dependencies to the constructor:
+依存関係の逆転とは、すべての依存関係をコンストラクタに引き渡すことを意味します。
 
 ```ABAP
 METHODS constructor
@@ -4141,36 +4141,36 @@ METHOD constructor.
 ENDMETHOD.
 ```
 
-Don't use setter injection.
-It enables using the productive code in ways that are not intended:
+セッターインジェクションは使用しないでください。
+意図しない方法で製品コードを使用することを可能にしてしまいます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHODS set_customizing_reader
   IMPORTING
     customizing_reader TYPE REF TO if_fra_cust_obj_model_reader.
 
 METHOD do_something.
   object->set_customizing_reader( a ).
-  object->set_customizing_reader( b ). " would you expect that somebody does this?
+  object->set_customizing_reader( b ). " 誰かがこんなことをすると思いますか？
 ENDMETHOD.
 ```
 
-Don't use FRIENDS injection.
-It will initialize productive dependencies before they are replaced, with probably unexpected consequences.
-It will break as soon as you rename the internals.
-It also circumvents initializations in the constructor.
+フレンドインジェクションは使用しないでください。
+製品コードの依存関係が置き換えられる前に初期化されてしまい、おそらく予想外の結果になるでしょう。
+内部の名前を変更するとすぐに壊れてしまいます。
+また、コンストラクタでの初期化を迂回できてしまいます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD setup.
-  cut = NEW fra_my_class( ). " <- builds a productive customizing_reader first - what will it break with that?
+  cut = NEW fra_my_class( ). " <- 最初に製品の customizing_reader を作成します。それで何が壊れるのでしょうか？
   cut->customizing_reader ?= cl_abap_testdouble=>create( 'if_fra_cust_obj_model_reader' ).
 ENDMETHOD.
 
 METHOD constructor.
   customizing_reader = fra_cust_obj_model_reader=>s_get_instance( ).
-  customizing_reader->fill_buffer( ). " <- won't be called on your test double, so no chance to test this
+  customizing_reader->fill_buffer( ). " <- テストダブルでは呼び出されないので、これをテストする機会はありません。
 ENDMETHOD.
 ```
 

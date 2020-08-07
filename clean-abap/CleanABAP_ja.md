@@ -194,12 +194,12 @@
     - [カバレッジにこだわらない](#カバレッジにこだわらない)
   - [テストクラス](#テストクラス)
     - [ローカルテストクラスは目的に応じて命名する](#ローカルテストクラスは目的に応じて命名する)
-    - [Put tests in local classes](#put-tests-in-local-classes)
-    - [Put help methods in help classes](#put-help-methods-in-help-classes)
-    - [How to execute test classes](#how-to-execute-test-classes)
-  - [Code Under Test](#code-under-test)
-    - [Name the code under test meaningfully, or default to CUT](#name-the-code-under-test-meaningfully-or-default-to-cut)
-    - [Test against interfaces, not implementations](#test-against-interfaces-not-implementations)
+    - [テストはローカルクラスに置く](#テストはローカルクラスに置く)
+    - [ヘルプメソッドはヘルプクラスに置く](#ヘルプメソッドはヘルプクラスに置く)
+    - [テストクラスの実行方法](#テストクラスの実行方法)
+  - [テスト対象コード](#テスト対象コード)
+    - [テスト対象コードに意味のある名前を付けるか, デフォルトを CUT にする](#テスト対象コードに意味のある名前を付けるか-デフォルトを-CUT-にする)
+    - [実装ではなくインタフェースに対してテストする](#実装ではなくインタフェースに対してテストする)
     - [Extract the call to the code under test to its own method](#extract-the-call-to-the-code-under-test-to-its-own-method)
   - [Injection](#injection)
     - [Use dependency inversion to inject test doubles](#use-dependency-inversion-to-inject-test-doubles)
@@ -3958,27 +3958,23 @@ CLASS ltc_fra_online_detection_api DEFINITION FOR TESTING ... . " それがテ�
 CLASS ltc_test DEFINITION FOR TESTING ....                      " もちろんこれはテストです。他に何がありえるでしょうか？
 ```
 
-#### Put tests in local classes
+#### テストはローカルクラスに置く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Classes](#test-classes) > [This section](#put-tests-in-local-classes)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストクラス](#テストクラス) > [本節](#テストはローカルクラスに置く)
 
-Put unit tests into the local test include of the class under test.
-This ensures that people find these tests when refactoring the class
-and allows them to run all associated tests with a single key press,
-as described in [How to execute test classes](#how-to-execute-test-classes).
+ユニットテストをテスト対象クラスのローカルテストインクルードに配置してください。
+これにより、クラスをリファクタリングする際にこれらのテストを見つけられるようになり、
+[テストクラスの実行方法](#テストクラスの実行方法) で説明されているように、
+1回のキー操作で関連するすべてのテストを実行できるようになります。
 
-Put component-, integration- and system tests into the local test include of a separate global class.
-They do not directly relate to a single class under test, therefore they should not arbitrarily be
-placed in one of the involved classes, but in a separate one.  
-Mark this global test class as `FOR TESTING` and `ABSTRACT`
-to avoid that it is accidentally referenced in production code.  
-Putting tests into other classes has the danger that people overlook them
-and forget to run them when refactoring the involved classes.
+コンポーネントテスト、統合テスト、システムテストを、個別のグローバルクラスのローカルテストインクルードに配置してください。
+これらのテストは、テスト対象の単一のクラスに直接関連していませんので、みだりに関係するクラスの一つに入れるのではなく、別のクラスに配置すべきです。
+このグローバルテストクラスには `FOR TESTING` と `ABSTRACT` というマークをつけて、製品コードで誤って参照されないようにしてください。
+テストを他のクラスに入れると、関係するクラスをリファクタリングするときに、テストを見落として実行するのを忘れてしまう危険性があります。
 
-Therefore it is beneficial to use _test relations_ to document which objects
-are tested by the test.  
-With the example below the test class `hiring_test`
-could be executed while being in the class `recruting` or `candidate` via the shrotcut `Shift-Crtl-F12` (Windows) or `Cmd-Shift-F12` (macOS).
+したがって、どのオブジェクトがテストの対象となるかを文書化するために _テスト関係_ を使用することが有益です。
+以下の例では、テストクラス `hiring_test` は、
+`recruting` クラスや `candidate` クラスの中で `Shift-Crtl-F12` (Windows) または `Cmd-Shift-F12` (macOS) ショートカットを使用して、実行することができます。
 
 ```abap
 "! @testing recruting
@@ -3990,12 +3986,12 @@ class hiring_test defintion
 endclass.
 ```
 
-#### Put help methods in help classes
+#### ヘルプメソッドはヘルプクラスに置く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Classes](#test-classes) > [This section](#put-help-methods-in-help-classes)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストクラス](#テストクラス) > [本節](#ヘルプメソッドはヘルプクラスに置く)
 
-Put help methods used by several test classes in a help class. Make the help methods available through
-inheritance (is-a relationship) or delegation (has-a relationship).
+複数のテストクラスに利用されるヘルプメソッドはヘルプクラスに配置します。
+継承(is-a関係)や委譲(has-a関係)によってヘルプメソッドを利用できるようにします。
 
 ```abap
 " inheritance example
@@ -4025,38 +4021,38 @@ CLASS ltc_unit_tests DEFINITION INHERITING FROM lth_unit_tests FINAL FOR TESTING
 ENDCLASS.
 ```
 
-#### How to execute test classes
+#### テストクラスの実行方法
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Classes](#test-classes) > [This section](#how-to-execute-test-classes)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストクラス](#テストクラス) > [本節](#テストクラスの実行方法)
 
-In the ABAP Development Tools, press Ctrl+Shift+F10 to run all tests in a class.
-Press Ctrl+Shift+F11 to include coverage measurements.
-Press Ctrl+Shift+F12 to also run tests in other classes that are maintained as test relations.
+ABAP Development Tools で、クラス内のすべてのテストを実行するには、Ctrl+Shift+F10 を押します。
+カバレッジ計測を含めるには、Ctrl+Shift+F11 を押します。
+テスト関係として保持されている他のクラスのテストも実行するには、Ctrl+Shift+F12 を押します。
 
-> On macOS, use `Cmd` instead of `Ctrl`.
+> macOS では、`Ctrl` の代わりに `Cmd` を使用します。
 
-### Code Under Test
+### テスト対象コード
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#code-under-test)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#テスト対象コード)
 
-#### Name the code under test meaningfully, or default to CUT
+#### テスト対象コードに意味のある名前を付けるか, デフォルトを CUT にする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Code Under Test](#code-under-test) > [This section](#name-the-code-under-test-meaningfully-or-default-to-cut)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テスト対象コード](#テスト対象コード) > [本節](#テスト対象コードに意味のある名前を付けるか-デフォルトを-CUT-にする)
 
-Give the variable that represents the code under test a meaningful name:
+テスト対象のコードを表す変数に意味のある名前をつけてください。
 
 ```ABAP
 DATA blog_post TYPE REF TO ...
 ```
 
-Don't just repeat the class name with all its non-valuable namespaces and prefixes:
+価値のない名前空間や接頭辞を使って、単純にクラス名を繰り返してはいけません。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA clean_fra_blog_post TYPE REF TO ...
 ```
 
-If you have different test setups, it can be helpful to describe the object's varying state:
+異なるテストセットアップがある場合、変化するオブジェクトの状態を記述するのに役立ちます。
 
 ```ABAP
 DATA empty_blog_post TYPE REF TO ...
@@ -4064,38 +4060,38 @@ DATA simple_blog_post TYPE REF TO ...
 DATA very_long_blog_post TYPE REF TO ...
 ```
 
-If you have problems finding a meaningful name, resort to `cut` as a default.
-The abbreviation stands for "code under test".
+意味のある名前が見つからない場合は、デフォルトとして `cut` を使います。
+「code under test」の略です。
 
 ```ABAP
 DATA cut TYPE REF TO ...
 ```
 
-Especially in unclean and confusing tests, calling the variable `cut`
-can temporarily help the reader see what's actually tested.
-However, tidying up the tests is the actual way to go for the long run.
+特に汚く紛らわしいテストでは、変数を `cut` と命名することで、
+実際にテストされている対象が一時的にわかりやすくなります。
+しかし、長期的にはテストを整理するのが現実的な方法です。
 
-#### Test against interfaces, not implementations
+#### 実装ではなくインタフェースに対してテストする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Code Under Test](#code-under-test) > [This section](#test-against-interfaces-not-implementations)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テスト対象コード]](#テスト対象コード) > [本節](#実装ではなくインタフェースに対してテストする)
 
-A practical consequence of the [_内部の private ではなく, public をテストする_](#内部の-private-ではなく-public-をテストする),
-type your code under test with an _interface_
+[_内部の private ではなく, public をテストする_](#内部の-private-ではなく-public-をテストする) の実質的な結果として、
+_インタフェース_ でテスト対象コードを指定します。
 
 ```ABAP
 DATA code_under_test TYPE REF TO some_interface.
 ```
 
-rather than a _class_
+は、次のように _クラス_ で指定するよりもよいです。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 DATA code_under_test TYPE REF TO some_class.
 ```
 
 #### Extract the call to the code under test to its own method
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Code Under Test](#code-under-test) > [This section](#extract-the-call-to-the-code-under-test-to-its-own-method)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Code Under Test](#テスト対象コード) > [本節](#extract-the-call-to-the-code-under-test-to-its-own-method)
 
 If the method to be tested requires a lot of parameters or prepared data,
 it can help to extract the call to it to a helper method of its own that defaults the uninteresting parameters:

@@ -203,16 +203,16 @@
     - [テスト対象コードの呼び出しをメソッドに抽出する](#テスト対象コードの呼び出しをメソッドに抽出する)
   - [インジェクション](#インジェクション)
     - [依存関係を逆転させてテストダブルをインジェクトする](#依存関係を逆転させてテストダブルをインジェクトする)
-    - [Consider to use the tool ABAP test double](#consider-to-use-the-tool-abap-test-double)
-    - [Exploit the test tools](#exploit-the-test-tools)
-    - [Use test seams as temporary workaround](#use-test-seams-as-temporary-workaround)
-    - [Use LOCAL FRIENDS to access the dependency-inverting constructor](#use-local-friends-to-access-the-dependency-inverting-constructor)
-    - [Don't misuse LOCAL FRIENDS to invade the tested code](#dont-misuse-local-friends-to-invade-the-tested-code)
-    - [Don't change the productive code to make the code testable](#dont-change-the-productive-code-to-make-the-code-testable)
-    - [Don't sub-class to mock methods](#dont-sub-class-to-mock-methods)
-    - [Don't mock stuff that's not needed](#dont-mock-stuff-thats-not-needed)
-    - [Don't build test frameworks](#dont-build-test-frameworks)
-  - [Test Methods](#test-methods)
+    - [ABAP test double ツールの利用を検討する](#ABAP-test-double-ツールの利用を検討する)
+    - [テストツールを利用する](#テストツールを利用する)
+    - [test seam は一時的な回避策として使用する](#test-seam-は一時的な回避策として使用する)
+    - [LOCAL FRIENDS を使用して依存関係逆転コンストラクタへアクセスする](#LOCAL-FRIENDS-を使用して依存関係逆転コンストラクタへアクセスする)
+    - [LOCAL FRIENDS を悪用してテスト対象コードに侵入しない](#LOCAL-FRIENDS-を悪用してテスト対象コードに侵入しない)
+    - [テスト可能にするために製品コードを変更しない](#テスト可能にするために製品コードを変更しない)
+    - [メソッドをモックするためにサブクラスにしない](#メソッドをモックするためにサブクラスにしない)
+    - [不要なものをモックしない](#不要なものをモックしない)
+    - [テストフレームワークを作らない](#テストフレームワークを作らない)
+  - [テストメソッド](#テストメソッド)
     - [Test method names: reflect what's given and expected](#test-method-names-reflect-whats-given-and-expected)
     - [Use given-when-then](#use-given-when-then)
     - ["When" is exactly one call](#when-is-exactly-one-call)
@@ -4174,9 +4174,9 @@ METHOD constructor.
 ENDMETHOD.
 ```
 
-#### Consider to use the tool ABAP test double
+#### ABAP test double ツールの利用を検討する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#consider-to-use-the-tool-abap-test-double)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#ABAP-test-double-ツールの利用を検討する)
 
 ```ABAP
 DATA(customizing_reader) = CAST /clean/customizing_reader( cl_abap_testdouble=>create( '/clean/default_custom_reader' ) ).
@@ -4184,10 +4184,10 @@ cl_abap_testdouble=>configure_call( customizing_reader )->returning( sub_claim_c
 customizing_reader->read( 'SOME_ID' ).
 ```
 
-Shorter and easier to understand than custom test doubles:
+は、次のカスタムテストダブルよりも短くてわかりやすいです。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 CLASS /dirty/default_custom_reader DEFINITION FOR TESTING CREATE PUBLIC.
   PUBLIC SECTION.
     INTERFACES /dirty/customizing_reader.
@@ -4206,41 +4206,37 @@ METHOD test_something.
 ENDMETHOD.
 ```
 
-#### Exploit the test tools
+#### テストツールを利用する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#exploit-the-test-tools)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#テストツールを利用する)
 
-In general, a clean programming style
-will let you do much of the work
-with standard ABAP unit tests and test doubles.
-However, there are tools that will allow you
-to tackle trickier cases in elegant ways:
+一般的に、クリーンなプログラミングスタイルであれば、
+標準のABAPユニットテストとテストダブルで多くの作業を行うことができます。
+しかし、よりトリッキーなケースにもエレガントな方法で取り組むことができるツールがあります。
 
-- Use the `CL_OSQL_REPLACE` service
-  to test complex OpenSQL statements
-  by redirecting them to a test data bin
-  that can be filled with test data
-  without interfering with the rest of the system.
+- `CL_OSQL_REPLACE` サービスを使用すると、
+  システムの他の部分に影響を与えることなく
+  複雑な OpenSQL 文を
+  テストデータを格納できるテストデータオブジェクトにリダイレクトしてテストできます。
 
-- Use the CDS test framework to test your CDS views.
+- CDS test framework を使用して CDS ビューをテストします。
 
-#### Use test seams as temporary workaround
+#### test seam は一時的な回避策として使用する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#use-test-seams-as-temporary-workaround)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#test-seam-は一時的な回避策として使用する)
 
-If all other techniques fail, or when in dangerous shallow waters of legacy code,
-refrain to [test seams](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abaptest-seam.htm)
-to make things testable.
+他のすべての技術でうまくいかない場合、またはレガシーコードの危険な浅瀬にいる場合にのみ
+テスト可能なものにするために [test seams](https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/index.htm?file=abaptest-seam.htm) を使用します。
 
-Although they look comfortable at first sight, test seams are invasive and tend to get entangled
-in private dependencies, such that they are hard to keep alive and stable in the long run.
+一見快適そうに見えますが、test seam は侵襲性があり、プライベートな依存関係に絡みつきやすいため、
+長期的に安定した状態を維持することが難しいのです。
 
-We therefore recommend to refrain to test seams only as a temporary workaround
-to allow you refactoring the code into a more testable form.
+そのため、コードをよりテスト可能な形式にリファクタリングできるようにするための
+一時的な回避策としてのみ、test seam を使用することを推奨します。
 
-#### Use LOCAL FRIENDS to access the dependency-inverting constructor
+#### LOCAL FRIENDS を使用して依存関係逆転コンストラクタへアクセスする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#use-local-friends-to-access-the-dependency-inverting-constructor)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#LOCAL-FRIENDS-を使用して依存関係逆転コンストラクタへアクセスする)
 
 ```ABAP
 CLASS /clean/unit_tests DEFINITION.
@@ -4261,15 +4257,15 @@ CLASS unit_tests IMPLEMENTATION.
 ENDCLASS.
 ```
 
-#### Don't misuse LOCAL FRIENDS to invade the tested code
+#### LOCAL FRIENDS を悪用してテスト対象コードに侵入しない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#dont-misuse-local-friends-to-invade-the-tested-code)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#LOCAL-FRIENDS-を悪用してテスト対象コードに侵入しない)
 
-Unit tests that access private and protected members to insert mock data are fragile:
-they break when the internal structure of the tested code changes.
+モックデータを挿入するために private や protected なメンバーにアクセスするユニットテストは脆弱です。
+それらは、テスト対象コードの内部構造が変化すると壊れます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 CLASS /dirty/class_under_test DEFINITION LOCAL FRIENDS unit_tests.
 CLASS unit_tests IMPLEMENTATION.
   METHOD returns_right_result.
@@ -4278,47 +4274,47 @@ CLASS unit_tests IMPLEMENTATION.
 ENDCLASS.
 ```
 
-#### Don't change the productive code to make the code testable
+#### テスト可能にするために製品コードを変更しない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#dont-change-the-productive-code-to-make-the-code-testable)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#テスト可能にするために製品コードを変更しない)
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 IF me->in_test_mode = abap_true.
 ```
 
-#### Don't sub-class to mock methods
+#### メソッドをモックするためにサブクラスにしない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#dont-sub-class-to-mock-methods)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#メソッドをモックするためにサブクラスにしない)
 
-Don't sub-class and overwrite methods to mock them in your unit tests.
-Although this works, it is fragile because the tests break easily when refactoring the code.
-It also enables real consumers to inherit your class,
-which [may hit you unprepared when not explicitly designing for it](#継承を意図しない場合はFINALにする).
+ユニットテストでモックするためにサブクラス化して、メソッドを上書きしたりしないようにしてください。
+これは機能しますが、脆弱であり、コードをリファクタリングするとテストが簡単に壊れます。
+また、実際の利用者がクラスを継承できるようになるため、
+[明示的にそのように設計していない場合、不意をつかれる可能性があります](#継承を意図しない場合はFINALにする)。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 CLASS unit_tests DEFINITION INHERITING FROM /dirty/real_class FOR TESTING [...].
   PROTECTED SECTION.
     METHODS needs_to_be_mocked REDEFINITION.
 ```
 
-To get legacy code under test,
-[resort to test seams instead](#use-test-seams-as-temporary-workaround).
-They are just as fragile but still the cleaner way because they at least don't change the class's productive behavior,
-as would happen when enabling inheritance by removing a previous `FINAL` flag or by changing method scope from `PRIVATE` to `PROTECTED`.
+レガシーコードをテストするには、
+[代わりに test seam に頼ってください](#test-seam-は一時的な回避策として使用する)。
+これは、同様に脆弱ではありますが、
+`FINAL` を削除して継承できるようにしたり、メソッドスコープを `PRIVATE` から `PROTECTED` に変更したりするといった、
+少なくともクラスの本番の振る舞いを変更しないため、よりクリーンな方法です。
 
-When writing new code, take this testability issue into account directly when designing the class,
-and find a different, better way.
-Common best practices include [resorting to other test tools](#exploit-the-test-tools)
-and extracting the problem method to a separate class with its own interface.
+新しいコードを書くときには、このテスト可能性の問題をクラスを設計するときに直接考慮に入れて、
+別のより良い方法を見つけてください。
+一般的なベストプラクティスとしては、[他のテストツールに頼る](#テストツールを利用する)ことや、
+問題のメソッドを独自のインターフェイスを持つ別のクラスに抽出することなどがあります。
 
-> A more specific variant of
-> [Don't change the productive code to make the code testable](#dont-change-the-productive-code-to-make-the-code-testable).
+> これは [テスト可能にするために製品コードを変更しない](#テスト可能にするために製品コードを変更しない) のより具体的なバリエーションです。
 
-#### Don't mock stuff that's not needed
+#### 不要なものをモックしない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#dont-mock-stuff-thats-not-needed)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#不要なものをモックしない)
 
 ```ABAP
 cut = NEW /clean/class_under_test( db_reader = db_reader
@@ -4326,37 +4322,35 @@ cut = NEW /clean/class_under_test( db_reader = db_reader
                                    writer    = VALUE #( ) ).
 ```
 
-Define your givens as precisely as possible: don't set data that your test doesn't need,
-and don't mock objects that are never called.
-These things distract the reader from what's really going on.
+テストの前提条件をできるだけ正確に定義してください。
+テストが必要としないデータを設定したり、決して呼び出されないオブジェクトをモックしたりしないようにしましょう。
+これらのことは、コードを読む人の注意をそらしてしまいます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 cut = NEW /dirty/class_under_test( db_reader = db_reader
                                    config    = config
                                    writer    = writer ).
 ```
 
-There are also cases where it's not necessary to mock something at all -
-this is usually the case with data structures and data containers.
-For example, your unit tests may well work with the productive version of a `transient_log`
-because it only stores data without any side effects.
+また、何かをモックする必要が全くない場合もあります - これは通常、データ構造やデータコンテナの場合です。
+例えば、ユニットテストは製品バージョンの `transient_log` を使用しても、それは副作用なくデータを保存するだけなので、問題なく動作するでしょう。
 
-#### Don't build test frameworks
+#### テストフレームワークを作らない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Injection](#injection) > [This section](#dont-build-test-frameworks)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [インジェクション](#インジェクション) > [本節](#テストフレームワークを作らない)
 
-Unit tests - in contrast to integration tests - should be data-in-data-out, with all test data being defined on the fly as needed.
+ユニットテストは、統合テストとは対照的に、必要に応じてすべてのテストデータをオンザフライで定義し、データインデータアウトする必要があります。
 
 ```ABAP
 cl_abap_testdouble=>configure_call( test_double )->returning( data ).
 ```
 
-Don't start building frameworks that distinguish "_test case IDs_" to decide what data to provide.
-The resulting code will be so long and tangled that you won't be able to keep these tests alive in the long term.
+提供するデータを判断するために「_テストケースID_」を区別するフレームワークを作り始めないでください。
+結果として生じるコードは非常に長く絡み合ったものになり、これらのテストを長期的に維持することができなくなります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 
 test_double->set_test_case( 1 ).
 
@@ -4366,13 +4360,13 @@ CASE me->test_case.
 ENDCASE.
 ```
 
-### Test Methods
+### テストメソッド
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#test-methods)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#テストメソッド)
 
 #### Test method names: reflect what's given and expected
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#test-methods) > [This section](#test-method-names-reflect-whats-given-and-expected)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストメソッド](#テストメソッド) > [本節](#test-method-names-reflect-whats-given-and-expected)
 
 Good names reflect the given and then of the test:
 
@@ -4410,7 +4404,7 @@ and express the differences in the givens in the class's names.
 
 #### Use given-when-then
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#test-methods) > [This section](#use-given-when-then)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Test Methods](#テストメソッド) > [本節](#use-given-when-then)
 
 Organize your test code along the given-when-then paradigm:
 First, initialize stuff in a given section ("given"),
@@ -4425,7 +4419,7 @@ Still they are helpful for the reader and the novice test writer to separate the
 
 #### "When" is exactly one call
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#test-methods) > [This section](#when-is-exactly-one-call)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#テストメソッド) > [This section](#when-is-exactly-one-call)
 
 Make sure that the "when" section of your test method contains exactly one call to the class under test:
 
@@ -4445,7 +4439,7 @@ It also confuses the reader because he is not sure what the exact feature under 
 
 #### Don't add a TEARDOWN unless you really need it
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#test-methods) > [This section](#dont-add-a-teardown-unless-you-really-need-it)
+> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#テストメソッド) > [This section](#dont-add-a-teardown-unless-you-really-need-it)
 
 `teardown` methods are usually only needed to clear up database entries
 or other external resources in integration tests.

@@ -213,8 +213,8 @@
     - [不要なものをモックしない](#不要なものをモックしない)
     - [テストフレームワークを作らない](#テストフレームワークを作らない)
   - [テストメソッド](#テストメソッド)
-    - [Test method names: reflect what's given and expected](#test-method-names-reflect-whats-given-and-expected)
-    - [Use given-when-then](#use-given-when-then)
+    - [テストメソッド名: 前提条件と期待する結果を反映する](#テストメソッド名-前提条件と期待する結果を反映する)
+    - [given-when-then を使用する](#given-when-then-を使用する)
     - ["When" is exactly one call](#when-is-exactly-one-call)
     - [Don't add a TEARDOWN unless you really need it](#dont-add-a-teardown-unless-you-really-need-it)
   - [Test Data](#test-data)
@@ -4364,11 +4364,11 @@ ENDCASE.
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#テストメソッド)
 
-#### Test method names: reflect what's given and expected
+#### テストメソッド名: 前提条件と期待する結果を反映する
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストメソッド](#テストメソッド) > [本節](#test-method-names-reflect-whats-given-and-expected)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストメソッド](#テストメソッド) > [本節](#テストメソッド名-前提条件と期待する結果を反映する)
 
-Good names reflect the given and then of the test:
+よい名前は、テストの前提条件と、期待する結果を反映しています。
 
 ```ABAP
 METHOD reads_existing_entry.
@@ -4376,46 +4376,45 @@ METHOD throws_on_invalid_key.
 METHOD detects_invalid_input.
 ```
 
-Bad names reflect the when, repeat meaningless facts, or are cryptic:
+悪い名前は、「いつ」（テスト対象の呼び出し方）を反映しているか、無意味な事実を繰り返すか、または隠語的です。
 
 ```ABAP
-" anti-patterns
+" アンチパターン
 
-" What's expected, success or failure?
+" 期待されているのは、成功でしょうか？失敗でしょうか？
 METHOD get_conversion_exits.
 
-" It's a test method, what else should it do but "test"?
+" テストメソッドですが、「テスト」以外に何をするのでしょうか？
 METHOD test_loop.
 
-" So it's parameterized, but what is its aim?
+" まさにパラメータ化テストですが、その目的は何でしょうか？
 METHOD parameterized_test.
 
-" What's "_wo_w" supposed to mean and will you still remember that in a year from now?
+" 「_wo_w」とは何を意味しているのでしょうか？1年後もそのことを覚えているでしょうか？
 METHOD get_attributes_wo_w.
 ```
 
-As ABAP allows only 30 characters in method names, it's fair to add an explanatory comment
-if the name is too short to convey enough meaning.
-ABAP Doc or the first line in the test method may be an appropriate choice for the comment.
+ABAP ではメソッド名に30文字しか許されていないので、十分な意味を伝えるには名前が短すぎる場合は、説明的なコメントを追加するのが妥当です。
+ABAP Doc やテストメソッドの最初の行がコメントのための適切な選択かもしれません。
 
-Having lots of test methods whose names are too long may be an indicator
-that you should split your single test class into several ones
-and express the differences in the givens in the class's names.
+名前が長すぎるテストメソッドがたくさんあるということは、
+一つのテストクラスをいくつかのテストクラスに分割して、
+前提条件の違いをそれぞれのクラス名で表現した方がよいということを示している可能性があります。
 
-#### Use given-when-then
+#### given-when-then を使用する
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Test Methods](#テストメソッド) > [本節](#use-given-when-then)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Test Methods](#テストメソッド) > [本節](#given-when-then-を使用する)
 
-Organize your test code along the given-when-then paradigm:
-First, initialize stuff in a given section ("given"),
-second call the actual tested thing ("when"),
-third validate the outcome ("then").
+テストコードは、given-when-then パラダイムに沿って構成してください。
+最初に、前提条件として初期化を行い(「given」)、
+2番目に、実際にテスト対象を呼び出し(「when」)、
+3番目に、結果を検証します(「then」)。
 
-If the given or then sections get so long
-that you cannot visually separate the three sections anymore, extract sub-methods.
-Blank lines or comments as separators may look good at first glance
-but don't really reduce the visual clutter.
-Still they are helpful for the reader and the novice test writer to separate the sections.
+given または then セクションが長くなり、
+もはや3つのセクションを見た目に区別できなくなった場合は、サブメソッドに抽出します。
+空白行やコメントで区切るのは、一見良いように見えるかもしれませんが、
+実際には見た目の乱雑さを軽減することはできません。
+それでも、読み手や初心者のテスト書き手にとってはセクションを区別するのに便利です。
 
 #### "When" is exactly one call
 

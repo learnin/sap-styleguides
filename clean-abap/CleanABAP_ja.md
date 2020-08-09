@@ -215,13 +215,13 @@
   - [テストメソッド](#テストメソッド)
     - [テストメソッド名: 前提条件と期待する結果を反映する](#テストメソッド名-前提条件と期待する結果を反映する)
     - [given-when-then を使用する](#given-when-then-を使用する)
-    - ["When" is exactly one call](#when-is-exactly-one-call)
-    - [Don't add a TEARDOWN unless you really need it](#dont-add-a-teardown-unless-you-really-need-it)
-  - [Test Data](#test-data)
-    - [Make it easy to spot meaning](#make-it-easy-to-spot-meaning)
-    - [Make it easy to spot differences](#make-it-easy-to-spot-differences)
-    - [Use constants to describe purpose and importance of test data](#use-constants-to-describe-purpose-and-importance-of-test-data)
-  - [Assertions](#assertions)
+    - [「when」ではちょうど1回呼び出す](#whenではちょうど1回呼び出す)
+    - [本当に必要な時以外は TEARDOWN を追加しない](#本当に必要な時以外は-TEARDOWN-を追加しない)
+  - [テストデータ](#テストデータ)
+    - [意味を見つけやすくする](#意味を見つけやすくする)
+    - [違いを見つけやすくする](#違いを見つけやすくする)
+    - [定数を使ってテストデータの目的と重要性を説明する](#定数を使ってテストデータの目的と重要性を説明する)
+  - [アサーション](#アサーション)
     - [Few, focused assertions](#few-focused-assertions)
     - [Use the right assert type](#use-the-right-assert-type)
     - [Assert content, not quantity](#assert-content-not-quantity)
@@ -4403,7 +4403,7 @@ ABAP Doc やテストメソッドの最初の行がコメントのための適�
 
 #### given-when-then を使用する
 
-> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [Test Methods](#テストメソッド) > [本節](#given-when-then-を使用する)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストメソッド](#テストメソッド) > [本節](#given-when-then-を使用する)
 
 テストコードは、given-when-then パラダイムに沿って構成してください。
 最初に、前提条件として初期化を行い(「given」)、
@@ -4416,11 +4416,11 @@ given または then セクションが長くなり、
 実際には見た目の乱雑さを軽減することはできません。
 それでも、読み手や初心者のテスト書き手にとってはセクションを区別するのに便利です。
 
-#### "When" is exactly one call
+#### 「when」ではちょうど1回呼び出す
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#テストメソッド) > [This section](#when-is-exactly-one-call)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストメソッド](#テストメソッド) > [本節](#whenではちょうど1回呼び出す)
 
-Make sure that the "when" section of your test method contains exactly one call to the class under test:
+テストメソッドの「when」セクションには、テスト対象クラスへの呼び出しが1回だけ含まれていることを確認してください。
 
 ```ABAP
 METHOD rejects_invalid_input.
@@ -4431,62 +4431,62 @@ METHOD rejects_invalid_input.
 ENDMETHOD.
 ```
 
-Calling multiple things indicates that the method has no clear focus and tests too much.
-This makes it harder to find the cause when the test fails:
-was it the first, second, or third call that caused the failure?
-It also confuses the reader because he is not sure what the exact feature under test is.
+複数のものを呼び出すということは、メソッドが明確な焦点を持っておらず、あまりに多くのことをテストしていることを示しています。
+これにより、テストが失敗したときに原因を見つけるのが難しくなります。
+失敗の原因は、1回目、2回目、3回目の呼び出しだったのでしょうか？
+また、テスト対象の機能が正確に何なのかがわからず、読者を混乱させます。
 
-#### Don't add a TEARDOWN unless you really need it
+#### 本当に必要な時以外は TEARDOWN を追加しない
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Methods](#テストメソッド) > [This section](#dont-add-a-teardown-unless-you-really-need-it)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストメソッド](#テストメソッド) > [本節](#本当に必要な時以外は-TEARDOWN-を追加しない)
 
-`teardown` methods are usually only needed to clear up database entries
-or other external resources in integration tests.
+`teardown` メソッドは通常、統合テストでデータベースエントリやその他の外部リソースをクリアするためにのみ必要とされます。
 
-Resetting members of the test class, esp. `cut` and the used test doubles, is superfluous;
-they are overwritten by the `setup` method before the next test method is started.
+テストクラスのメンバー、特に `cut` や使用されたテストダブルをリセットすることは余計なことです。
+次のテストメソッドが開始される前に、それらは `setup` メソッドによって上書きされます。
 
-### Test Data
+### テストデータ
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#test-data)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#テストデータ)
 
-#### Make it easy to spot meaning
+#### 意味を見つけやすくする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Data](#test-data) > [This section](#make-it-easy-to-spot-meaning)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストデータ](#テストデータ) > [本節](#意味を見つけやすくする)
 
-In unit tests, you want to be able to quickly tell which data and doubles are important,
-and which ones are only there to keep the code from crashing.
-Support this by giving things that have no meaning obvious names and values, for example:
-
-```ABAP
-DATA(alert_id) = '42'.                             " well-known meaningless numbers
-DATA(detection_object_type) = '?=/"&'.             " 'keyboard accidents'
-CONSTANTS some_random_number TYPE i VALUE 782346.  " revealing variable names
-```
-
-Don't trick people into believing something connects to real objects or real customizing if it doesn't:
+ユニットテストでは、どのデータやテストダブルが重要で、
+どのデータやテストダブルがコードをクラッシュさせないようにするためだけのためのものなのかを
+素早く見分けることができるようにしたいものです。
+あからさまに意味のない名前や値を与えることで、これをサポートします。例えば、
 
 ```ABAP
-" anti-pattern
-DATA(alert_id) = '00000001223678871'.        " this alert really exists
-DATA(detection_object_type) = 'FRA_SCLAIM'.  " this detection object type, too
-CONSTANTS memory_limit TYPE i VALUE 4096.    " this number looks carefully chosen
+DATA(alert_id) = '42'.                             " よく知られた意味のない数字
+DATA(detection_object_type) = '?=/"&'.             " 「キーボード事故」
+CONSTANTS some_random_number TYPE i VALUE 782346.  " 変数名を明かす
 ```
 
-#### Make it easy to spot differences
+実際のオブジェクトや実際のカスタマイズと関係がない場合には、関係があるように見えないようにしてください。
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Data](#test-data) > [This section](#make-it-easy-to-spot-differences)
+```ABAP
+" アンチパターン
+DATA(alert_id) = '00000001223678871'.        " このアラートは実際に存在します
+DATA(detection_object_type) = 'FRA_SCLAIM'.  " この detection object type も実際に存在します
+CONSTANTS memory_limit TYPE i VALUE 4096.    " この数字は慎重に選ばれたように見えます
+```
+
+#### 違いを見つけやすくする
+
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストデータ](#テストデータ) > [本節](#違いを見つけやすくする)
 
 ```ABAP
 exp_parameter_in = VALUE #( ( parameter_name = '45678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789END1' )
                             ( parameter_name = '45678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789END2' ) ).
 ```
 
-Don't force readers to compare long meaningless strings to spot tiny differences.
+小さな違いを見極めるために、読者に意味のない長い文字列を比較させないでください。
 
-#### Use constants to describe purpose and importance of test data
+#### 定数を使ってテストデータの目的と重要性を説明する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Test Data](#test-data) > [This section](#use-constants-to-describe-purpose-and-importance-of-test-data)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [テストデータ](#テストデータ) > [本節](#定数を使ってテストデータの目的と重要性を説明する)
 
 ```ABAP
 CONSTANTS some_nonsense_key TYPE char8 VALUE 'ABCDEFGH'.
@@ -4502,9 +4502,9 @@ METHOD throws_on_invalid_entry.
 ENDMETHOD.
 ```
 
-### Assertions
+### アサーション
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [This section](#assertions)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#アサーション)
 
 #### Few, focused assertions
 

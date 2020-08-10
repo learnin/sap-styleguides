@@ -222,13 +222,13 @@
     - [違いを見つけやすくする](#違いを見つけやすくする)
     - [定数を使ってテストデータの目的と重要性を説明する](#定数を使ってテストデータの目的と重要性を説明する)
   - [アサーション](#アサーション)
-    - [Few, focused assertions](#few-focused-assertions)
-    - [Use the right assert type](#use-the-right-assert-type)
-    - [Assert content, not quantity](#assert-content-not-quantity)
-    - [Assert quality, not content](#assert-quality-not-content)
-    - [Use FAIL to check for expected exceptions](#use-fail-to-check-for-expected-exceptions)
-    - [Forward unexpected exceptions instead of catching and failing](#forward-unexpected-exceptions-instead-of-catching-and-failing)
-    - [Write custom asserts to shorten code and avoid duplication](#write-custom-asserts-to-shorten-code-and-avoid-duplication)
+    - [少なく, 焦点を絞ったアサーション](#少なく-焦点を絞ったアサーション)
+    - [正しいアサートタイプを使用する](#正しいアサートタイプを使用する)
+    - [量ではなく, 内容をアサートする](#量ではなく-内容をアサートする)
+    - [内容ではなく, 特性でアサートする](#内容ではなく-特性でアサートする)
+    - [期待する例外をチェックするために FAIL を使う](#期待する例外をチェックするために-FAIL-を使う)
+    - [予期せぬ例外はキャッチして失敗させるのではなく, 伝播させる](#予期せぬ例外はキャッチして失敗させるのではなく-伝播させる)
+    - [コードを短くして, 重複を避けるためにカスタムアサートを書く](#コードを短くして-重複を避けるためにカスタムアサートを書く)
 
 ## やり方
 
@@ -454,7 +454,7 @@ METHODS read_that.
 METHODS read_those.
 ```
 
-概念を表す言葉を選び、それに拘ります。他の同義語を混在させないようにしてください。同義語があると、読者はありもしない意味の違いを見つけようとして時間を浪費してしまいます。
+概念を表す言葉を選び、それに拘ります。他の同義語を混在させないようにしてください。同義語があると、コードを読む人はありもしない意味の違いを見つけようとして時間を浪費してしまいます。
 
 ```ABAP
 " アンチパターン
@@ -847,7 +847,7 @@ ASSIGN COMPONENT name OF STRUCTURE structure TO FIELD-SYMBOL(<component>).
 ASSIGN (class_name)=>(static_member) TO FIELD-SYMBOL(<member>).
 ```
 
-コードレビューは、人々が「ただ〜だから」「いつもそのようにLOOPしているから」「特別な理由がないから」といった恣意的な理由で、この2つから選択する傾向があることを示しています。恣意的な選択は、なぜ一方が他方よりも使用されているのかという無用な質問に読者の時間を浪費させることになります。したがって、十分な根拠に基づく正確な決定に置き換えるべきです。私たちの推奨は、このような理由に基づいています。
+コードレビューは、人々が「ただ〜だから」「いつもそのようにLOOPしているから」「特別な理由がないから」といった恣意的な理由で、この2つから選択する傾向があることを示しています。恣意的な選択は、なぜ一方が他方よりも使用されているのかという無用な質問にコードを読む人の時間を浪費させることになります。したがって、十分な根拠に基づく正確な決定に置き換えるべきです。私たちの推奨は、このような理由に基づいています。
 
 - フィールドシンボルは、構造体のコンポーネントに動的にアクセスするなど、参照ではできないことができます。
   同様に、参照は、動的に型付けされたデータ構造体を構築するなど、フィールドシンボルではできないことを行うことができます。
@@ -2852,7 +2852,7 @@ METHODS assert_user_input_is_valid
     cx_bad_user_input.
 ```
 
-例外の使い方を誤ると、実際には何も問題がないのに、何か問題が起きたように読者に誤解を与えてしまいます。
+例外の使い方を誤ると、実際には何も問題がないのに、何か問題が起きたようにコードを読む人に誤解を与えてしまいます。
 また、例外は構築する必要があり、多くのコンテキスト情報を収集することが多いため、通常のコードよりもはるかに遅くなります。
 
 #### クラスベースの例外を使う
@@ -4434,7 +4434,7 @@ ENDMETHOD.
 複数のものを呼び出すということは、メソッドが明確な焦点を持っておらず、あまりに多くのことをテストしていることを示しています。
 これにより、テストが失敗したときに原因を見つけるのが難しくなります。
 失敗の原因は、1回目、2回目、3回目の呼び出しだったのでしょうか？
-また、テスト対象の機能が正確に何なのかがわからず、読者を混乱させます。
+また、テスト対象の機能が正確に何なのかがわからず、コードを読む人を混乱させます。
 
 #### 本当に必要な時以外は TEARDOWN を追加しない
 
@@ -4482,7 +4482,7 @@ exp_parameter_in = VALUE #( ( parameter_name = '45678901234567890123456789012345
                             ( parameter_name = '45678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789END2' ) ).
 ```
 
-小さな違いを見極めるために、読者に意味のない長い文字列を比較させないでください。
+小さな違いを見極めるために、コードを読む人に意味のない長い文字列を比較させないでください。
 
 #### 定数を使ってテストデータの目的と重要性を説明する
 
@@ -4506,11 +4506,11 @@ ENDMETHOD.
 
 > [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [本節](#アサーション)
 
-#### Few, focused assertions
+#### 少なく, 焦点を絞ったアサーション
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#few-focused-assertions)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#少なく-焦点を絞ったアサーション)
 
-Assert only exactly what the test method is about, and this with a small number of assertions.
+テストメソッドが何についてのものかだけを正確にアサートし、これを少数のアサーションで行います。
 
 ```ABAP
 METHOD rejects_invalid_input.
@@ -4521,14 +4521,13 @@ METHOD rejects_invalid_input.
 ENDMETHOD.
 ```
 
-Asserting too much is an indicator that the method has no clear focus.
-This couples productive and test code in too many places: changing a feature
-will require rewriting a large number of tests although they are not really involved with the changed feature.
-It also confuses the reader with a large variety of assertions,
-obscuring the one important, distinguishing assertion among them.
+あまりにも多くのことをアサートするのは、そのメソッドが明確な焦点を持っていないことを示しています。
+これは、製品コードとテストコードをあまりにも多くの場所で結合させていて、機能を変更すると、
+変更された機能には実際には関与していないにもかかわらず、多数のテストを書き換える必要があります。
+また、多種多様なアサーションでコードを読む人を混乱させ、その中の1つの重要なアサーションが不明瞭になってしまいます。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD rejects_invalid_input.
   " when
   DATA(is_valid) = cut->is_valid_input( 'SOME_RANDOM_ENTRY' ).
@@ -4540,69 +4539,68 @@ METHOD rejects_invalid_input.
 ENDMETHOD.
 ```
 
-#### Use the right assert type
+#### 正しいアサートタイプを使用する
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#use-the-right-assert-type)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#正しいアサートタイプを使用する)
 
 ```ABAP
 cl_abap_unit_assert=>assert_equals( act = table
                                     exp = test_data ).
 ```
 
-Asserts often do more than meets the eye, for example `assert_equals`
-includes type matching and providing precise descriptions if values differ.
-Using the wrong, too-common asserts will force you into the debugger immediately
-instead of allowing you to see what is wrong right from the error message.
+アサートは、目に見える以上のことをすることが多いです。
+例えば `assert_equals` には型のマッチングや、値が異なる場合の的確な説明が含まれています。
+間違った、一般的すぎるアサートを使うと、エラーメッセージから何が間違っているのかを知ることができずに、すぐにデバッガに入ってしまうことになります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 cl_abap_unit_assert=>assert_true( xsdbool( act = exp ) ).
 ```
 
-#### Assert content, not quantity
+#### 量ではなく, 内容をアサートする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#assert-content-not-quantity)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#量ではなく-内容をアサートする)
 
 ```ABAP
 assert_contains_exactly( actual   = table
                          expected = VALUE string_table( ( `ABC` ) ( `DEF` ) ( `GHI` ) ) ).
 ```
 
-Don't write magic-number-quantity assertions if you can express the actual content you expect.
-Numbers may vary although the expectations are still met.
-In reverse, the numbers may match although the content is something completely unexpected.
+期待している実際の内容を表現できるのであれば、マジックナンバー数量のアサーションは書かないようにしましょう。
+期待通りの内容であるにもかかわらず、数字が一致しないことがあります。
+逆に、全く予想外の内容であるにもかかわらず、数字が一致する場合もあります。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 assert_equals( act = lines( log_messages )
                exp = 3 ).
 ```
 
-#### Assert quality, not content
+#### 内容ではなく, 特性でアサートする
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#assert-quality-not-content)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#内容ではなく-特性でアサートする)
 
-If you are interested in a meta quality of the result,
-but not in the actual content itself, express that with a suitable assert:
+実際の内容そのものではなく、結果のメタ品質に興味がある場合は、
+適切なアサートでそれを表現してください。
 
 ```ABAP
 assert_all_lines_shorter_than( actual_lines        = table
                                expected_max_length = 80 ).
 ```
 
-Asserting the precise content obscures what you actually want to test.
-It is also fragile because refactoring may produce a different
-but perfectly acceptable result although it breaks all your too-precise unit tests.
+厳密な内容をアサートすると、実際にテストしたいことが不明瞭になります。
+また、脆弱になります。なぜなら、リファクタリングを行うと、厳密すぎるユニットテストをすべて壊してしまうにもかかわらず、
+完全に受け入れ可能な差異が発生する可能性があるためです。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 assert_equals( act = table
                exp = VALUE string_table( ( `ABC` ) ( `DEF` ) ( `GHI` ) ) ).
 ```
 
-#### Use FAIL to check for expected exceptions
+#### 期待する例外をチェックするために FAIL を使う
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#use-fail-to-check-for-expected-exceptions)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#期待する例外をチェックするために-FAIL-を使う)
 
 ```ABAP
 METHOD throws_on_empty_input.
@@ -4616,9 +4614,9 @@ METHOD throws_on_empty_input.
 ENDMETHOD.
 ```
 
-#### Forward unexpected exceptions instead of catching and failing
+#### 予期せぬ例外はキャッチして失敗させるのではなく, 伝播させる
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#forward-unexpected-exceptions-instead-of-catching-and-failing)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#予期せぬ例外はキャッチして失敗させるのではなく-伝播させる)
 
 ```ABAP
 METHODS reads_entry FOR TESTING RAISING /clean/some_exception.
@@ -4631,10 +4629,10 @@ METHOD reads_entry.
 ENDMETHOD.
 ```
 
-Your test code remains focused on the happy path and is therefore much easier to read and understand, as compared to:
+テストコードは正常系に焦点を当てたままなので、次のような場合に比べて読みやすく、理解しやすいです。
 
 ```ABAP
-" anti-pattern
+" アンチパターン
 METHOD reads_entry.
   TRY.
       DATA(entry) = cut->read_something( ).
@@ -4645,9 +4643,9 @@ METHOD reads_entry.
 ENDMETHOD.
 ```
 
-#### Write custom asserts to shorten code and avoid duplication
+#### コードを短くして, 重複を避けるためにカスタムアサートを書く
 
-> [クリーン ABAP](#クリーン-abap) > [Content](#content) > [Testing](#testing) > [Assertions](#assertions) > [This section](#write-custom-asserts-to-shorten-code-and-avoid-duplication)
+> [クリーン ABAP](#クリーン-abap) > [目次](#目次) > [テスト](#テスト) > [アサーション](#アサーション) > [本節](#コードを短くして-重複を避けるためにカスタムアサートを書く)
 
 ```ABAP
 METHODS assert_contains
@@ -4664,4 +4662,4 @@ METHOD assert_contains.
 ENDMETHOD.
 ```
 
-Instead of copy-pasting this over and over again.
+これを何度も何度もコピーペーストするのではなく。
